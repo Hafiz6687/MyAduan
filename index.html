@@ -2383,9 +2383,17 @@ Portal rasmi : jtksm.mohr.gov.my
                     <div class="card-body">
                         <div class="form-group" id="ruanganAduan">
                             <label>Jenis Pengadu <span>*</span></label>
-                            <div class="input-wrapper radio-group">
-                                <label><input type="radio" name="aduan" id="aduanIndividu" value="Individu" onchange="toggleAduan()" checked> Individu</label>
-                                <label><input type="radio" name="aduan" id="aduanBerkumpulan" value="Berkumpulan" onchange="toggleAduan()"> Berkumpulan</label>
+                            <div class="input-wrapper">
+                                <select id="jenisPengaduDropdown" onchange="toggleAduan()">
+                                    <option value="Individu" selected>Pekerja Individu</option>
+                                    <option value="Berkumpulan">Pekerja Berkumpulan</option>
+                                    <option value="Bukan Pekerja">Bukan Pekerja</option>
+                                </select>
+                            </div>
+                            <!-- Input terselindung (hidden) untuk keserasian fungsi sistem asal tanpa ralat -->
+                            <div style="display: none;">
+                                <input type="radio" name="aduan" id="aduanIndividu" value="Individu" checked>
+                                <input type="radio" name="aduan" id="aduanBerkumpulan" value="Berkumpulan">
                             </div>
                         </div>
 
