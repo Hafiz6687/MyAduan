@@ -488,9 +488,7 @@ body {
                 <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarSetiapPerkataan(this)"></textarea>
             </div>
             
-            <!-- INPUT JUMLAH DISEMBUNYIKAN (PENTING: Jangan padam id ini untuk elak ralat sistem JavaScript asal) -->
-            <input type="hidden" id="jumlahTuntutan" value="0.00">
-            <div class="modal-actions">
+                        <div class="modal-actions">
                 <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
                 <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
             </div>
@@ -6640,21 +6638,27 @@ function simpanTuntutan() {
     let jenis = document.getElementById('jenisTuntutan').value;
     let jenisLain = document.getElementById('jenisTuntutanLain').value.trim();
     let keterangan = document.getElementById('keteranganTuntutan').value.trim();
-    let jumlah = document.getElementById('jumlahTuntutan').value.replace(/,/g, ''); 
+    
+    // Gantikan bacaan elemen dengan nilai statik "0.00" supaya array sistem tak rosak
+    let jumlah = "0.00"; 
+    
     const index = parseInt(document.getElementById('indexTuntutanEdit').value);
     const jenisJadual = document.getElementById('jenisJadualTuntutan').value; 
 
     if (jenis === 'Lain-lain') { 
         if (jenisLain === "") { 
-            alert("Sila nyatakan jenis tuntutan lain."); 
+            alert("Sila nyatakan jenis aduan lain."); 
             return; 
         } 
         jenis = jenisLain; 
     }
-    if (jenis === "" || keterangan === "" || jumlah.trim() === "" || isNaN(jumlah)) { 
-        alert("Sila lengkapkan Jenis, Keterangan, dan pastikan Jumlah Tuntutan adalah nombor."); 
+    
+    // Validasi jumlah telah dibuang di sini
+    if (jenis === "" || keterangan === "") { 
+        alert("Sila lengkapkan Jenis dan Keterangan aduan."); 
         return; 
     }
+    
     if (!keterangan.startsWith('(')) { keterangan = '(' + keterangan; } 
     if (!keterangan.endsWith(')')) { keterangan = keterangan + ')'; }
 
@@ -6664,7 +6668,7 @@ function simpanTuntutan() {
         } else { 
             memoriTuntutanKetua.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); 
         }
-        autoKiraTuntutanBerkumpulan(); 
+        if (typeof autoKiraTuntutanBerkumpulan === 'function') autoKiraTuntutanBerkumpulan(); 
         renderJadualTuntutan();
     } else if (jenisJadual.startsWith('tambahan_')) {
         let idxTambahan = parseInt(jenisJadual.split('_')[1]);
@@ -6673,8 +6677,8 @@ function simpanTuntutan() {
         } else { 
             memoriTuntutanTambahan[idxTambahan].push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); 
         }
-        autoKiraTuntutanBerkumpulan(); 
-        renderJadualTuntutanTambahan(idxTambahan);
+        if (typeof autoKiraTuntutanBerkumpulan === 'function') autoKiraTuntutanBerkumpulan(); 
+        if (typeof renderJadualTuntutanTambahan === 'function') renderJadualTuntutanTambahan(idxTambahan);
         renderJadualTuntutan(); 
     } else {
         if (index > -1) { 
@@ -6824,8 +6828,6 @@ function bukaModalTuntutan(jenisJadual = 'biasa', indexEdit = -1) {
         let ketRaw = targetArray[indexEdit].keterangan;
         if(ketRaw.startsWith('(') && ketRaw.endsWith(')')){ ketRaw = ketRaw.slice(1,-1); }
         document.getElementById('keteranganTuntutan').value = ketRaw;
-        const jumlahEdit = targetArray[indexEdit].jumlah;
-        document.getElementById('jumlahTuntutan').value = Number(jumlahEdit).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById('indexTuntutanEdit').value = indexEdit;
     } else {
         let tajukBaru = "Tambah Tuntutan";
@@ -6836,7 +6838,6 @@ function bukaModalTuntutan(jenisJadual = 'biasa', indexEdit = -1) {
         document.getElementById('jenisTuntutan').value = "";
         jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = "";
         document.getElementById('keteranganTuntutan').value = "";
-        document.getElementById('jumlahTuntutan').value = "";
         document.getElementById('indexTuntutanEdit').value = "-1";
     }
     setTimeout(() => { document.getElementById('jenisTuntutan').focus(); document.getElementById('jenisTuntutan').style.boxShadow = '0 0 0 2px rgba(37, 99, 235, 0.3)'; document.getElementById('jenisTuntutan').addEventListener('blur', function() { this.style.boxShadow = 'none'; }, { once: true }); }, 100);
