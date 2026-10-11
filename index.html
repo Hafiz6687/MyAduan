@@ -479,23 +479,17 @@ body {
             <input type="hidden" id="indexTuntutanEdit" value="-1">
             <input type="hidden" id="jenisJadualTuntutan" value="biasa"> <!-- PENANDA JENIS JADUAL -->
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">Jenis Tuntutan <span>*</span></label>
+                <label style="text-align: left;">Jenis Aduan <span>*</span></label>
                 <select id="jenisTuntutan" onchange="semakJenisTuntutanLain()"><option value="">-Sila Pilih-</option></select>
-                <input type="text" id="jenisTuntutanLain" placeholder="Sila nyatakan jenis tuntutan lain" style="display: none; margin-top: 8px; width: 100%;" oninput="hurufBesarAyatPertama(this)">
+                <input type="text" id="jenisTuntutanLain" placeholder="Sila nyatakan jenis aduan lain" style="display: none; margin-top: 8px; width: 100%;" oninput="hurufBesarAyatPertama(this)">
             </div>
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">Keterangan Tuntutan <span>*</span></label>
-                <!-- KITA TUKAR oninput KEPADA hurufBesarSetiapPerkataan(this) -->
-                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan gaji tertunggak bagi bulan Ogos 2026" style="resize: vertical;" oninput="hurufBesarSetiapPerkataan(this)"></textarea>
+                <label style="text-align: left;">Keterangan Aduan <span>*</span></label>
+                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarSetiapPerkataan(this)"></textarea>
             </div>
-            <div class="form-group" style="grid-template-columns: 1fr;">
-                <label style="text-align: left;">Jumlah Tuntutan (RM) <span>*</span></label>
-                <div class="input-wrapper" style="position: relative;">
-                    <span style="position: absolute; left: 12px; top: 10px; color: var(--text-muted); font-weight: 600;">RM</span>
-                    <input type="text" id="jumlahTuntutan" style="padding-left: 45px;" placeholder="Contoh: 2500.00" 
-                           oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" onfocus="unformatDuit(this)" onblur="formatDuit(this)">
-                </div>
-            </div>
+            
+            <!-- INPUT JUMLAH DISEMBUNYIKAN (PENTING: Jangan padam id ini untuk elak ralat sistem JavaScript asal) -->
+            <input type="hidden" id="jumlahTuntutan" value="0.00">
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
                 <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
@@ -1453,9 +1447,8 @@ Portal rasmi : jtksm.mohr.gov.my
                             <thead style="background-color: var(--card-header-bg);">
                                 <tr>
                                     <th style="width: 5%; text-align:center; padding: 12px;">Bil.</th>
-                                    <th style="width: 30%; padding: 12px;">Jenis Tuntutan</th>
-                                    <th style="width: 45%; padding: 12px;">Keterangan Tuntutan</th>
-                                    <th style="width: 20%; padding: 12px; text-align: right;">Jumlah (RM)</th>
+                                    <th style="width: 35%; padding: 12px;">Jenis Aduan</th>
+                                    <th style="width: 60%; padding: 12px;">Keterangan Aduan</th>
                                 </tr>
                             </thead>
                             <tbody id="mk_body_tuntutan">
@@ -2796,14 +2789,15 @@ Portal rasmi : jtksm.mohr.gov.my
                     <thead style="background-color: var(--card-header-bg);">
                         <tr>
                             <th style="width: 5%; text-align: center; border-bottom: 1px solid var(--border-color);">Bil.</th>
-                            <th style="width: 25%; border-bottom: 1px solid var(--border-color);">Jenis Tuntutan</th>
-                            <th style="width: 35%; border-bottom: 1px solid var(--border-color);">Keterangan Tuntutan</th>
-                            <th style="width: 15%; text-align: right; border-bottom: 1px solid var(--border-color);">Jumlah (RM)</th>
+                            <th style="width: 25%; border-bottom: 1px solid var(--border-color);">Jenis Aduan</th>
+                            <th style="width: 50%; border-bottom: 1px solid var(--border-color);">Keterangan Aduan</th>
                             <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Kemaskini</th>
                             <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Hapus</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>
+                    </tbody>
                         <tr><td colspan="6" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat tuntutan direkodkan.</td></tr>
                     </tbody>
                 </table>
@@ -2835,11 +2829,11 @@ Portal rasmi : jtksm.mohr.gov.my
         <table id="jadualTuntutan">
                             <thead>
                                 <tr>
-                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
-                                    <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
+                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Aduan</th><th style="width: 50%;">Keterangan Aduan</th>
+                                    <th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
                                 </tr>
                             </thead>
-                            <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
+                            <tbody><tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr></tbody>
                         </table>
                     </div>
 
@@ -3410,20 +3404,17 @@ function bukaMaklumatKes(index) {
     
     const tbodyTuntutan = document.getElementById('mk_body_tuntutan');
     tbodyTuntutan.innerHTML = '';
-    let jumlahKeseluruhan = 0;
 
     if (kes.dataBorang) {
         if (isBerkumpulan) {
             if (kes.dataBorang.tuntutanKetua && kes.dataBorang.tuntutanKetua.length > 0) {
                 let namaKetua = kes.dataBorang.inputs && kes.dataBorang.inputs['namaPengadu'] ? kes.dataBorang.inputs['namaPengadu'].toUpperCase() : kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '').toUpperCase() : "KETUA PENGADU";
-                let indexBil = 1; let jumlahKetua = 0; let htmlKetuaRows = '';
+                let indexBil = 1; let htmlKetuaRows = '';
                 kes.dataBorang.tuntutanKetua.forEach(t => {
-                    const jumlahNum = parseFloat(t.jumlah); const nilai = isNaN(jumlahNum) ? 0 : jumlahNum; jumlahKetua += nilai; jumlahKeseluruhan += nilai;
-                    htmlKetuaRows += `<tr class="tuntutan-item-ketua" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); text-align: right; font-weight: 500;">RM ${Number(t.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+                    htmlKetuaRows += `<tr class="tuntutan-item-ketua" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td></tr>`;
                 });
-                tbodyTuntutan.innerHTML += `<tr style="background-color: #eff6ff; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="const rows = document.querySelectorAll('.tuntutan-item-ketua'); const btn = document.getElementById('btnTogolTuntutan_ketua'); let isHidden = rows[0].style.display === 'none'; rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none'); btn.innerHTML = isHidden ? '▲ Sembunyi' : '▼ Buka';"><td colspan="2" style="padding: 12px 15px; font-weight: 700; color: var(--primary-blue); border-bottom: 1px solid var(--border-color);">Tuntutan Ketua Pengadu</td><td style="padding: 12px 15px; font-weight: 700; color: var(--primary-blue); border-bottom: 1px solid var(--border-color);">${namaKetua}</td><td style="padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border-color);"><span id="btnTogolTuntutan_ketua" style="font-size: 0.85em; font-weight: 600; background: #bfdbfe; color: #1e40af; padding: 4px 10px; border-radius: 20px; min-width: 80px; text-align: center; display: inline-block;">▼ Buka</span></td></tr>`;
+                tbodyTuntutan.innerHTML += `<tr style="background-color: #eff6ff; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="const rows = document.querySelectorAll('.tuntutan-item-ketua'); const btn = document.getElementById('btnTogolTuntutan_ketua'); let isHidden = rows[0].style.display === 'none'; rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none'); btn.innerHTML = isHidden ? '▲ Sembunyi' : '▼ Buka';"><td colspan="2" style="padding: 12px 15px; font-weight: 700; color: var(--primary-blue); border-bottom: 1px solid var(--border-color);">Aduan Ketua Pengadu</td><td style="padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border-color);"><span id="btnTogolTuntutan_ketua" style="font-size: 0.85em; font-weight: 600; background: #bfdbfe; color: #1e40af; padding: 4px 10px; border-radius: 20px; min-width: 80px; text-align: center; display: inline-block;">▼ Buka</span></td></tr>`;
                 tbodyTuntutan.innerHTML += htmlKetuaRows;
-                tbodyTuntutan.innerHTML += `<tr style="background-color: #f1f5f9;"><td colspan="3" style="text-align:right; padding: 8px 15px; font-weight: 600; font-size: 0.9em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">JUMLAH TUNTUTAN KETUA PENGADU</td><td style="text-align: right; padding: 8px 10px; font-weight: 600; font-size: 0.9em; border-bottom: 1px solid var(--border-color);">RM ${jumlahKetua.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
             }
             
             if (kes.dataBorang.tuntutanTambahan) {
@@ -3445,14 +3436,12 @@ function bukaMaklumatKes(index) {
                         }
                         if (namaDitemui && typeof namaDitemui === 'string' && namaDitemui.trim() !== "") { namaPengaduTambahan = namaDitemui.trim().toUpperCase(); } else { namaPengaduTambahan = "PENGADU " + key; }
 
-                        let indexBil = 1; let jumlahPengadu = 0; let htmlPengaduRows = '';
+                        let indexBil = 1; let htmlPengaduRows = '';
                         senaraiTambahan.forEach(t => {
-                            const jumlahNum = parseFloat(t.jumlah); const nilai = isNaN(jumlahNum) ? 0 : jumlahNum; jumlahPengadu += nilai; jumlahKeseluruhan += nilai;
-                            htmlPengaduRows += `<tr class="tuntutan-item-pengadu-${key}" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); text-align: right; font-weight: 500;">RM ${Number(t.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+                            htmlPengaduRows += `<tr class="tuntutan-item-pengadu-${key}" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td></tr>`;
                         });
-                        tbodyTuntutan.innerHTML += `<tr style="background-color: #f8fafc; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="const rows = document.querySelectorAll('.tuntutan-item-pengadu-${key}'); const btn = document.getElementById('btnTogolTuntutan_pengadu_${key}'); let isHidden = rows[0].style.display === 'none'; rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none'); btn.innerHTML = isHidden ? '▲ Sembunyi' : '▼ Buka';"><td colspan="2" style="padding: 12px 15px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);">Tuntutan Pengadu ${key}</td><td style="padding: 12px 15px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);">${namaPengaduTambahan}</td><td style="padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);"><span id="btnTogolTuntutan_pengadu_${key}" style="font-size: 0.85em; font-weight: 600; background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 20px; min-width: 80px; text-align: center; display: inline-block;">▼ Buka</span></td></tr>`;
+                        tbodyTuntutan.innerHTML += `<tr style="background-color: #f8fafc; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="const rows = document.querySelectorAll('.tuntutan-item-pengadu-${key}'); const btn = document.getElementById('btnTogolTuntutan_pengadu_${key}'); let isHidden = rows[0].style.display === 'none'; rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none'); btn.innerHTML = isHidden ? '▲ Sembunyi' : '▼ Buka';"><td colspan="2" style="padding: 12px 15px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);">Aduan Pengadu ${key} (${namaPengaduTambahan})</td><td style="padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);"><span id="btnTogolTuntutan_pengadu_${key}" style="font-size: 0.85em; font-weight: 600; background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 20px; min-width: 80px; text-align: center; display: inline-block;">▼ Buka</span></td></tr>`;
                         tbodyTuntutan.innerHTML += htmlPengaduRows;
-                        tbodyTuntutan.innerHTML += `<tr style="background-color: #f1f5f9;"><td colspan="3" style="text-align:right; padding: 8px 15px; font-weight: 600; font-size: 0.9em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">JUMLAH TUNTUTAN ${namaPengaduTambahan}</td><td style="text-align: right; padding: 8px 10px; font-weight: 600; font-size: 0.9em; border-bottom: 1px solid var(--border-color);">RM ${jumlahPengadu.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
                     }
                 }
             }
@@ -3460,22 +3449,16 @@ function bukaMaklumatKes(index) {
             let senaraiTuntutanSemasa = kes.dataBorang.tuntutanBiasa || [];
             let indexBil = 1;
             senaraiTuntutanSemasa.forEach((item) => {
-                const jumlahNum = parseFloat(item.jumlah);
-                jumlahKeseluruhan += isNaN(jumlahNum) ? 0 : jumlahNum;
-                tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); text-align: right; font-weight: 500;">RM ${Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+                tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td></tr>`;
             });
         }
     } else {
-        let senaraiTuntutanSemasa = [ {jenis: "Baki Gaji", keterangan: "(MEI 2026)", jumlah: "2645.00"}, {jenis: "Baki Gaji", keterangan: "(JUN 2026)", jumlah: "1600.00"} ];
+        let senaraiTuntutanSemasa = [ {jenis: "Baki Gaji", keterangan: "(MEI 2026)"}, {jenis: "Baki Gaji", keterangan: "(JUN 2026)"} ];
         let indexBil = 1;
         senaraiTuntutanSemasa.forEach((item) => {
-            const jumlahNum = parseFloat(item.jumlah); jumlahKeseluruhan += isNaN(jumlahNum) ? 0 : jumlahNum;
-            tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); text-align: right; font-weight: 500;">RM ${Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+            tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td></tr>`;
         });
     }
-    
-    tbodyTuntutan.innerHTML += `<tr style="background-color: #e2e8f0; font-weight: bold;"><td colspan="3" style="text-align:right; padding: 16px 15px; font-size: 1.1em; color: var(--text-main);">JUMLAH KESELURUHAN TUNTUTAN</td><td style="text-align: right; padding: 16px 15px; font-size: 1.1em; color: var(--primary-blue);">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
-
     const listKad = ['sebutan', 'sebutan_tangguh', 'sebutan_semula', 'bicara', 'bicara_tangguh', 'bicara_sambung', 'keputusan'];
     listKad.forEach(idPrefix => {
         const elT = document.getElementById(`mk_tarikh_${idPrefix}`);
