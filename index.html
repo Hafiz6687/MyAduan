@@ -2424,6 +2424,14 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
+                        <!-- Ruangan baharu untuk Tarikh Luput Pas Pekerja (Disembunyikan secara lalai) -->
+                        <div class="form-group" id="ruanganTarikhLuputPas" style="display: none;">
+                            <label>Tarikh Luput Pas Pekerja <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="date" id="tarikhLuputPasPengadu" style="width: 100%; max-width: 300px; box-sizing: border-box;">
+                            </div>
+                        </div>
+
                         <div class="form-group"><label id="labelNamaPengadu">Nama <span>*</span></label><div class="input-wrapper"><input type="text" id="namaPengadu" placeholder="Nama penuh"></div></div>
 
                         <div class="form-group" id="ruanganJantina">
@@ -6994,16 +7002,35 @@ function tukarPeranan() {
             const labelNama = document.getElementById('labelNamaPengadu');
             const warganegara = document.getElementById('warganegaraPengadu');
             const ruanganLain = document.getElementById('ruanganWarganegaraLain');
-            const isKumpulan = document.getElementById('aduanBerkumpulan').checked && !document.getElementById('majikan').checked;
+            const isKumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+            
+            // Rujukan tambahan untuk Tarikh Luput Pas Pekerja
+            const ruanganLuput = document.getElementById('ruanganTarikhLuputPas');
 
             if(ruanganLain) { ruanganLain.style.display = 'none'; }
-            labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
+            if(labelNama) labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
 
             if (jenis === 'MyKad') {
-                labelNo.innerHTML = 'No. MyKad <span>*</span>'; inputNo.placeholder = "Contoh: 880101-01-1234"; inputNo.maxLength = 14; remark.innerText = "Masukkan No. Kad Pengenalan"; warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+                if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>'; 
+                if(inputNo) { inputNo.placeholder = "Contoh: 880101-01-1234"; inputNo.maxLength = 14; }
+                if(remark) remark.innerText = "Masukkan No. Kad Pengenalan"; 
+                if(warganegara) warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+                
+                // Sembunyikan dan kosongkan tarikh luput jika MyKad
+                if(ruanganLuput) { 
+                    ruanganLuput.style.display = 'none'; 
+                    const tLuput = document.getElementById('tarikhLuputPasPengadu');
+                    if (tLuput) tLuput.value = ''; 
+                }
+                
             } else if (jenis === 'Pasport') {
-                labelNo.innerHTML = 'No. Pasport <span>*</span>'; inputNo.placeholder = "Masukkan No. Pasport"; inputNo.maxLength = 20; remark.innerText = "Masukkan No. Pasport";
-                warganegara.innerHTML = `<option value="">-Sila Pilih-</option><option value="Indonesia">Indonesia</option><option value="Bangladesh">Bangladesh</option><option value="Nepal">Nepal</option><option value="India">India</option><option value="Myanmar">Myanmar</option><option value="Filipina">Filipina</option><option value="Pakistan">Pakistan</option><option value="Lain-lain">Lain-lain</option>`;
+                if(labelNo) labelNo.innerHTML = 'No. Pasport <span>*</span>'; 
+                if(inputNo) { inputNo.placeholder = "Masukkan No. Pasport"; inputNo.maxLength = 20; }
+                if(remark) remark.innerText = "Masukkan No. Pasport";
+                if(warganegara) warganegara.innerHTML = `<option value="">-Sila Pilih-</option><option value="Indonesia">Indonesia</option><option value="Bangladesh">Bangladesh</option><option value="Nepal">Nepal</option><option value="India">India</option><option value="Myanmar">Myanmar</option><option value="Filipina">Filipina</option><option value="Pakistan">Pakistan</option><option value="Lain-lain">Lain-lain</option>`;
+                
+                // Paparkan tarikh luput jika Pasport dipilih (guna 'grid' mengikut standard UI form-group)
+                if(ruanganLuput) ruanganLuput.style.display = 'grid'; 
             } 
         }
 
