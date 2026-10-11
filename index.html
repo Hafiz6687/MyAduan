@@ -8,15 +8,15 @@
     
     <style>
 :root {
-    --primary-blue: #0f172a;
-    --primary-hover: #1e293b;
-    --bg-color: #f8fafc; 
-    --sidebar-bg: #0f172a; 
-    --text-main: #f8fafc; 
-    --text-muted: #94a3b8;
-    --border-color: #334155; 
-    --card-bg: #1e293b;
-    --card-header-bg: #0f172a;
+    --primary-blue: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-color: #f1f5f9; 
+    --sidebar-bg: #ffffff; 
+    --text-main: #0f172a; 
+    --text-muted: #64748b;
+    --border-color: #e2e8f0; 
+    --card-bg: #ffffff;
+    --card-header-bg: #f8fafc;
     --danger: #ef4444;
     --success: #10b981;
     --success-hover: #059669;
@@ -28,17 +28,18 @@ body {
     padding: 0;
     display: flex;
     background-color: var(--bg-color);
-    color: #e2e8f0;
+    color: var(--text-main);
     height: 100vh;
 }
 
 .sidebar {
     width: 260px;
     min-width: 260px;
-    background: linear-gradient(180deg, #090d16 0%, #0f172a 100%);
+    background-color: var(--sidebar-bg);
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.02);
     z-index: 10;
     overflow-y: auto; 
 }
