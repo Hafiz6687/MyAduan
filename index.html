@@ -2882,50 +2882,23 @@ Portal rasmi : jtksm.mohr.gov.my
                 </div>
 
                 <div class="card full-width">
-                    <div class="card-header">Maklumat Tambahan & Seksyen Tuntutan</div>
+                    <div class="card-header">Maklumat Tambahan</div>
                     <div class="card-body">
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <div class="input-wrapper" style="display: flex; gap: 30px; align-items: center; font-weight: 500;">
-                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" id="luarKawasan"> Kes Luar Kawasan?</label>
-                                <label id="ruanganGajiMinima" style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" id="gajiMinima"> Kes Di Bawah Tuntutan Gaji Minima?</label>
-                            </div>
-                        </div>
-                        
-                        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 25px 0;">
-                        
-                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <label style="text-align: left; font-size: 1em; margin-bottom: 15px;">Seksyen Tuntutan <span>*</span></label>
-                            <div id="seksyenPekerja" class="input-wrapper" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                                <div style="display: flex; gap: 15px; align-items: center; grid-column: span 3;">
-                                    <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(1)" onchange="semakSeksyenTuntutan()"> Seksyen 69(1)</label>
-                                    <div style="display: flex; gap: 15px; margin-left: 10px;">
-                                        <label><input type="checkbox" name="subSeksyen" value="(a)"> (a)</label>
-                                        <label><input type="checkbox" name="subSeksyen" value="(b)"> (b)</label>
-                                        <label><input type="checkbox" name="subSeksyen" value="(c)"> (c)</label>
-                                    </div>
-                                </div>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(i)" onchange="semakSeksyenTuntutan()"> Seksyen 69(2)(i)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(ii)" onchange="semakSeksyenTuntutan()"> Seksyen 69(2)(ii)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(iii)" onchange="semakSeksyenTuntutan()"> Seksyen 69(2)(iii)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(3)" onchange="semakSeksyenTuntutan()"> Seksyen 69(3)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69F" onchange="semakSeksyenTuntutan()"> Seksyen 69F</label>
-                            </div>              
-
-                            <div id="seksyenMajikan" class="input-wrapper" style="display: none; padding: 15px; background-color: #eff6ff; border: 1px dashed var(--primary-blue); border-radius: 8px;">
-                                <label style="font-weight: 600; color: var(--primary-blue); display: flex; align-items: center; gap: 10px;">
-                                    <input type="radio" name="seksyen" value="69(2)(iii)" checked> Seksyen 69(2)(iii)
+                            <div class="input-wrapper" style="display: flex; flex-direction: column; gap: 8px; font-weight: 500;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="identitiRahsia"> Pengadu mohon identitinya dirahsiakan
                                 </label>
-                                <p style="margin: 5px 0 0 25px; font-size: 0.85em; color: var(--text-muted); font-style: italic;">*Ini adalah satu-satunya pilihan seksyen yang dibenarkan untuk pengadu berstatus Majikan.</p>
+                                <p style="font-size: 0.85em; color: var(--text-muted); margin: 0 0 0 26px; font-style: italic;">*Tandakan jika Pengadu mohon identitinya dirahsiakan</p>
                             </div>
-
                         </div>
                         
-         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
                             <button type="button" class="btn-terapung" style="background-color: #cbd5e1; color: #1e293b; border: none; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 25px;" onclick="pergiKeTabBorang('tab1')">
                                 <span style="font-size: 1.2em; line-height: 1;">←</span> Kembali
                             </button>
-                            <!-- Butang Seterusnya ini disembunyikan secara lalai dan ditambah animasi -->
-                            <button id="btnSeterusnyaTab2" class="btn-save btn-seterusnya btn-terapung anim-slide-in" style="padding: 10px 25px; display: none; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab3')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
+                            <!-- Butang seterusnya dipaksa "display: flex" supaya terus terpapar -->
+                            <button id="btnSeterusnyaTab2" class="btn-save btn-seterusnya btn-terapung anim-slide-in" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab3')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
                         </div>
                     </div>
                 </div>
@@ -8882,21 +8855,17 @@ function janaKenyataanAwal() {
 }
 
 function semakSeksyenTuntutan() {
+    // Fungsi ini diselaras supaya membiarkan butang Seterusnya sentiasa terbuka.
     const btnSeterusnya = document.getElementById('btnSeterusnyaTab2');
-    if (!btnSeterusnya) return;
-
-    const radioTerpilih = document.querySelector('input[name="seksyen"]:checked');
-    if (radioTerpilih) { 
+    if (btnSeterusnya) {
         btnSeterusnya.style.display = 'flex'; 
-    } else { 
-        btnSeterusnya.style.display = 'none'; 
     }
 }
 
-
-        function semakKelayakanTuntutan() {
-            kawalJenisAduanTuntutan();
+function semakKelayakanTuntutan() {
+    kawalJenisAduanTuntutan();
         }
+       
 // FUNGSI JANA NO KES BAHARU SECARA AUTOMATIK
 function janaNoKesBaru() {
     let maxBil = 0;
