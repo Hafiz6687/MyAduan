@@ -6294,45 +6294,7 @@ function janaJadualPengaduTambahan(bilangan) {
         }
     }
 }
-// --- FUNGSI BARU: Papar memori jadual tuntutan tambahan ke dalam skrin ---
-        function renderJadualTuntutanTambahan(idx) {
-            const tbody = document.getElementById(`bodyTuntutanTambahan${idx}`);
-            if (!tbody) return;
-            
-            tbody.innerHTML = "";
-            let arrayTuntutan = memoriTuntutanTambahan[idx] || [];
-            
-            if (arrayTuntutan.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat tuntutan direkodkan.</td></tr>`;
-            } else {
-                let jumlahKeseluruhan = 0;
-                arrayTuntutan.forEach((item, index) => {
-                    const jumlahNum = parseFloat(item.jumlah);
-                    jumlahKeseluruhan += isNaN(jumlahNum) ? 0 : jumlahNum;
-                    const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td style="text-align: center;">${index + 1}</td>
-                        <td>${item.jenis}</td>
-                        <td>${item.keterangan}</td>
-                        <td style="text-align: right; font-weight: 500;">RM ${jumlahCantik}</td>
-                        <td style="text-align: center;"><button type="button" class="btn-edit-tbl" style="background-color: #0ea5e9;" onclick="bukaModalTuntutan('tambahan_${idx}', ${index})">✏️ Edit</button></td>
-                        <td style="text-align: center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'tambahan_${idx}')">🗑️ Hapus</button></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-                
-                const trTotal = document.createElement('tr');
-                trTotal.style.backgroundColor = '#f0f9ff';
-                trTotal.style.fontWeight = 'bold';
-                trTotal.innerHTML = `
-                    <td colspan="3" style="text-align:right; padding-right: 15px; color: var(--text-main);">JUMLAH KESELURUHAN PENGADU ${idx}</td>
-                    <td colspan="3" style="color: #0ea5e9; text-align: left; padding-left: 16px;">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                `;
-                tbody.appendChild(trTotal);
-            }
-        }
+
         // --- FUNGSI BARU: Togol untuk jadual Pengadu Tambahan ---
         function togglePengaduTambahan(index) {
             const kandungan = document.getElementById(`kandunganPengadu${index}`);
@@ -6714,86 +6676,83 @@ function simpanTuntutan() {
 function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.display = 'none'; }
        
 function renderJadualTuntutan() {
-            const tbody = document.querySelector("#jadualTuntutan tbody");
-            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
-            const isMajikan = document.getElementById('majikan')?.checked;
-            const isAutoGroup = aduanBerkumpulan && !isMajikan; // Cek jika ia adalah mod auto-kira
+    const tbody = document.querySelector("#jadualTuntutan tbody");
+    const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+    
+    // isMajikan telah dibuang, jadi isAutoGroup bergantung pada aduanBerkumpulan sahaja
+    const isAutoGroup = aduanBerkumpulan; 
 
-            if (tbody) {
-                tbody.innerHTML = ""; 
-                if (memoriTuntutan.length === 0) { 
-                    tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; 
-                } else {
-                    let jumlahKeseluruhan = 0; 
+    if (tbody) {
+        tbody.innerHTML = ""; 
+        if (memoriTuntutan.length === 0) { 
+            // Tukar colspan ke 5
+            tbody.innerHTML = `<tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr>`; 
+        } else {
+            memoriTuntutan.forEach((item, index) => {
+                
+                // Kekalkan logik Auto-Kira (berkumpulan) untuk sembunyikan butang edit/hapus
+                const actionHtml = isAutoGroup 
+                    ? `<td colspan="2" style="text-align: center; color: var(--text-muted); font-style: italic; font-size: 0.85em; background-color: #f8fafc;">🔒 Auto-Salin dari Ketua</td>`
+                    : `<td style="text-align:center;"><button type="button" class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
+                       <td style="text-align:center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>`;
 
-                    memoriTuntutan.forEach((item, index) => {
-                        const jumlahNum = parseFloat(item.jumlah);
-                        jumlahKeseluruhan += isNaN(jumlahNum) ? 0 : jumlahNum; 
-
-                        const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        
-                        // Jika Auto-Kira (berkumpulan), sembunyikan butang edit/hapus dan ganti dengan ikon Lock
-                        const actionHtml = isAutoGroup 
-                            ? `<td colspan="2" style="text-align: center; color: var(--text-muted); font-style: italic; font-size: 0.85em; background-color: #f8fafc;">🔒 Auto-Kira dari Kumpulan</td>`
-                            : `<td><button class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
-                               <td><button class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>`;
-
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${index + 1}</td><td>${item.jenis}</td><td>${item.keterangan}</td><td>RM ${jumlahCantik}</td>
-                            ${actionHtml}
-                        `;
-                        tbody.appendChild(tr);
-                    });
-
-                    const trTotal = document.createElement('tr');
-                    trTotal.style.backgroundColor = '#f1f5f9';
-                    trTotal.style.fontWeight = 'bold';
-                    trTotal.innerHTML = `
-                        <td colspan="3" style="text-align:right; padding-right: 15px; color: var(--text-main);">JUMLAH KESELURUHAN</td>
-                        <td colspan="${isAutoGroup ? 3 : 3}" style="color: var(--primary-blue);">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    `;
-                    tbody.appendChild(trTotal);
-                }
-            }
-
-// ... Kekalkan blok code untuk tbody di atas ...
-            
-            const tbodyKetua = document.querySelector("#jadualTuntutanKetua tbody");
-            if (tbodyKetua) {
-                tbodyKetua.innerHTML = ""; 
-                if (memoriTuntutanKetua.length === 0) { 
-                    tbodyKetua.innerHTML = `<tr><td colspan="6" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat tuntutan direkodkan.</td></tr>`; 
-                } else {
-                    let jumlahKeseluruhanKetua = 0; 
-                    memoriTuntutanKetua.forEach((item, index) => {
-                        const jumlahNum = parseFloat(item.jumlah);
-                        jumlahKeseluruhanKetua += isNaN(jumlahNum) ? 0 : jumlahNum; 
-                        const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        const tr = document.createElement('tr');
-                        
-                        // DISERAGAMKAN MENGIKUT FORMAT PENGADU TAMBAHAN
-                        tr.innerHTML = `
-                            <td style="text-align: center;">${index + 1}</td>
-                            <td>${item.jenis}</td>
-                            <td>${item.keterangan}</td>
-                            <td style="text-align: right; font-weight: 500;">RM ${jumlahCantik}</td>
-                            <td style="text-align: center;"><button type="button" class="btn-edit-tbl" style="background-color: #0284c7;" onclick="bukaModalTuntutan('ketua', ${index})">✏️ Edit</button></td>
-                            <td style="text-align: center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'ketua')">🗑️ Hapus</button></td>
-                        `;
-                        tbodyKetua.appendChild(tr);
-                    });
-                    const trTotalKetua = document.createElement('tr');
-                    trTotalKetua.style.backgroundColor = '#e0f2fe'; 
-                    trTotalKetua.style.fontWeight = 'bold';
-                    trTotalKetua.innerHTML = `
-                        <td colspan="3" style="text-align:right; padding-right: 15px; color: var(--text-main);">JUMLAH KESELURUHAN KETUA</td>
-                        <td colspan="3" style="color: #0284c7; text-align: left; padding-left: 16px;">RM ${jumlahKeseluruhanKetua.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    `;
-                    tbodyKetua.appendChild(trTotalKetua);
-                }
-            }
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${index + 1}</td>
+                    <td>${item.jenis}</td>
+                    <td>${item.keterangan}</td>
+                    ${actionHtml}
+                `;
+                tbody.appendChild(tr);
+            });
+            // Baris trTotal (JUMLAH KESELURUHAN) telah dibuang sepenuhnya
         }
+    }
+
+    const tbodyKetua = document.querySelector("#jadualTuntutanKetua tbody");
+    if (tbodyKetua) {
+        tbodyKetua.innerHTML = ""; 
+        if (memoriTuntutanKetua.length === 0) { 
+            // Tukar colspan ke 5
+            tbodyKetua.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>`; 
+        } else {
+            memoriTuntutanKetua.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td>${item.jenis}</td>
+                    <td>${item.keterangan}</td>
+                    <td style="text-align: center;"><button type="button" class="btn-edit-tbl" style="background-color: #0284c7;" onclick="bukaModalTuntutan('ketua', ${index})">✏️ Edit</button></td>
+                    <td style="text-align: center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'ketua')">🗑️ Hapus</button></td>
+                `;
+                tbodyKetua.appendChild(tr);
+            });
+            // Baris trTotalKetua (JUMLAH KESELURUHAN KETUA) telah dibuang sepenuhnya
+        }
+    }
+}
+
+function renderJadualTuntutanTambahan(idx) {
+    const tbody = document.querySelector(`#jadualTuntutanPengadu${idx} tbody`);
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    if (!memoriTuntutanTambahan[idx] || memoriTuntutanTambahan[idx].length === 0) {
+        // Tukar colspan dari 6 ke 5
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr>';
+    } else {
+        memoriTuntutanTambahan[idx].forEach((t, i) => {
+            // Kolum RM dan baris Jumlah Keseluruhan dibuang sepenuhnya
+            tbody.innerHTML += `<tr>
+                <td style="text-align:center;">${i + 1}</td>
+                <td>${t.jenis}</td>
+                <td>${t.keterangan}</td>
+                <td style="text-align:center;"><button type="button" class="btn-edit-tbl" onclick="bukaModalTuntutan('tambahan_${idx}', ${i})">✏️ Edit</button></td>
+                <td style="text-align:center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan('tambahan_${idx}', ${i})">🗑️ Hapus</button></td>
+            </tr>`;
+        });
+    }
+}
 function bukaModalTuntutan(jenisJadual = 'biasa', indexEdit = -1) {
     document.getElementById('modalTuntutan').style.display = 'flex';
     document.getElementById('jenisJadualTuntutan').value = jenisJadual;
