@@ -8,40 +8,40 @@
     
     <style>
 :root {
-            --primary-blue: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-color: #e2e8f0; 
-            --sidebar-bg: #e2e8f0; /* <-- DIUBAH: Disamakan dengan bg-color supaya blend */
-            --text-main: #1e293b; 
-            --text-muted: #475569;
-            --border-color: #cbd5e1; 
-            --card-bg: #ffffff;
-            --card-header-bg: #f1f5f9;
-            --danger: #ef4444;
-            --success: #10b981;
-            --success-hover: #059669;
-        }
+    --primary-blue: #0f172a;
+    --primary-hover: #1e293b;
+    --bg-color: #f8fafc; 
+    --sidebar-bg: #0f172a; 
+    --text-main: #f8fafc; 
+    --text-muted: #94a3b8;
+    --border-color: #334155; 
+    --card-bg: #1e293b;
+    --card-header-bg: #0f172a;
+    --danger: #ef4444;
+    --success: #10b981;
+    --success-hover: #059669;
+}
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            height: 100vh;
-        }
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: var(--bg-color);
+    color: #e2e8f0;
+    height: 100vh;
+}
 
 .sidebar {
-            width: 260px;
-            min-width: 260px;
-            background-color: var(--sidebar-bg);
-            display: flex;
-            flex-direction: column;
-            /* border-right dan box-shadow dibuang supaya sidebar betul-betul blend dengan background */
-            z-index: 10;
-            overflow-y: auto; 
-        }
+    width: 260px;
+    min-width: 260px;
+    background: linear-gradient(180deg, #090d16 0%, #0f172a 100%);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    z-index: 10;
+    overflow-y: auto; 
+}
         .sidebar-header {
             padding: 24px 20px;
             text-align: center;
