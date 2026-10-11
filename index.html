@@ -2434,8 +2434,23 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
+                        <div class="form-group" id="ruanganBangsaPengaduAsal">
+                            <label>Bangsa <span>*</span></label>
+                            <div class="input-wrapper">
+                                <select id="bangsaPengadu" onchange="kawalBangsa()">
+                                    <option value="">-Sila Pilih-</option>
+                                    <option value="Melayu">Melayu</option>
+                                    <option value="Cina">Cina</option>
+                                    <option value="India">India</option>
+                                    <option value="Lain-lain">Lain-lain</option>
+                                </select>
+                                <div id="ruanganBangsaLain" style="display: none; margin-top: 10px;">
+                                    <input type="text" id="bangsaLain" placeholder="Sila nyatakan bangsa" style="width: 100%;" oninput="hurufBesarAyatPertama(this)">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanPengadu" placeholder="Jawatan"></div></div>
-                        
                         <div class="form-group">
                             <label>Gaji Pokok <span>*</span></label>
                             <div class="input-wrapper" style="position: relative; width: 60%;">
@@ -6998,6 +7013,17 @@ function tukarPeranan() {
             if (warganegara === 'Lain-lain') { ruanganLain.style.display = 'block'; } else { ruanganLain.style.display = 'none'; document.getElementById('warganegaraLain').value = '';  }
         }
 
+        function kawalBangsa() {
+            const bangsa = document.getElementById('bangsaPengadu').value;
+            const ruanganLain = document.getElementById('ruanganBangsaLain');
+            if (bangsa === 'Lain-lain') { 
+                ruanganLain.style.display = 'block'; 
+            } else { 
+                ruanganLain.style.display = 'none'; 
+                document.getElementById('bangsaLain').value = '';  
+            }
+        }
+
         function kawalJenisDaftarDefendan() {
             const jenis = document.getElementById('jenisDaftarDefendan').value;
             const labelNo = document.getElementById('labelNoPendDefendan');
@@ -7226,6 +7252,8 @@ function resetBorangPendaftaran() {
         document.getElementById('ruanganElaunWrapper').style.display = 'none';
         document.getElementById('btnTambahElaun').style.display = 'none';
         document.getElementById('senaraiElaun').innerHTML = '';
+        
+        if (document.getElementById('ruanganBangsaLain')) document.getElementById('ruanganBangsaLain').style.display = 'none';
         // ----------------------------------------------------------------
 
 // Kosongkan semula bekas jadual pengadu tambahan
@@ -7641,6 +7669,7 @@ function bukaKesDidaftar(index) {
 
         toggleAduan();
         kawalWarganegara();
+        kawalBangsa();
         kawalSektor(); 
         toggleMaklumatPerkhidmatan();
         toggleElaun();
