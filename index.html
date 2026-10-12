@@ -2354,7 +2354,7 @@ Portal rasmi : jtksm.mohr.gov.my
                     <div id="ruanganNoKes" style="display: none; align-items: center; gap: 8px;">
                         <label style="font-weight: 700; color: var(--text-muted); font-size: 0.95em; margin: 0;">No. Kes:</label>
                         <!-- Cari baris ini dan ubah nilai (value) di dalamnya -->
-                        <input type="text" id="noKes" value="ADN/10103/2026/0000" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
+                        <input type="text" id="noKes" value="ADN/10103/2026/0001" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
                         <div class="tooltip-container">
                             <span style="font-size: 1.2em; color: var(--primary-blue);">ℹ️</span>
                             <div class="tooltip-text">
@@ -2505,14 +2505,24 @@ Portal rasmi : jtksm.mohr.gov.my
         <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Boleh key-in manually</p>
     </div>
 </div>
-                                <div class="form-group" style="align-items: center; margin-bottom: 15px;">
-    <label style="margin-top: 0;">Tarikh Akhir Kerja</label>
+                                
+<div class="form-group" style="align-items: center; margin-bottom: 15px;">
+    <label style="margin-top: 0;">Tarikh Akhir Kerja <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal; font-style: italic;">*Jika berkaitan</span></label>
     <div class="input-wrapper">
         <input type="date" id="tarikhAkhirKerja" style="width: 100%; max-width: 300px; min-width: 160px; box-sizing: border-box;">
-        <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*(Tarikh Ditamatkan)</p>
+        <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Tarikh Semasa-Masih bekerja</p>
     </div>
 </div>
 
+<div class="form-group" style="align-items: flex-start; margin-bottom: 15px;">
+    <label style="margin-top: 0;"></label>
+    <div class="input-wrapper">
+        <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.9em; font-weight: 500; color: var(--text-main);">
+            <input type="checkbox" id="tarikhKerjaTidakPasti" style="margin-top: 2px;">
+            <span style="line-height: 1.4;">*Tanda sekiranya Tarikh Mula Kerja dan Tarikh Akhir Kerja (jika berkaitan) adalah Tidak Pasti</span>
+        </label>
+    </div>
+</div>
                                 <div class="form-group" style="align-items: center; margin-bottom: 15px;">
                                     <label style="margin-top: 0;">Diberi Kontrak?</label>
                                     <div class="input-wrapper radio-group" style="margin: 0;">
@@ -2944,18 +2954,23 @@ Portal rasmi : jtksm.mohr.gov.my
        
         // Data Global
         const senaraiTuntutanPekerja = [
-            "Baki Gaji", "Baki Gaji Minimum", "Bayaran Balik Potongan Gaji", "Elaun", 
-            "Elaun / Faedah Bersalin", "Faedah-Faedah Penamatan dan Pembentian Kerja", 
-            "Gaji Cuti Hari Kelepasan", "Gaji Cuti Hospitalitasi", "Gaji Cuti Paterniti", 
-            "Gaji Cuti Sakit", "Gaji Cuti Tahunan", "Gaji Ganti Cuti Tahunan", 
-            "Gaji Ganti Notis", "Gaji Kerja Cuti Kelepasan", "Gaji Kerja Hari Rehat", 
-            "Gaji Kerja Lebih Masa Pada Hari Cuti Kelepasan", "Gaji Kerja Lebih Masa Pada Hari Biasa", 
-            "Gaji Kerja Lebih Masa Pada Hari Cuti Rehat", "Lain-lain"
+            "Bayaran Upah/Gaji", 
+            "Potongan Upah/Gaji", 
+            "Perintah Gaji Minimum", 
+            "Elaun", 
+            "Elaun /Faedah Bersalin", 
+            "Cuti Hari Kelepasan", 
+            "Cuti Hospitalitasi", 
+            "Cuti Paterniti", 
+            "Cuti Sakit", 
+            "Cuti Tahunan", 
+            "Kerja Hari Rehat", 
+            "Kerja Lebih Masa Hari Rehat", 
+            "Kerja Lebih Masa Pada Hari Cuti Kelepasan", 
+            "Kerja Lebih Masa Pada Hari Biasa", 
+            "Lain-lain"
         ];
-        
-        const senaraiTuntutanMajikan = [
-            "Gaji Ganti Notis", "Lain-lain"
-        ];
+  
 
         let memoriTuntutan = []; 
         let memoriTuntutanKetua = []; 
