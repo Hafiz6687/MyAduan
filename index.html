@@ -2886,7 +2886,7 @@ Portal rasmi : jtksm.mohr.gov.my
                                 Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span>
                                 <span style="display: block; font-size: 0.75em; color: var(--text-muted); font-weight: 500; font-style: italic; margin-top: 4px;">Taipkan kronologi dan masalah berkaitan tuntutan di sini...</span>
                             </label>
-                            <textarea id="kronologiKes" class="teks-justify auto-expand" style="padding: 15px;" oninput="autoResize(this); hurufBesarSelepasTitik(this)">Masalahnya, </textarea>
+                            <textarea id="kronologiKes" class="teks-justify auto-expand" style="padding: 15px;" placeholder="Taipkan kronologi dan masalah berkaitan aduan di sini..." oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                         </div>
                     </div>
                 </div>
@@ -2986,6 +2986,10 @@ Portal rasmi : jtksm.mohr.gov.my
         document.addEventListener('DOMContentLoaded', function() {
             kemaskiniDropdownPendaftaran();
             semakWakilLengkap();
+            
+            // Set Tarikh Akhir Kerja kepada tarikh hari ini secara lalai
+            let tAkhir = document.getElementById('tarikhAkhirKerja');
+            if(tAkhir && !tAkhir.value) tAkhir.value = new Date().toISOString().split('T')[0];
 
             window.addEventListener('click', function(e) {
                 if (!e.target.closest('.action-dropdown-container')) {
@@ -6609,9 +6613,6 @@ function simpanTuntutan() {
         return; 
     }
     
-    if (!keterangan.startsWith('(')) { keterangan = '(' + keterangan; } 
-    if (!keterangan.endsWith(')')) { keterangan = keterangan + ')'; }
-
     if (jenisJadual === 'ketua') {
         if (index > -1) { 
             memoriTuntutanKetua[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; 
