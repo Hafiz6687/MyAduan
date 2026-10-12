@@ -1274,10 +1274,154 @@ body {
 
 <!-- PREVIEW MODAL & ACTION ICON BUTTON -->
     <div class="modal-overlay" id="modalPreview" style="z-index: 2000; flex-direction: column; padding: 0; background: rgba(0,0,0,0.8); position: fixed;">      
-        <!-- Bahagian Paparan Kertas (A4) -->
+        <!-- Bahagian Paparan Kertas (A4) digantikan dengan Lampiran 2 (Borang Aduan) -->
         <div style="width: 100%; height: 100vh; overflow-y: auto; background: #525659; display: flex; justify-content: center; padding: 40px 20px;">
-            <div id="previewContent" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <!-- HTML Cetakan akan dimasukkan ke sini -->
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                
+                <!-- Disembunyikan supaya skrip asal (JS) tidak ralat / error apabila ia cuba mencari previewContent -->
+                <div id="previewContent" style="display: none;"></div>
+                
+                <!-- TEMPLATE LAMPIRAN 2 -->
+                <div class="kertas-a4" id="lampiran2BorangAduan" style="display: block; font-family: Arial, sans-serif; font-size: 10pt; color: #000; text-align: left; line-height: 1.4; box-sizing: border-box; padding: 40px 50px;">
+                    <div style="text-align: right; font-weight: bold; font-size: 10pt;">LAMPIRAN 2</div>
+                    <div style="text-align: center; font-weight: bold; font-size: 11pt; margin-bottom: 5px;">JABATAN TENAGA KERJA SEMENANJUNG MALAYSIA</div>
+                    <div style="text-align: center; font-weight: bold; font-size: 12pt; margin-bottom: 15px; text-decoration: underline;">BORANG ADUAN</div>
+
+                    <div style="font-size: 9pt; font-style: italic; margin-bottom: 15px; line-height: 1.3;">
+                        *Bagi pekerja yang telah diberhentikan/berhenti kerja, tuntutan berkaitan kewangan hendaklah dibuat secara fizikal ke Pejabat Tenaga Kerja berhampiran.<br>
+                        **Borang ini hendaklah dilengkapkan dan disertakan satu salinan Kad Pengenalan / Pasport, serta dokumen-dokumen berkaitan penggajian pengadu (jika ada). Jika aduan dibuat secara berkumpulan sila lengkapkan juga BAHAGIAN I (B).
+                    </div>
+
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px; background: #e2e8f0; padding: 4px;">BAHAGIAN I: PENGADU</div>
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 8px;">A. BUTIRAN PENGADU</div>
+
+                    <div style="display: flex; gap: 30px; margin-bottom: 10px; padding-left: 20px;">
+                        <label><input type="checkbox" checked style="pointer-events: none;"> PEKERJA</label>
+                        <label><input type="checkbox" style="pointer-events: none;"> BUKAN PEKERJA</label>
+                    </div>
+
+                    <table style="width: 100%; border: none; font-size: 10pt; margin-bottom: 15px; border-spacing: 0 6px;">
+                        <tr><td style="width: 32%;">(1) Nama:</td><td style="border-bottom: 1px dotted #000; width: 68%;" id="l2_nama"></td></tr>
+                        <tr><td>(2) Jantina:</td><td style="border-bottom: 1px dotted #000;" id="l2_jantina"></td></tr>
+                        <tr><td>(3) Umur:</td><td style="border-bottom: 1px dotted #000;" id="l2_umur"></td></tr>
+                        <tr><td>(4) Bangsa:</td><td style="border-bottom: 1px dotted #000;" id="l2_bangsa"></td></tr>
+                        <tr><td>(5) Alamat:</td><td style="border-bottom: 1px dotted #000;" id="l2_alamat"></td></tr>
+                        <tr><td>(6) No. K/P:</td><td style="border-bottom: 1px dotted #000;" id="l2_kp"></td></tr>
+                        <tr><td>(7) No. Tel:</td><td style="border-bottom: 1px dotted #000;" id="l2_tel"></td></tr>
+                        <tr><td>(8) Emel:</td><td style="border-bottom: 1px dotted #000;" id="l2_emel"></td></tr>
+                        <tr><td>(9) Kategori Pekerjaan:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
+                        <tr><td>(10) No. Pasport (Pekerja Imigran):</td><td style="border-bottom: 1px dotted #000;"></td></tr>
+                        <tr><td>(11) Tarikh Luput Pas Pekerja:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
+                        <tr><td>(12) Kewarganegaraan:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
+                        <tr><td>(13) Jawatan:</td><td style="border-bottom: 1px dotted #000;" id="l2_jawatan"></td></tr>
+                        <tr><td>(14) Tempoh Berkhidmat:</td><td style="border-bottom: 1px dotted #000;" id="l2_tempoh"></td></tr>
+                        <tr><td>(15) Gaji:</td><td style="border-bottom: 1px dotted #000;" id="l2_gaji"></td></tr>
+                        <tr><td>(16) Bayaran-bayaran Lain:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
+                    </table>
+
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 8px;">B. BUTIRAN PENGADU YANG LAIN (Salinan Kad Pengenalan/ Pasport disertakan jika perlu)</div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px;" border="1">
+                        <tr style="background: #f1f5f9; text-align: center; font-weight: bold;">
+                            <td style="width: 5%; padding: 4px;">No.</td>
+                            <td style="width: 45%; padding: 4px;">Nama</td>
+                            <td style="width: 25%; padding: 4px;">No. KP/Pasport</td>
+                            <td style="width: 25%; padding: 4px;">Warganegara</td>
+                        </tr>
+                        <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
+                        <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
+                        <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
+                        <tr><td style="text-align: center; padding: 4px;">(4)</td><td></td><td></td><td></td></tr>
+                    </table>
+
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px; background: #e2e8f0; padding: 4px;">BAHAGIAN II: BUTIR-BUTIR TEMPAT PEKERJAAN</div>
+                    <table style="width: 100%; border: none; font-size: 10pt; margin-bottom: 20px; border-spacing: 0 6px;">
+                        <tr><td style="width: 32%;">(1) Nama Majikan / Syarikat:</td><td style="border-bottom: 1px dotted #000; width: 68%;" id="l2_majikan"></td></tr>
+                        <tr><td>(2) Alamat Majikan:</td><td style="border-bottom: 1px dotted #000;" id="l2_alamatMajikan"></td></tr>
+                        <tr><td>(3) Alamat Tempat Pekerjaan:</td><td style="border-bottom: 1px dotted #000;" id="l2_alamatKerja"></td></tr>
+                        <tr><td>(4) Nama Pengurus:</td><td style="border-bottom: 1px dotted #000;" id="l2_pengurus"></td></tr>
+                        <tr><td>(5) No. Tel/Bimbit:</td><td style="border-bottom: 1px dotted #000;" id="l2_telMajikan"></td></tr>
+                        <tr>
+                            <td>(6) Jenis Perusahaan:</td>
+                            <td style="display: flex; gap: 10px;">
+                                <div style="flex: 1; border-bottom: 1px dotted #000;" id="l2_sektor"></div>
+                                <div>E-mail:</div>
+                                <div style="flex: 1; border-bottom: 1px dotted #000;" id="l2_emelMajikan"></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Muka surat baharu untuk cetakan (Page Break) -->
+                    <div style="page-break-before: always; margin-top: 40px;"></div>
+
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px; background: #e2e8f0; padding: 4px;">BAHAGIAN III: ADUAN</div>
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px;">BUTIRAN ADUAN</div>
+                    <div style="font-size: 9pt; margin-bottom: 10px; line-height: 1.3;">
+                        (Sila senaraikan di bawah, satu atau lebih isu aduan seperti gaji, cuti, masa bekerja, penganiayaan, pelanggaran syarat-syarat pekerjaan, kemudahan penginapan pekerja, kemudahan di tempat pekerjaan, gangguan seksual dan sebagainya.)
+                    </div>
+                    
+                    <div style="min-height: 250px; border: 1px solid #000; padding: 10px; margin-bottom: 20px; white-space: pre-wrap; font-size: 10pt;" id="l2_aduan"></div>
+
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 10px;">PENGAKUAN:</div>
+                    <table style="width: 100%; border: none; font-size: 10pt; margin-bottom: 30px;">
+                        <tr>
+                            <td style="width: 10%;">Tarikh:</td><td style="width: 20%; border-bottom: 1px dotted #000;" id="l2_tarikhPengakuan"></td>
+                            <td style="width: 10%; text-align: center;">Masa:</td><td style="width: 20%; border-bottom: 1px dotted #000;"></td>
+                            <td style="width: 20%; text-align: right; padding-right: 10px;">Tandatangan:</td><td style="width: 20%; border-bottom: 1px dotted #000;"></td>
+                        </tr>
+                    </table>
+
+                    <div style="font-weight: bold; font-size: 10pt; margin-bottom: 10px; text-decoration: underline;">UNTUK KEGUNAAN PEJABAT TENAGA KERJA - ULASAN PEGAWAI BERTUGAS</div>
+                    <table style="width: 100%; border: none; font-size: 10pt; margin-bottom: 20px;">
+                        <tr>
+                            <td style="width: 10%;">Tarikh:</td><td style="width: 20%; border-bottom: 1px dotted #000;"></td>
+                            <td style="width: 10%; text-align: center;">Masa:</td><td style="width: 20%; border-bottom: 1px dotted #000;"></td>
+                            <td style="width: 20%; text-align: right; padding-right: 10px;">Nama Pegawai:</td><td style="width: 20%; border-bottom: 1px dotted #000;"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Skrip Automatik Ekstrak Data -->
+                <script>
+                    function populasikanLampiran2() {
+                        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
+                        
+                        // Bahagian I: Pengadu
+                        if(document.getElementById('l2_nama')) document.getElementById('l2_nama').innerText = getVal('namaPengadu') || document.getElementById('mk_daftar_oleh').innerText.toUpperCase();
+                        if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
+                        if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = getVal('telPengadu');
+                        if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
+                        if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
+                        if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
+                        if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
+                        
+                        let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
+                        if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
+                        
+                        // Bahagian II: Tempat Pekerjaan (Majikan)
+                        if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
+                        if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
+                        if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : '';
+                        if(document.getElementById('l2_pengurus')) document.getElementById('l2_pengurus').innerText = getVal('namaPemilikDefendan');
+                        
+                        let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
+                        if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
+                        
+                        // Bahagian III: Aduan
+                        if(document.getElementById('l2_aduan')) {
+                            let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
+                            document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
+                        }
+                        
+                        // Pengakuan Tarikh Semasa
+                        if(document.getElementById('l2_tarikhPengakuan')) {
+                            let harini = new Date();
+                            document.getElementById('l2_tarikhPengakuan').innerText = harini.toLocaleDateString('ms-MY');
+                        }
+                    }
+
+                    // Paksa ekstrak data setiap kali tetikus digerakkan ke dalam modal preview
+                    document.getElementById('lampiran2BorangAduan').addEventListener('mouseenter', populasikanLampiran2);
+                </script>
             </div>
         </div>
 
