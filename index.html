@@ -2733,6 +2733,14 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
+                        <!-- Ruangan Umur KHAS untuk MyKad (Auto-kira) -->
+                        <div class="form-group" id="ruanganUmurMyKad">
+                            <label>Umur <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="umurPengadu" placeholder="Automatik dari MyKad" readonly style="background-color: #e2e8f0; cursor: not-allowed; width: 150px;">
+                            </div>
+                        </div>
+
                         <!-- Ruangan Tarikh Luput Pas Pekerja (Hanya muncul jika Pasport) -->
                         <div class="form-group" id="ruanganTarikhLuputPas" style="display: none;">
                             <label>Tarikh Luput Pas Pekerja <span>*</span></label>
@@ -2741,7 +2749,7 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
-                        <!-- Ruangan Umur untuk Pasport (Hanya muncul jika Pasport, input nombor sahaja + Tahun) -->
+                        <!-- Ruangan Umur KHAS untuk Pasport (Hanya muncul jika Pasport, input nombor sahaja + Tahun) -->
                         <div class="form-group" id="ruanganUmurPasport" style="display: none;">
                             <label>Umur <span>*</span></label>
                             <div class="input-wrapper" style="display: flex; align-items: center; gap: 10px;">
@@ -7265,76 +7273,86 @@ function tukarPeranan() {
 }
        
 function kawalJenisDaftarPengadu() {
-    const jenis = document.getElementById('jenisDaftarPengadu').value;
-    const labelNo = document.getElementById('labelNoPendPengadu');
-    const inputNo = document.getElementById('noPendPengadu');
-    const remark = document.getElementById('remarkNoPendPengadu');
-    const labelNama = document.getElementById('labelNamaPengadu');
-    const warganegara = document.getElementById('warganegaraPengadu');
-    const ruanganLain = document.getElementById('ruanganWarganegaraLain');
-    const isKumpulan = document.getElementById('aduanBerkumpulan')?.checked;
-    
-    const ruanganLuput = document.getElementById('ruanganTarikhLuputPas');
-    const ruanganUmurPasport = document.getElementById('ruanganUmurPasport');
+            const jenis = document.getElementById('jenisDaftarPengadu').value;
+            const labelNo = document.getElementById('labelNoPendPengadu');
+            const inputNo = document.getElementById('noPendPengadu');
+            const remark = document.getElementById('remarkNoPendPengadu');
+            const labelNama = document.getElementById('labelNamaPengadu');
+            const warganegara = document.getElementById('warganegaraPengadu');
+            const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+            const isKumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+            
+            const ruanganLuput = document.getElementById('ruanganTarikhLuputPas');
+            const ruanganUmurPasport = document.getElementById('ruanganUmurPasport');
+            const ruanganUmurMyKad = document.getElementById('ruanganUmurMyKad');
 
-    if(ruanganLain) { ruanganLain.style.display = 'none'; }
-    if(labelNama) labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
+            if(ruanganLain) { ruanganLain.style.display = 'none'; }
+            if(labelNama) labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
 
-    if (jenis === 'MyKad') {
-        if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>'; 
-        if(inputNo) { inputNo.placeholder = "Contoh: 880101-01-1234"; inputNo.maxLength = 14; }
-        if(remark) remark.innerText = "Masukkan No. Kad Pengenalan"; 
-        if(warganegara) warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
-        
-        // Sembunyikan medan umur manual pasport jika MyKad dipilih
-        if(ruanganUmurPasport) {
-            ruanganUmurPasport.style.display = 'none';
-            const umurPasportInput = document.getElementById('umurPasportPengadu');
-            if(umurPasportInput) umurPasportInput.value = '';
+            if (jenis === 'MyKad') {
+                if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>'; 
+                if(inputNo) { inputNo.placeholder = "Contoh: 880101-01-1234"; inputNo.maxLength = 14; }
+                if(remark) remark.innerText = "Masukkan No. Kad Pengenalan"; 
+                if(warganegara) warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+                
+                // Tunjuk Umur MyKad, Sembunyi Umur Pasport & Luput Pas
+                if(ruanganUmurMyKad) ruanganUmurMyKad.style.display = 'grid';
+                if(ruanganUmurPasport) ruanganUmurPasport.style.display = 'none';
+                if(ruanganLuput) ruanganLuput.style.display = 'none';
+                
+                // Kosongkan kotak pasport
+                const umurPasportInput = document.getElementById('umurPasportPengadu');
+                if(umurPasportInput) umurPasportInput.value = '';
+                const tLuput = document.getElementById('tarikhLuputPasPengadu');
+                if (tLuput) tLuput.value = ''; 
+                
+            } else if (jenis === 'Pasport') {
+                if(labelNo) labelNo.innerHTML = 'No. Pasport <span>*</span>'; 
+                if(inputNo) { inputNo.placeholder = "Masukkan No. Pasport"; inputNo.maxLength = 20; }
+                if(remark) remark.innerText = "Masukkan No. Pasport";
+                if(warganegara) warganegara.innerHTML = `<option value="">-Sila Pilih-</option><option value="Indonesia">Indonesia</option><option value="Bangladesh">Bangladesh</option><option value="Nepal">Nepal</option><option value="India">India</option><option value="Myanmar">Myanmar</option><option value="Filipina">Filipina</option><option value="Pakistan">Pakistan</option><option value="Lain-lain">Lain-lain</option>`;
+                
+                // Sembunyi Umur MyKad, Tunjuk Umur Pasport & Luput Pas
+                if(ruanganUmurMyKad) ruanganUmurMyKad.style.display = 'none';
+                if(ruanganUmurPasport) ruanganUmurPasport.style.display = 'grid';
+                if(ruanganLuput) ruanganLuput.style.display = 'grid'; 
+            } 
         }
 
-        if(ruanganLuput) { 
-            ruanganLuput.style.display = 'none'; 
-            const tLuput = document.getElementById('tarikhLuputPasPengadu');
-            if (tLuput) tLuput.value = ''; 
+        // Fungsi pengiraan automatik umur (jika MyKad)
+        function kiraUmurDariMyKad(inputElement) {
+            const jenis = document.getElementById('jenisDaftarPengadu')?.value;
+            const kotakUmur = document.getElementById('umurPengadu');
+            
+            let umurKira = "";
+            const val = inputElement.value.replace(/[^0-9]/g, '');
+            if (val.length >= 2) {
+                let thnDuaDigit = parseInt(val.substring(0, 2), 10);
+                let tahunSemasa = new Date().getFullYear();
+                let abad = (thnDuaDigit > (tahunSemasa % 100)) ? 1900 : 2000;
+                let tahunLahir = abad + thnDuaDigit;
+                let umur = tahunSemasa - tahunLahir;
+                
+                if (val.length >= 6) {
+                    let blnLahir = parseInt(val.substring(2, 4), 10) - 1;
+                    let hariLahir = parseInt(val.substring(4, 6), 10);
+                    let tqi = new Date();
+                    let tLahirDate = new Date(tahunLahir, blnLahir, hariLahir);
+                    if (tqi < tLahirDate) { umur--; }
+                }
+                
+                if (umur >= 0) {
+                    umurKira = umur;
+                }
+            }
+            
+            // Masukkan "Tahun" terus ke dalam field input jika MyKad
+            if (jenis === 'MyKad' && kotakUmur) {
+                kotakUmur.value = umurKira !== "" ? umurKira + " Tahun" : "";
+            }
+            
+            return umurKira; // Pulangkan nombor sahaja untuk digunakan pada Lampiran 2
         }
-        
-    } else if (jenis === 'Pasport') {
-        if(labelNo) labelNo.innerHTML = 'No. Pasport <span>*</span>'; 
-        if(inputNo) { inputNo.placeholder = "Masukkan No. Pasport"; inputNo.maxLength = 20; }
-        if(remark) remark.innerText = "Masukkan No. Pasport";
-        if(warganegara) warganegara.innerHTML = `<option value="">-Sila Pilih-</option><option value="Indonesia">Indonesia</option><option value="Bangladesh">Bangladesh</option><option value="Nepal">Nepal</option><option value="India">India</option><option value="Myanmar">Myanmar</option><option value="Filipina">Filipina</option><option value="Pakistan">Pakistan</option><option value="Lain-lain">Lain-lain</option>`;
-        
-        // Paparkan Tarikh Luput dan Umur Pasport di bawah No. Pasport
-        if(ruanganLuput) ruanganLuput.style.display = 'grid'; 
-        if(ruanganUmurPasport) ruanganUmurPasport.style.display = 'grid';
-    } 
-}
-
-// Fungsi pengiraan automatik umur (jika MyKad)
-function kiraUmurDariMyKad(inputElement) {
-    const jenis = document.getElementById('jenisDaftarPengadu')?.value;
-    if (jenis !== 'MyKad') return;
-
-    const val = inputElement.value.replace(/[^0-9]/g, '');
-    if (val.length >= 2) {
-        let thnDuaDigit = parseInt(val.substring(0, 2), 10);
-        let tahunSemasa = new Date().getFullYear();
-        let abad = (thnDuaDigit > (tahunSemasa % 100)) ? 1900 : 2000;
-        let tahunLahir = abad + thnDuaDigit;
-        let umur = tahunSemasa - tahunLahir;
-        
-        if (val.length >= 6) {
-            let blnLahir = parseInt(val.substring(2, 4), 10) - 1;
-            let hariLahir = parseInt(val.substring(4, 6), 10);
-            let tqi = new Date();
-            let tLahirDate = new Date(tahunLahir, blnLahir, hariLahir);
-            if (tqi < tLahirDate) { umur--; }
-        }
-        return umur >= 0 ? umur + " Tahun" : "";
-    }
-    return "";
-}
 
 function kawalWarganegara() {
     const warganegara = document.getElementById('warganegaraPengadu').value;
