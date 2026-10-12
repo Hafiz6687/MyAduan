@@ -1413,60 +1413,77 @@ body {
                     </table>
                 </div>
 
-                <!-- Skrip Automatik Ekstrak Data -->
+                <!-- Skrip Automatik Ekstrak Data & Penindih Fungsi Asal -->
                 <script>
                     function populasikanLampiran2() {
-                        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
-                        // Bahagian I: Pengadu
-                        if(document.getElementById('l2_nama')) document.getElementById('l2_nama').innerText = getVal('namaPengadu') || document.getElementById('mk_daftar_oleh').innerText.toUpperCase();
-                        if(document.getElementById('l2_jantina')) document.getElementById('l2_jantina').innerText = getVal('jantinaPengadu');
-                        if(document.getElementById('l2_umur')) document.getElementById('l2_umur').innerText = getVal('umurPengadu');
-                        if(document.getElementById('l2_bangsa')) document.getElementById('l2_bangsa').innerText = getVal('bangsaPengadu');
-                        if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
-                        
-                        // Ekstrak dan gabungkan No. Tel & No. H/P jika ada
-                        let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
-                        if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
-                        
-                        if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
-                        
-                        // Ekstrak Kategori & Imigresen
-                        if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
-                        if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
-                        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || '';
-                        if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
+                        try {
+                            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
+                            
+                            if(document.getElementById('l2_nama')) {
+                                let namaL = getVal('namaPengadu');
+                                let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
+                                document.getElementById('l2_nama').innerText = namaL || daftarOleh;
+                            }
+                            if(document.getElementById('l2_jantina')) document.getElementById('l2_jantina').innerText = getVal('jantinaPengadu');
+                            if(document.getElementById('l2_umur')) document.getElementById('l2_umur').innerText = getVal('umurPengadu');
+                            if(document.getElementById('l2_bangsa')) document.getElementById('l2_bangsa').innerText = getVal('bangsaPengadu');
+                            if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
+                            
+                            let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
+                            if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
+                            
+                            if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
+                            if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
+                            if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
+                            if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || '';
+                            if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
 
-                        if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
-                        if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
-                        if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
-                        if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
-                        
-                        let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
-                        if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
-                        
-                        // Bahagian II: Tempat Pekerjaan (Majikan)
-                        if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
-                        if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
-                        if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : '';
-                        if(document.getElementById('l2_pengurus')) document.getElementById('l2_pengurus').innerText = getVal('namaPemilikDefendan');
-                        
-                        let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
-                        if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
-                        
-                        // Bahagian III: Aduan
-                        if(document.getElementById('l2_aduan')) {
-                            let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
-                            document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
-                        }
-                        
-                        // Pengakuan Tarikh Semasa
-                        if(document.getElementById('l2_tarikhPengakuan')) {
-                            let harini = new Date();
-                            document.getElementById('l2_tarikhPengakuan').innerText = harini.toLocaleDateString('ms-MY');
+                            if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
+                            if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
+                            if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
+                            if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
+                            
+                            let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
+                            if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
+                            
+                            if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
+                            if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
+                            if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : '';
+                            if(document.getElementById('l2_pengurus')) document.getElementById('l2_pengurus').innerText = getVal('namaPemilikDefendan');
+                            
+                            let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
+                            if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
+                            
+                            if(document.getElementById('l2_aduan')) {
+                                let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
+                                document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
+                            }
+                            
+                            if(document.getElementById('l2_tarikhPengakuan')) {
+                                let harini = new Date();
+                                document.getElementById('l2_tarikhPengakuan').innerText = harini.toLocaleDateString('ms-MY');
+                            }
+                        } catch (err) {
+                            console.log("Ralat mengekstrak data Lampiran 2:", err);
                         }
                     }
 
-                    // Paksa ekstrak data setiap kali tetikus digerakkan ke dalam modal preview
+                    // FUNGSI INI AKAN MERAMPAS KUASA DARI SCRIPT.JS
+                    function gantiFungsiBukaPreviewAsal() {
+                        window.bukaPreview = function() {
+                            document.getElementById('modalPreview').style.display = 'flex';
+                            populasikanLampiran2();
+                        };
+                    }
+                    
+                    // Laksanakan rampasan kuasa serta merta
+                    gantiFungsiBukaPreviewAsal();
+                    
+                    // Ulang rampasan kuasa selepas sistem siap dimuatkan sepenuhnya
+                    window.addEventListener('load', gantiFungsiBukaPreviewAsal);
+                    setTimeout(gantiFungsiBukaPreviewAsal, 1000);
+
+                    // Ekstrak data automatik apabila tertikus masuk kotak
                     document.getElementById('lampiran2BorangAduan').addEventListener('mouseenter', populasikanLampiran2);
                 </script>
             </div>
@@ -1558,7 +1575,7 @@ Portal rasmi : jtksm.mohr.gov.my
             <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Aduan</span></div>
             <div style="display: flex; gap: 10px;" id="butangCetakHeader">
                 <!-- Butang ini disembunyikan secara lalai (display: none) -->
-                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="document.getElementById('modalPreview').style.display='flex'; if(typeof populasikanLampiran2 === 'function') populasikanLampiran2();">📄 Semak & Cetak</button>
+                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="bukaPreview()">📄 Semak & Cetak</button>
             </div>
         </div>
         
