@@ -2498,29 +2498,30 @@ Portal rasmi : jtksm.mohr.gov.my
 
                             <div id="kandunganMaklumatPerkhidmatan" style="display: none;">
                                 
-                                <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+<div class="form-group" style="align-items: center; margin-bottom: 15px;">
+    <label style="margin-top: 0;">Tempoh Perkhidmatan</label>
+    <div class="input-wrapper radio-group" style="margin: 0; display: flex; gap: 15px;">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="radio" name="jenisTempoh" value="Pasti" onchange="document.getElementById('ruanganTempohPasti').style.display=''; document.getElementById('ruanganTempohTidakPasti').style.display='none';" checked> Pasti
+        </label>
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="radio" name="jenisTempoh" value="Tidak Pasti" onchange="document.getElementById('ruanganTempohPasti').style.display='none'; document.getElementById('ruanganTempohTidakPasti').style.display='flex';"> Tidak Pasti
+        </label>
+    </div>
+</div>
+
+<div class="form-group" id="ruanganTempohPasti" style="align-items: center; margin-bottom: 15px;">
     <label style="margin-top: 0;">Tarikh Mula Kerja</label>
     <div class="input-wrapper">
         <input type="date" id="tarikhMulaKerja" style="width: 100%; max-width: 300px; min-width: 160px; box-sizing: border-box;">
         <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Boleh key-in manually</p>
     </div>
 </div>
-                                
-<div class="form-group" style="align-items: center; margin-bottom: 15px;">
-    <label style="margin-top: 0;">Tarikh Akhir Kerja <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal; font-style: italic;">*Jika berkaitan</span></label>
-    <div class="input-wrapper">
-        <input type="date" id="tarikhAkhirKerja" style="width: 100%; max-width: 300px; min-width: 160px; box-sizing: border-box;">
-        <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Tarikh Semasa-Masih bekerja</p>
-    </div>
-</div>
 
-<div class="form-group" style="align-items: flex-start; margin-bottom: 15px;">
-    <label style="margin-top: 0;"></label>
-    <div class="input-wrapper">
-        <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.9em; font-weight: 500; color: var(--text-main);">
-            <input type="checkbox" id="tarikhKerjaTidakPasti" style="margin-top: 2px;">
-            <span style="line-height: 1.4;">*Tanda sekiranya Tarikh Mula Kerja dan Tarikh Akhir Kerja (jika berkaitan) adalah Tidak Pasti</span>
-        </label>
+<div class="form-group" id="ruanganTempohTidakPasti" style="display: none; align-items: flex-start; margin-bottom: 15px;">
+    <label style="margin-top: 0;">Keterangan Tempoh</label>
+    <div class="input-wrapper" style="width: 100%;">
+        <textarea id="teksTempohTidakPasti" class="auto-expand" placeholder="Contoh: Lebih kurang 5 tahun, atau tidak pasti..." rows="2" style="width: 100%; box-sizing: border-box; resize: vertical;" oninput="if(typeof autoResize === 'function') autoResize(this);"></textarea>
     </div>
 </div>
                                 <div class="form-group" style="align-items: center; margin-bottom: 15px;">
@@ -8797,22 +8798,26 @@ function janaKenyataanAwal() {
             else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
         } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
         
-        // --- LOGIK TARIKH MULA DAN CHECKBOX TIDAK PASTI ---
-        const isTidakPasti = document.getElementById('tarikhKerjaTidakPasti')?.checked;
+        // --- LOGIK TEMPOH PERKHIDMATAN (PASTI / TIDAK PASTI) ---
+        const radioTidakPasti = document.querySelector('input[name="jenisTempoh"]:checked')?.value === 'Tidak Pasti';
+        const teksTempoh = document.getElementById('teksTempohTidakPasti')?.value.trim();
+        
         let tarikhMula = '[Tarikh mula kerja]';
         let teksBermula = 'bermula pada';
         
-        if (tarikhMulaRaw) {
-            if (isTidakPasti) {
-                let tahun = tarikhMulaRaw.split('-')[0];
-                tarikhMula = `tahun ${tahun} namun tarikh sebenar saya tidak ingat`;
-                teksBermula = 'bermula dari';
+        if (radioTidakPasti) {
+            if (teksTempoh) {
+                tarikhMula = teksTempoh;
+                teksBermula = 'dengan anggaran tempoh perkhidmatan:';
             } else {
-                tarikhMula = new Date(tarikhMulaRaw).toLocaleDateString('ms-MY');
-                teksBermula = 'bermula pada';
+                tarikhMula = '[Sila nyatakan anggaran tempoh]';
+                teksBermula = 'dengan anggaran tempoh perkhidmatan:';
             }
+        } else if (tarikhMulaRaw) {
+            tarikhMula = new Date(tarikhMulaRaw).toLocaleDateString('ms-MY');
+            teksBermula = 'bermula pada';
         }
-        // ---------------------------------------------------
+        // -------------------------------------------------------
 
         const jawatan = jawatanRaw || '[Jawatan]';
         const gaji = gajiRaw || '[Gaji pokok]';
