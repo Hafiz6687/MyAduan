@@ -1309,24 +1309,48 @@ body {
                         </div>
                     </div>
 
-                    <table style="width: 100%; border: none; font-size: 10pt; margin-bottom: 15px; border-spacing: 0 6px;">
-                        <tr><td style="width: 32%;">(1) Nama:</td><td style="border-bottom: 1px dotted #000; width: 68%;" id="l2_nama"></td></tr>
-                        <tr><td>(2) Jantina:</td><td style="border-bottom: 1px dotted #000;" id="l2_jantina"></td></tr>
-                        <tr><td>(3) Umur:</td><td style="border-bottom: 1px dotted #000;" id="l2_umur"></td></tr>
-                        <tr><td>(4) Bangsa:</td><td style="border-bottom: 1px dotted #000;" id="l2_bangsa"></td></tr>
-                        <tr><td>(5) Alamat:</td><td style="border-bottom: 1px dotted #000;" id="l2_alamat"></td></tr>
-                        <tr><td>(6) No. K/P:</td><td style="border-bottom: 1px dotted #000;" id="l2_kp"></td></tr>
-                        <tr><td>(7) No. Tel:</td><td style="border-bottom: 1px dotted #000;" id="l2_tel"></td></tr>
-                        <tr><td>(8) Emel:</td><td style="border-bottom: 1px dotted #000;" id="l2_emel"></td></tr>
-                        <tr><td>(9) Kategori Pekerjaan:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
-                        <tr><td>(10) No. Pasport (Pekerja Imigran):</td><td style="border-bottom: 1px dotted #000;"></td></tr>
-                        <tr><td>(11) Tarikh Luput Pas Pekerja:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
-                        <tr><td>(12) Kewarganegaraan:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
-                        <tr><td>(13) Jawatan:</td><td style="border-bottom: 1px dotted #000;" id="l2_jawatan"></td></tr>
-                        <tr><td>(14) Tempoh Berkhidmat:</td><td style="border-bottom: 1px dotted #000;" id="l2_tempoh"></td></tr>
-                        <tr><td>(15) Gaji:</td><td style="border-bottom: 1px dotted #000;" id="l2_gaji"></td></tr>
-                        <tr><td>(16) Bayaran-bayaran Lain:</td><td style="border-bottom: 1px dotted #000;"></td></tr>
-                    </table>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; font-size: 10pt; break-inside: avoid; page-break-inside: avoid;">
+                        <!-- Row 1 -->
+                        <div style="display: flex; gap: 8px;">
+                            <div style="white-space: nowrap;">(1) Nama:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_nama"></div>
+                        </div>
+                        <!-- Row 2 -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(2) Jantina:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_jantina"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(3) Umur:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_umur"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(4) Bangsa:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_bangsa"></div></div>
+                        </div>
+                        <!-- Row 3 -->
+                        <div style="display: flex; gap: 8px;">
+                            <div style="white-space: nowrap;">(5) Alamat:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_alamat"></div>
+                        </div>
+                        <!-- Row 4 -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(6) No. K/P:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_kp"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(7) No. Tel:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_tel"></div></div>
+                        </div>
+                        <!-- Row 5 -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(8) Emel:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_emel"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(9) Kategori Pekerjaan:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_kategori"></div></div>
+                        </div>
+                        <!-- Row 6 -->
+                        <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 15px;">
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(10) No. Pasport (Pekerja Imigran):</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_pasport"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(11) Tarikh Luput Pas Pekerja:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_luput_pas"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(12) Kewarganegaraan:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_warganegara"></div></div>
+                        </div>
+                        <!-- Row 7 -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(13) Jawatan:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_jawatan"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(14) Tempoh Berkhidmat:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_tempoh"></div></div>
+                        </div>
+                        <!-- Row 8 -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(15) Gaji:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_gaji"></div></div>
+                            <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(16) Bayaran-bayaran Lain:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_bayaran_lain"></div></div>
+                        </div>
+                    </div>
 
                     <div style="font-weight: bold; font-size: 10pt; margin-bottom: 8px;">B. BUTIRAN PENGADU YANG LAIN (Salinan Kad Pengenalan/ Pasport disertakan jika perlu)</div>
                     <table style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px;" border="1">
@@ -1393,15 +1417,29 @@ body {
                 <script>
                     function populasikanLampiran2() {
                         const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
-                        
                         // Bahagian I: Pengadu
                         if(document.getElementById('l2_nama')) document.getElementById('l2_nama').innerText = getVal('namaPengadu') || document.getElementById('mk_daftar_oleh').innerText.toUpperCase();
+                        if(document.getElementById('l2_jantina')) document.getElementById('l2_jantina').innerText = getVal('jantinaPengadu');
+                        if(document.getElementById('l2_umur')) document.getElementById('l2_umur').innerText = getVal('umurPengadu');
+                        if(document.getElementById('l2_bangsa')) document.getElementById('l2_bangsa').innerText = getVal('bangsaPengadu');
                         if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
-                        if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = getVal('telPengadu');
+                        
+                        // Ekstrak dan gabungkan No. Tel & No. H/P jika ada
+                        let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
+                        if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
+                        
                         if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
+                        
+                        // Ekstrak Kategori & Imigresen
+                        if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
+                        if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
+                        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || '';
+                        if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
+
                         if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
                         if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
                         if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
+                        if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
                         
                         let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
                         if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
