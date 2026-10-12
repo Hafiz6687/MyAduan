@@ -2984,14 +2984,18 @@ Portal rasmi : jtksm.mohr.gov.my
         let isEditMode = false; // Penanda untuk check jika kita sedang edit draf lama
 
         document.addEventListener('DOMContentLoaded', function() {
-            kemaskiniDropdownPendaftaran();
-            semakWakilLengkap();
             
             // Set Tarikh Akhir Kerja kepada tarikh hari ini secara lalai
             let tAkhir = document.getElementById('tarikhAkhirKerja');
-            if(tAkhir && !tAkhir.value) tAkhir.value = new Date().toISOString().split('T')[0];
+            if (tAkhir && !tAkhir.value) {
+                let today = new Date();
+                tAkhir.value = today.toISOString().split('T')[0];
+            }
 
-            window.addEventListener('click', function(e) {
+            kemaskiniDropdownPendaftaran();
+            semakWakilLengkap();
+
+        window.addEventListener('click', function(e) {
                 if (!e.target.closest('.action-dropdown-container')) {
                     document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
                         menu.classList.remove('show');
@@ -7170,11 +7174,10 @@ function resetBorangPendaftaran() {
         const inputs = bekasBorang.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], textarea');
         inputs.forEach(input => input.value = '');
         
-        // --- 2. PASTIKAN 'Masalahnya, ' DIKEMBALIKAN DENGAN BETUL ---
+        // --- 2. KOSONGKAN KRONOLOGI SUPAYA PLACEHOLDER KELUAR ---
         const kronologi = document.getElementById('kronologiKes');
         if (kronologi) {
-            kronologi.value = 'Masalahnya, ';
-            // Panggil autoResize supaya kotak tidak 'tersembunyi' atau leper
+            kronologi.value = '';
             setTimeout(() => { autoResize(kronologi); }, 50);
         }
         // ------------------------------------------------------------
@@ -7222,11 +7225,11 @@ function resetBorangPendaftaran() {
         if (document.getElementById('ruanganBangsaLain')) document.getElementById('ruanganBangsaLain').style.display = 'none';
         // ----------------------------------------------------------------
 
-// Kosongkan semula bekas jadual pengadu tambahan
-        janaJadualPengaduTambahan(0);
+        // Kosongkan semula bekas jadual pengadu tambahan
+       janaJadualPengaduTambahan(0);
 
         // --- TAMBAH KOD INI UNTUK SUNTIK NO KES AUTO-INCREMENT ---
-        document.getElementById('noKes').value = janaNoKesBaru();
+        document.getElementById('noKes').value = "ADN/10103/2026/0001";
         // ---------------------------------------------------------
 
         toggleAduan(); // <--- MASUKKAN FUNGSI INI DI SINI
@@ -8786,7 +8789,23 @@ function janaKenyataanAwal() {
             else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
         } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
         
-        const tarikhMula = tarikhMulaRaw ? new Date(tarikhMulaRaw).toLocaleDateString('ms-MY') : '[Tarikh mula kerja]';
+        // --- LOGIK TARIKH MULA DAN CHECKBOX TIDAK PASTI ---
+        const isTidakPasti = document.getElementById('tarikhKerjaTidakPasti')?.checked;
+        let tarikhMula = '[Tarikh mula kerja]';
+        let teksBermula = 'bermula pada';
+        
+        if (tarikhMulaRaw) {
+            if (isTidakPasti) {
+                let tahun = tarikhMulaRaw.split('-')[0];
+                tarikhMula = `tahun ${tahun} namun tarikh sebenar saya tidak ingat`;
+                teksBermula = 'bermula dari';
+            } else {
+                tarikhMula = new Date(tarikhMulaRaw).toLocaleDateString('ms-MY');
+                teksBermula = 'bermula pada';
+            }
+        }
+        // ---------------------------------------------------
+
         const jawatan = jawatanRaw || '[Jawatan]';
         const gaji = gajiRaw || '[Gaji pokok]';
         
@@ -8809,7 +8828,10 @@ function janaKenyataanAwal() {
 
         let ayatTempatKerja = `Tempat pekerjaan saya di ${tempatKerja}.`;
         
-        const p1 = `${ayatDefendan} bermula pada ${tarikhMula}. Jawatan terakhir saya sebagai ${jawatan}. Gaji pokok terakhir saya ialah RM${gaji}. ${ayatElaun} ${ayatTempatKerja}`;
+        // --- PERKATAAN 'TERAKHIR' TELAH DIBUANG DARI SINI ---
+        const p1 = `${ayatDefendan} ${teksBermula} ${tarikhMula}. Jawatan saya sebagai ${jawatan}. Gaji pokok saya ialah RM${gaji}. ${ayatElaun} ${ayatTempatKerja}`;
+        // ----------------------------------------------------
+
         const rKontrak = document.querySelector('input[name="adaKontrak"]:checked');
         const kontrak = rKontrak ? rKontrak.value : '';
         const ayatKontrak = kontrak === 'Ya' ? 'Saya ada diberikan kontrak perkhidmatan.' : (kontrak === 'Tidak' ? 'Saya tiada diberi kontrak perkhidmatan.' : 'Saya [Ada/Tiada] diberikan kontrak perkhidmatan.');
@@ -8869,7 +8891,6 @@ function janaKenyataanAwal() {
         autoResize(textareaAwal);
     }
 }
-
 function semakSeksyenTuntutan() {
     // Fungsi ini diselaras supaya membiarkan butang Seterusnya sentiasa terbuka.
     const btnSeterusnya = document.getElementById('btnSeterusnyaTab2');
