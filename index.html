@@ -1511,57 +1511,72 @@ body {
                 <!-- Skrip Automatik Ekstrak Data & Penindih Fungsi Asal -->
                 <script>
                     function populasikanLampiran2() {
-                        try {
-                            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
-                            
-                            if(document.getElementById('l2_nama')) {
-                                let namaL = getVal('namaPengadu');
-                                let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
-                                document.getElementById('l2_nama').innerText = namaL || daftarOleh;
-                            }
-                            if(document.getElementById('l2_jantina')) document.getElementById('l2_jantina').innerText = getVal('jantinaPengadu');
-                            if(document.getElementById('l2_umur')) document.getElementById('l2_umur').innerText = getVal('umurPengadu');
-                            if(document.getElementById('l2_bangsa')) document.getElementById('l2_bangsa').innerText = getVal('bangsaPengadu');
-                            if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
-                            
-                            let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
-                            if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
-                            
-                            if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
-                            if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
-                            if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
-                            if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || '';
-                            if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
+    try {
+        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
+        
+        if(document.getElementById('l2_nama')) {
+            let namaL = getVal('namaPengadu');
+            let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
+            document.getElementById('l2_nama').innerText = namaL || daftarOleh;
+        }
+        if(document.getElementById('l2_jantina')) document.getElementById('l2_jantina').innerText = getVal('jantinaPengadu');
+        
+        // --- KEMASKINI PENGAMBILAN UMUR (MYKAD ATAU PASPORT) ---
+        if(document.getElementById('l2_umur')) {
+            const jP = document.getElementById('jenisDaftarPengadu')?.value;
+            let valUmur = "";
+            if (jP === 'Pasport') {
+                let uPasport = document.getElementById('umurPasportPengadu')?.value || "";
+                valUmur = uPasport ? uPasport + " Tahun" : "";
+            } else {
+                let noKpVal = document.getElementById('noPendPengadu')?.value || "";
+                valUmur = kiraUmurDariMyKad({ value: noKpVal }) || "";
+            }
+            document.getElementById('l2_umur').innerText = valUmur;
+        }
+        // --------------------------------------------------------
 
-                            if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
-                            if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
-                            if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
-                            if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
-                            
-                            let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
-                            if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
-                            
-                            if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
-                            if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
-                            if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : '';
-                            if(document.getElementById('l2_pengurus')) document.getElementById('l2_pengurus').innerText = getVal('namaPemilikDefendan');
-                            
-                            let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
-                            if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
-                            
-                            if(document.getElementById('l2_aduan')) {
-                                let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
-                                document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
-                            }
-                            
-                            if(document.getElementById('l2_tarikhPengakuan')) {
-                                let harini = new Date();
-                                document.getElementById('l2_tarikhPengakuan').innerText = harini.toLocaleDateString('ms-MY');
-                            }
-                        } catch (err) {
-                            console.log("Ralat mengekstrak data Lampiran 2:", err);
-                        }
-                    }
+        if(document.getElementById('l2_bangsa')) document.getElementById('l2_bangsa').innerText = getVal('bangsaPengadu');
+        if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
+        
+        let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
+        if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
+        
+        if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
+        if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
+        if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
+        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || '';
+        if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
+
+        if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
+        if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
+        if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
+        if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
+        
+        let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
+        if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
+        
+        if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
+        if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
+        if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : '';
+        if(document.getElementById('l2_pengurus')) document.getElementById('l2_pengurus').innerText = getVal('namaPemilikDefendan');
+        
+        let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
+        if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
+        
+        if(document.getElementById('l2_aduan')) {
+            let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
+            document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
+        }
+        
+        if(document.getElementById('l2_tarikhPengakuan')) {
+            let harini = new Date();
+            document.getElementById('l2_tarikhPengakuan').innerText = harini.toLocaleDateString('ms-MY');
+        }
+    } catch (err) {
+        console.log("Ralat mengekstrak data Lampiran 2:", err);
+    }
+}
 
                     // FUNGSI INI AKAN MERAMPAS KUASA DARI SCRIPT.JS
                     function gantiFungsiBukaPreviewAsal() {
@@ -2717,19 +2732,20 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
-                        <!-- Medan Umur Automatik -->
-                        <div class="form-group" id="ruanganUmurPengadu">
-                            <label>Umur <span>*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="umurPengadu" placeholder="Automatik dikira dari No. MyKad" readonly style="background-color: #e2e8f0; cursor: not-allowed; width: 50%;">
-                            </div>
-                        </div>
-
-                        <!-- Ruangan baharu untuk Tarikh Luput Pas Pekerja (Disembunyikan secara lalai) -->
+                        <!-- Ruangan Tarikh Luput Pas Pekerja (Hanya muncul jika Pasport) -->
                         <div class="form-group" id="ruanganTarikhLuputPas" style="display: none;">
                             <label>Tarikh Luput Pas Pekerja <span>*</span></label>
                             <div class="input-wrapper">
                                 <input type="date" id="tarikhLuputPasPengadu" style="width: 100%; max-width: 300px; box-sizing: border-box;">
+                            </div>
+                        </div>
+
+                        <!-- Ruangan Umur untuk Pasport (Hanya muncul jika Pasport, input nombor sahaja + Tahun) -->
+                        <div class="form-group" id="ruanganUmurPasport" style="display: none;">
+                            <label>Umur <span>*</span></label>
+                            <div class="input-wrapper" style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" id="umurPasportPengadu" placeholder="Cth: 30" min="1" max="150" style="width: 120px;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <span style="font-weight: 600; font-size: 0.9em; color: var(--text-main);">Tahun</span>
                             </div>
                         </div>
 
@@ -7248,106 +7264,83 @@ function tukarPeranan() {
 }
        
 function kawalJenisDaftarPengadu() {
-            const jenis = document.getElementById('jenisDaftarPengadu').value;
-            const labelNo = document.getElementById('labelNoPendPengadu');
-            const inputNo = document.getElementById('noPendPengadu');
-            const remark = document.getElementById('remarkNoPendPengadu');
-            const labelNama = document.getElementById('labelNamaPengadu');
-            const warganegara = document.getElementById('warganegaraPengadu');
-            const ruanganLain = document.getElementById('ruanganWarganegaraLain');
-            const isKumpulan = document.getElementById('aduanBerkumpulan')?.checked;
-            
-            const inputUmur = document.getElementById('umurPengadu');
-            const ruanganLuput = document.getElementById('ruanganTarikhLuputPas');
+    const jenis = document.getElementById('jenisDaftarPengadu').value;
+    const labelNo = document.getElementById('labelNoPendPengadu');
+    const inputNo = document.getElementById('noPendPengadu');
+    const remark = document.getElementById('remarkNoPendPengadu');
+    const labelNama = document.getElementById('labelNamaPengadu');
+    const warganegara = document.getElementById('warganegaraPengadu');
+    const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+    const isKumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+    
+    const ruanganLuput = document.getElementById('ruanganTarikhLuputPas');
+    const ruanganUmurPasport = document.getElementById('ruanganUmurPasport');
 
-            if(ruanganLain) { ruanganLain.style.display = 'none'; }
-            if(labelNama) labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
+    if(ruanganLain) { ruanganLain.style.display = 'none'; }
+    if(labelNama) labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
 
-            if (jenis === 'MyKad') {
-                if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>'; 
-                if(inputNo) { inputNo.placeholder = "Contoh: 880101-01-1234"; inputNo.maxLength = 14; }
-                if(remark) remark.innerText = "Masukkan No. Kad Pengenalan"; 
-                if(warganegara) warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
-                
-                // Kunci medan umur kepada baca-sahaja dan kira semula jika ada nombor MyKad
-                if(inputUmur) {
-                    inputUmur.readOnly = true;
-                    inputUmur.style.backgroundColor = "#e2e8f0";
-                    inputUmur.style.cursor = "not-allowed";
-                    inputUmur.placeholder = "Automatik dikira dari No. MyKad";
-                    kiraUmurDariMyKad(inputNo);
-                }
-
-                if(ruanganLuput) { 
-                    ruanganLuput.style.display = 'none'; 
-                    const tLuput = document.getElementById('tarikhLuputPasPengadu');
-                    if (tLuput) tLuput.value = ''; 
-                }
-                
-            } else if (jenis === 'Pasport') {
-                if(labelNo) labelNo.innerHTML = 'No. Pasport <span>*</span>'; 
-                if(inputNo) { inputNo.placeholder = "Masukkan No. Pasport"; inputNo.maxLength = 20; }
-                if(remark) remark.innerText = "Masukkan No. Pasport";
-                if(warganegara) warganegara.innerHTML = `<option value="">-Sila Pilih-</option><option value="Indonesia">Indonesia</option><option value="Bangladesh">Bangladesh</option><option value="Nepal">Nepal</option><option value="India">India</option><option value="Myanmar">Myanmar</option><option value="Filipina">Filipina</option><option value="Pakistan">Pakistan</option><option value="Lain-lain">Lain-lain</option>`;
-                
-                // Benarkan user isi umur secara manual apabila Pasport dipilih
-                if(inputUmur) {
-                    inputUmur.readOnly = false;
-                    inputUmur.style.backgroundColor = "#f8fafc";
-                    inputUmur.style.cursor = "text";
-                    inputUmur.placeholder = "Masukkan umur";
-                    inputUmur.value = "";
-                }
-
-                if(ruanganLuput) ruanganLuput.style.display = 'grid'; 
-            } 
+    if (jenis === 'MyKad') {
+        if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>'; 
+        if(inputNo) { inputNo.placeholder = "Contoh: 880101-01-1234"; inputNo.maxLength = 14; }
+        if(remark) remark.innerText = "Masukkan No. Kad Pengenalan"; 
+        if(warganegara) warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+        
+        // Sembunyikan medan umur manual pasport jika MyKad dipilih
+        if(ruanganUmurPasport) {
+            ruanganUmurPasport.style.display = 'none';
+            const umurPasportInput = document.getElementById('umurPasportPengadu');
+            if(umurPasportInput) umurPasportInput.value = '';
         }
 
-        // Fungsi khusus mengira umur automatik daripada 2 digit pertama MyKad
-        function kiraUmurDariMyKad(inputElement) {
-            const jenis = document.getElementById('jenisDaftarPengadu')?.value;
-            if (jenis !== 'MyKad') return;
-
-            const val = inputElement.value.replace(/[^0-9]/g, '');
-            const inputUmur = document.getElementById('umurPengadu');
-            if (!inputUmur) return;
-
-            if (val.length >= 2) {
-                let thnDuaDigit = parseInt(val.substring(0, 2), 10);
-                let tahunSemasa = new Date().getFullYear();
-                let abad = (thnDuaDigit > (tahunSemasa % 100)) ? 1900 : 2000;
-                let tahunLahir = abad + thnDuaDigit;
-                
-                let umur = tahunSemasa - tahunLahir;
-                
-                // Semak tambahan bulan/hari jika cukup syarat (pilihan ketepatan lanjut)
-                if (val.length >= 6) {
-                    let blnLahir = parseInt(val.substring(2, 4), 10) - 1;
-                    let hariLahir = parseInt(val.substring(4, 6), 10);
-                    let tqi = new Date();
-                    let tLahirDate = new Date(tahunLahir, blnLahir, hariLahir);
-                    
-                    if (tqi < tLahirDate) {
-                        umur--;
-                    }
-                }
-
-                if (umur >= 0 && umur < 150) {
-                    inputUmur.value = umur + " Tahun";
-                } else {
-                    inputUmur.value = "";
-                }
-            } else {
-                inputUmur.value = "";
-            }
+        if(ruanganLuput) { 
+            ruanganLuput.style.display = 'none'; 
+            const tLuput = document.getElementById('tarikhLuputPasPengadu');
+            if (tLuput) tLuput.value = ''; 
         }
+        
+    } else if (jenis === 'Pasport') {
+        if(labelNo) labelNo.innerHTML = 'No. Pasport <span>*</span>'; 
+        if(inputNo) { inputNo.placeholder = "Masukkan No. Pasport"; inputNo.maxLength = 20; }
+        if(remark) remark.innerText = "Masukkan No. Pasport";
+        if(warganegara) warganegara.innerHTML = `<option value="">-Sila Pilih-</option><option value="Indonesia">Indonesia</option><option value="Bangladesh">Bangladesh</option><option value="Nepal">Nepal</option><option value="India">India</option><option value="Myanmar">Myanmar</option><option value="Filipina">Filipina</option><option value="Pakistan">Pakistan</option><option value="Lain-lain">Lain-lain</option>`;
+        
+        // Paparkan Tarikh Luput dan Umur Pasport di bawah No. Pasport
+        if(ruanganLuput) ruanganLuput.style.display = 'grid'; 
+        if(ruanganUmurPasport) ruanganUmurPasport.style.display = 'grid';
+    } 
+}
 
-        function kawalWarganegara() {
-            const warganegara = document.getElementById('warganegaraPengadu').value;
-            const ruanganLain = document.getElementById('ruanganWarganegaraLain');
-            if (warganegara === 'Lain-lain') { ruanganLain.style.display = 'block'; } else { ruanganLain.style.display = 'none'; document.getElementById('warganegaraLain').value = '';  }
+// Fungsi pengiraan automatik umur (jika MyKad)
+function kiraUmurDariMyKad(inputElement) {
+    const jenis = document.getElementById('jenisDaftarPengadu')?.value;
+    if (jenis !== 'MyKad') return;
+
+    const val = inputElement.value.replace(/[^0-9]/g, '');
+    if (val.length >= 2) {
+        let thnDuaDigit = parseInt(val.substring(0, 2), 10);
+        let tahunSemasa = new Date().getFullYear();
+        let abad = (thnDuaDigit > (tahunSemasa % 100)) ? 1900 : 2000;
+        let tahunLahir = abad + thnDuaDigit;
+        let umur = tahunSemasa - tahunLahir;
+        
+        if (val.length >= 6) {
+            let blnLahir = parseInt(val.substring(2, 4), 10) - 1;
+            let hariLahir = parseInt(val.substring(4, 6), 10);
+            let tqi = new Date();
+            let tLahirDate = new Date(tahunLahir, blnLahir, hariLahir);
+            if (tqi < tLahirDate) { umur--; }
         }
+        return umur >= 0 ? umur + " Tahun" : "";
+    }
+    return "";
+}
 
+function kawalWarganegara() {
+    const warganegara = document.getElementById('warganegaraPengadu').value;
+    const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+    if (warganegara === 'Lain-lain') { ruanganLain.style.display = 'block'; } else { ruanganLain.style.display = 'none'; document.getElementById('warganegaraLain').value = '';  }
+}
+       
         function kawalBangsa() {
             const bangsa = document.getElementById('bangsaPengadu').value;
             const ruanganLain = document.getElementById('ruanganBangsaLain');
