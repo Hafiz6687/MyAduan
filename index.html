@@ -438,52 +438,88 @@ body {
         .sortable-th:hover { background-color: #cbd5e1 !important; }
         .sort-icon { position: absolute; right: 8px; font-size: 0.85em; color: #94a3b8; top: 50%; transform: translateY(-50%); }
         
-        @media print {
+       @media print {
     @page { 
         size: A4 portrait; 
-        margin: 1.5cm 2.5cm; /* Pindah margin ke tetapan kertas sebenar */
+        margin: 1.27cm 1.5cm;
     }
-    body { 
-        background: white; 
-        margin: 0; 
-        padding: 0; 
+    
+    html, body { 
+        background: #ffffff !important; 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        width: 100% !important;
+        height: auto !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
+
+    /* Sembunyikan semua elemen UI skrin biasa semasa mencetak */
     body > *:not(#printArea) { 
         display: none !important; 
     }
+
+    /* Paparkan kawasan cetakan utama sahaja */
     #printArea { 
         display: block !important; 
-        width: 100%;
-        margin: 0; 
-        padding: 0; 
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important; 
+        padding: 0 !important; 
+        background: #ffffff !important;
     }
 
-    #lampiran2BorangAduan {
+    #printArea #lampiran2BorangAduan {
         display: block !important;
+        width: 100% !important;
         gap: 0 !important;
         padding: 0 !important;
         margin: 0 !important;
     }
 
-    /* TETAPAN KHAS KERTAS A4 UNTUK CETAKAN (MENGELAKKAN TERPOTONG) */
-    .kertas-a4 {
+    /* Kemasan khas untuk elemen helaian A4 dalam mod print */
+    .kertas-a4, 
+    #printArea .kertas-a4 {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
         margin: 0 !important; 
-        padding: 0 !important; /* Padding dibuang sebab margin diuruskan oleh @page */
+        padding: 0 !important; 
         box-shadow: none !important; 
+        border: none !important;
+        background: #ffffff !important;
         page-break-after: always !important; 
         page-break-inside: avoid !important;
-        min-height: auto !important; 
-        height: auto !important; /* Tukar ke auto supaya isi tak terpotong */
+        break-after: page !important;
+        break-inside: avoid !important;
         box-sizing: border-box !important;
-        overflow: visible !important; /* Tukar ke visible supaya isi tidak hilang */
+        overflow: visible !important;
     }
     
-    .kertas-a4:last-child {
+    .kertas-a4:last-child,
+    #printArea .kertas-a4:last-child {
         page-break-after: auto !important; 
+        break-after: auto !important;
     }
-    
-    body.print-only-akuan .page-borang, body.print-only-akuan .page-kenyataan { display: none !important; }
-    body.print-only-kenyataan .page-akuan { display: none !important; } 
+
+    /* Pastikan jadual dan kotak input cetakan kekal kemas */
+    table, tr, td, th {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Kawalan suis penapis cetakan mengikut kelas body */
+    body.print-only-akuan .page-borang, 
+    body.print-only-akuan .page-kenyataan { 
+        display: none !important; 
+    }
+    body.print-only-kenyataan .page-akuan { 
+        display: none !important; 
+    } 
 }
     </style>
 </head>
