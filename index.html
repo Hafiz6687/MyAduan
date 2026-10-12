@@ -441,7 +441,7 @@ body {
         @media print {
     @page { 
         size: A4 portrait; 
-        margin: 0; 
+        margin: 1.5cm 2.5cm; /* Pindah margin ke tetapan kertas sebenar */
     }
     body { 
         background: white; 
@@ -458,7 +458,6 @@ body {
         padding: 0; 
     }
 
-    /* BUANG FLEX DAN JURANG (GAP) SEMASA CETAKAN SUPAYA TIADA MUKA SURAT KOSONG */
     #lampiran2BorangAduan {
         display: block !important;
         gap: 0 !important;
@@ -469,14 +468,14 @@ body {
     /* TETAPAN KHAS KERTAS A4 UNTUK CETAKAN (MENGELAKKAN TERPOTONG) */
     .kertas-a4 {
         margin: 0 !important; 
-        padding: 1.5cm 2.5cm !important;
+        padding: 0 !important; /* Padding dibuang sebab margin diuruskan oleh @page */
         box-shadow: none !important; 
         page-break-after: always !important; 
         page-break-inside: avoid !important;
         min-height: auto !important; 
-        height: 29.7cm !important; 
+        height: auto !important; /* Tukar ke auto supaya isi tak terpotong */
         box-sizing: border-box !important;
-        overflow: hidden !important;
+        overflow: visible !important; /* Tukar ke visible supaya isi tidak hilang */
     }
     
     .kertas-a4:last-child {
