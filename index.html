@@ -1362,7 +1362,7 @@ body {
                             </div>
                         </div>
 
-                        <div style="font-weight: bold; font-size: 10pt; margin-bottom: 8px;">B. BUTIRAN PENGADU YANG LAIN (Salinan Kad Pengenalan/ Pasport disertakan jika perlu)</div>
+                        <div style="font-weight: bold; font-size: 10pt; border: 1px solid #000; padding: 8px 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">B. BUTIRAN PENGADU YANG LAIN (Salinan Kad Pengenalan/ Pasport disertakan jika perlu)</div>
                         <table style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px;" border="1">
                             <tr style="background: #f1f5f9; text-align: center; font-weight: bold;">
                                 <td style="width: 5%; padding: 4px;">No.</td>
@@ -1376,22 +1376,28 @@ body {
                             <tr><td style="text-align: center; padding: 4px;">(4)</td><td></td><td></td><td></td></tr>
                         </table>
 
-                        <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px; background: #e2e8f0; padding: 4px;">BAHAGIAN II: BUTIR-BUTIR TEMPAT PEKERJAAN</div>
-                        <table style="width: 100%; border: none; font-size: 10pt; margin-bottom: 20px; border-spacing: 0 6px;">
-                            <tr><td style="width: 32%;">(1) Nama Majikan / Syarikat:</td><td style="border-bottom: 1px dotted #000; width: 68%;" id="l2_majikan"></td></tr>
-                            <tr><td>(2) Alamat Majikan:</td><td style="border-bottom: 1px dotted #000;" id="l2_alamatMajikan"></td></tr>
-                            <tr><td>(3) Alamat Tempat Pekerjaan:</td><td style="border-bottom: 1px dotted #000;" id="l2_alamatKerja"></td></tr>
-                            <tr><td>(4) Nama Pengurus:</td><td style="border-bottom: 1px dotted #000;" id="l2_pengurus"></td></tr>
-                            <tr><td>(5) No. Tel/Bimbit:</td><td style="border-bottom: 1px dotted #000;" id="l2_telMajikan"></td></tr>
-                            <tr>
-                                <td>(6) Jenis Perusahaan:</td>
-                                <td style="display: flex; gap: 10px;">
-                                    <div style="flex: 1; border-bottom: 1px dotted #000;" id="l2_sektor"></div>
-                                    <div>E-mail:</div>
-                                    <div style="flex: 1; border-bottom: 1px dotted #000;" id="l2_emelMajikan"></div>
-                                </td>
-                            </tr>
-                        </table>
+                        <div style="font-weight: bold; font-size: 10pt; margin-bottom: 15px; background: #e2e8f0; padding: 4px;">BAHAGIAN II: BUTIR-BUTIR TEMPAT PEKERJAAN</div>
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; font-size: 10pt; break-inside: avoid; page-break-inside: avoid;">
+                            <div style="display: flex; gap: 8px;">
+                                <div style="white-space: nowrap;">(1) Nama Majikan / Syarikat:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_majikan"></div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="white-space: nowrap;">(2) Alamat Majikan:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_alamatMajikan"></div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="white-space: nowrap;">(3) Alamat Tempat Pekerjaan:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_alamatKerja"></div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="white-space: nowrap;">(4) Nama Pengurus:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_pengurus"></div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="white-space: nowrap;">(5) No. Tel/Bimbit:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_telMajikan"></div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">(6) Jenis Perusahaan:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_sektor"></div></div>
+                                <div style="display: flex; gap: 8px;"><div style="white-space: nowrap;">E-mail:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_emelMajikan"></div></div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- KERTAS A4: MUKA SURAT 2 -->
