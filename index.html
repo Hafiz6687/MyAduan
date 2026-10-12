@@ -484,9 +484,9 @@ body {
                 <input type="text" id="jenisTuntutanLain" placeholder="Sila nyatakan jenis aduan lain" style="display: none; margin-top: 8px; width: 100%;" oninput="hurufBesarAyatPertama(this)">
             </div>
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">Keterangan Aduan <span>*</span></label>
-                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarSetiapPerkataan(this)"></textarea>
-            </div>
+    <label style="text-align: left;">Keterangan Aduan <span>*</span></label>
+    <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
+</div>
             
                         <div class="modal-actions">
                 <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
@@ -7173,6 +7173,14 @@ function resetBorangPendaftaran() {
         // Kosongkan semua input & textarea
         const inputs = bekasBorang.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], textarea');
         inputs.forEach(input => input.value = '');
+        
+        // --- SET SEMULA TARIKH AKHIR KERJA KEPADA TARIKH HARI INI ---
+        let tAkhir = document.getElementById('tarikhAkhirKerja');
+        if (tAkhir) {
+            let today = new Date();
+            tAkhir.value = today.toISOString().split('T')[0];
+        }
+        // -------------------------------------------------------------
         
         // --- 2. KOSONGKAN KRONOLOGI SUPAYA PLACEHOLDER KELUAR ---
         const kronologi = document.getElementById('kronologiKes');
