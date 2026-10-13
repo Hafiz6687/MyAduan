@@ -3179,40 +3179,59 @@ Portal rasmi : jtksm.mohr.gov.my
     </div>
 </div> <!-- TAMAT KAD 3 KETUA -->
 
-<!-- KAD 4: TUNTUTAN SEDIA ADA / KESELURUHAN -->
-<div class="card full-width" id="kad4_biasa" style="order: 4;">
-    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
-    
-    <!-- Kandungan Tuntutan Biasa (Sembunyi sehingga Sektor & Jenis Perniagaan diisi) -->
-    <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-            
-            <!-- INI ADALAH TEMPAT YANG BETUL UNTUK BUTANG TERSEBUT -->
-            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
-            <!-- =================================================== -->
-            
+<!-- KODING BARU MENGGANTIKAN KAD 3 & KAD 4 FORMA BERKUMPULAN -->
+<div class="card full-width" id="kad3_ketua" style="order: 3; display: none;">
+    <div class="card-header">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span>Maklumat Pengadu</span>
+            <span style="font-size: 0.75em; font-weight: 500; color: var(--primary-blue); font-style: italic; text-transform: none;">
+                * Senarai butiran pengadu yang terlibat dalam aduan berkumpulan.
+            </span>
         </div>
         
-        <table id="jadualTuntutan">
-                            <thead>
-                                <tr>
-                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Aduan</th><th style="width: 50%;">Keterangan Aduan</th>
-                                    <th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody><tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr></tbody>
-                        </table>
-                    </div>
-
-<!-- Butang Seterusnya (Akan muncul bersama jadual tuntutan) -->
-                    <div class="card-body" id="ruanganButangSeterusnyaTab1" style="padding-top: 0; display: none;">
-                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-                            <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Butang Action Dropdown G1 -->
+        <div class="action-dropdown-container" style="margin-left: auto; position: relative; display: flex; align-items: center;">
+            <button type="button" style="width: 46px; height: 30px; background-color: #334155; color: white; border: none; border-radius: 6px; font-size: 24px; font-weight: 900; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 6px; transition: all 0.2s ease;" onclick="document.getElementById('dropdownG1').classList.toggle('show')" title="Tindakan">
+                ⋯
+            </button>
+            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
+                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Ketua');">📄 G1 Ketua</a>
+                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Borang');">📄 G1 Borang</a>
             </div>
+        </div>
+    </div>
+    
+    <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
+        <!-- JADUAL BUTIRAN PENGADU (MATCHING DENGAN BAHAGIAN B BORANG ADUAN) -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <h5 style="margin: 0; color: var(--primary-blue); font-size: 1.05em;">Senarai Pengadu Berkumpulan</h5>
+            <button type="button" class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap; padding: 8px 15px; font-size: 0.85em;" onclick="tambahPengaduBerkumpulan()">+ Pengadu</button>
+        </div>
+
+        <table id="jadualPengaduBerkumpulan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            <thead style="background-color: var(--card-header-bg);">
+                <tr style="text-align: center; font-weight: bold;">
+                    <th style="width: 5%; text-align: center; padding: 8px; border-bottom: 1px solid var(--border-color);">No.</th>
+                    <th style="width: 40%; padding: 8px; border-bottom: 1px solid var(--border-color);">Nama</th>
+                    <th style="width: 25%; padding: 8px; border-bottom: 1px solid var(--border-color);">No. KP / Pasport</th>
+                    <th style="width: 20%; padding: 8px; border-bottom: 1px solid var(--border-color);">Warganegara</th>
+                    <th style="width: 10%; text-align: center; padding: 8px; border-bottom: 1px solid var(--border-color);">Hapus</th>
+                </tr>
+            </thead>
+            <tbody id="bodyPengaduBerkumpulan">
+                <tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada pengadu tambahan direkodkan.</td></tr>
+            </tbody>
+        </table>
+
+        <!-- Container Borang Tambahan Pengadu jika ada butiran lanjut -->
+        <div id="ruanganPengaduTambahan" style="margin-top: 20px;"></div>
+
+        <!-- Butang Seterusnya -->
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+            <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
+        </div>
+    </div>
+</div>
 
             <!-- TAB 2: KENYATAAN PENGADU -->
             <div class="content-area" id="tab2" style="display: none; grid-template-columns: 1fr;">
@@ -6575,6 +6594,58 @@ function semakBilanganPengadu(input) {
         }
     } else {
         janaJadualPengaduTambahan(0); 
+    }
+}
+       // FUNGSI BARU UNTUK TAMBAH PENGADU KE JADUAL
+function tambahPengaduBerkumpulan() {
+    let inputBil = document.getElementById('bilPengadu');
+    let semasa = parseInt(inputBil.value) || 1;
+    semasa++;
+    inputBil.value = semasa;
+    semakBilanganPengadu(inputBil);
+    renderJadualPengaduBerkumpulan();
+}
+
+// FUNGSI UNTUK RENDER JADUAL PENGADU BERKUMPULAN
+function renderJadualPengaduBerkumpulan() {
+    const tbody = document.getElementById('bodyPengaduBerkumpulan');
+    if (!tbody) return;
+
+    const inputBil = document.getElementById('bilPengadu');
+    const bil = parseInt(inputBil?.value) || 1;
+
+    tbody.innerHTML = '';
+    
+    if (bil <= 1) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada pengadu tambahan direkodkan.</td></tr>`;
+        return;
+    }
+
+    for (let i = 2; i <= bil; i++) {
+        let namaVal = document.getElementById(`namaPengaduTambahan${i}`)?.value || '';
+        let kpVal = document.getElementById(`kpPengaduTambahan${i}`)?.value || '';
+        let warganegaraVal = document.getElementById(`warganegaraPengaduTambahan${i}`)?.value || 'Malaysia';
+
+        tbody.innerHTML += `
+            <tr>
+                <td style="text-align: center; padding: 8px;">(${i - 1})</td>
+                <td style="padding: 8px;"><input type="text" id="namaPengaduTambahan${i}" value="${namaVal}" placeholder="Nama Pengadu ${i}" oninput="hurufBesarSetiapPerkataan(this)" style="width:100%; box-sizing:border-box; padding:6px;"></td>
+                <td style="padding: 8px;"><input type="text" id="kpPengaduTambahan${i}" value="${kpVal}" placeholder="No. KP / Pasport" oninput="formatMyKadTambahan(this)" style="width:100%; box-sizing:border-box; padding:6px;"></td>
+                <td style="padding: 8px;"><input type="text" id="warganegaraPengaduTambahan${i}" value="${warganegaraVal}" placeholder="Warganegara" style="width:100%; box-sizing:border-box; padding:6px;"></td>
+                <td style="text-align: center; padding: 8px;"><button type="button" class="btn-delete-tbl" onclick="hapusPengaduBerkumpulan(${i})">🗑️</button></td>
+            </tr>
+        `;
+    }
+}
+
+function hapusPengaduBerkumpulan(index) {
+    let inputBil = document.getElementById('bilPengadu');
+    let semasa = parseInt(inputBil.value) || 1;
+    if (semasa > 1) {
+        semasa--;
+        inputBil.value = semasa;
+        semakBilanganPengadu(inputBil);
+        renderJadualPengaduBerkumpulan();
     }
 }
 // --- FUNGSI DIKEMASKINI: Tukar penomboran bermula dari Pengadu 2 ---
