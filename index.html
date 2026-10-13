@@ -1608,7 +1608,7 @@ function populasikanLampiran2() {
 
             let hasilElaun = "";
             if (statusElaun === 'YA') {
-                hasilElaun = "YA" + (senarai.length > 0 ? " - " + senarai.join(", ") : "");
+                hasilElaun = senarai.length > 0 ? senarai.join(", ") : "YA";
             } else if (statusElaun === 'TIDAK') {
                 hasilElaun = "-Tiada-";
             } else {
