@@ -1418,15 +1418,17 @@ body {
 
                         <div style="font-weight: bold; font-size: 10pt; border: 1px solid #000; padding: 8px 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">B. BUTIRAN PENGADU YANG LAIN (Salinan Kad Pengenalan/ Pasport disertakan jika perlu)</div>
                         <table style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px;" border="1">
-                            <tr style="background: #f1f5f9; text-align: center; font-weight: bold;">
-                                <td style="width: 5%; padding: 4px;">No.</td>
-                                <td style="width: 45%; padding: 4px;">Nama</td>
-                                <td style="width: 25%; padding: 4px;">No. KP/Pasport</td>
-                                <td style="width: 25%; padding: 4px;">Warganegara</td>
-                            </tr>
-                            <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
-                            <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
-                            <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
+                            <thead>
+                                <tr style="background: #f1f5f9; text-align: center; font-weight: bold;">
+                                    <td style="width: 5%; padding: 4px;">No.</td>
+                                    <td style="width: 45%; padding: 4px;">Nama</td>
+                                    <td style="width: 25%; padding: 4px;">No. KP/Pasport</td>
+                                    <td style="width: 25%; padding: 4px;">Warganegara</td>
+                                </tr>
+                            </thead>
+                            <tbody id="l2_bodyPengaduLain">
+                                <!-- Baris ini akan dikawal oleh JavaScript bergantung kepada jenis pendaftaran -->
+                            </tbody>
                         </table>
 
                         <!-- WRAP BAHAGIAN II -->
@@ -1552,10 +1554,30 @@ function populasikanLampiran2() {
         if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
 
         if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
-        if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
-        if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
-        if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
-        
+                            if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
+                            if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
+                            if(document.getElementById('l2_bayaran_lain')) document.getElementById('l2_bayaran_lain').innerText = getVal('bayaranLain') || '';
+                            
+                            // --- KAWALAN PAPARAN JADUAL PENGADU LAIN (BERKUMPULAN VS INDIVIDU) ---
+                            const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
+                            if (tbodyPengaduLain) {
+                                const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || '';
+                                const isKumpulan = dropdownPengadu.includes('Berkumpulan');
+                                
+                                if (isKumpulan) {
+                                    // Tunjuk 3 baris kosong secara lalai jika aduan adalah berkumpulan
+                                    tbodyPengaduLain.innerHTML = `
+                                        <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
+                                        <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
+                                        <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
+                                    `;
+                                } else {
+                                    // Tunjuk -Tiada- jika aduan individu
+                                    tbodyPengaduLain.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 8px; font-style: italic; font-weight: bold;">-Tiada-</td></tr>`;
+                                }
+                            }
+                            // ----------------------------------------------------------------------
+                            
         let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
         if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
         
