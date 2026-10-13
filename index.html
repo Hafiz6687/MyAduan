@@ -3149,7 +3149,40 @@ Portal rasmi : jtksm.mohr.gov.my
         </div>
     </div>
 </div>
+<!-- KAD 4: TUNTUTAN SEDIA ADA / KESELURUHAN -->
+<div class="card full-width" id="kad4_biasa" style="order: 4;">
+    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
+    
+    <!-- Kandungan Tuntutan Biasa -->
+    <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
+            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
+        </div>
+        
+        <table id="jadualTuntutan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
+            <thead style="background-color: var(--card-header-bg);">
+                <tr>
+                    <th style="width: 5%; text-align: center; border-bottom: 1px solid var(--border-color);">Bil.</th>
+                    <th style="width: 25%; border-bottom: 1px solid var(--border-color);">Jenis Aduan</th>
+                    <th style="width: 50%; border-bottom: 1px solid var(--border-color);">Keterangan Aduan</th>
+                    <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Kemaskini</th>
+                    <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Hapus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>
+            </tbody>
+        </table>
+    </div>
 
+    <!-- Butang Seterusnya (Akan muncul bersama jadual tuntutan) -->
+    <div class="card-body" id="ruanganButangSeterusnyaTab1" style="padding-top: 0; display: none;">
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+            <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
+        </div>
+    </div>
+</div>
             <!-- TAB 2: KENYATAAN PENGADU -->
             <div class="content-area" id="tab2" style="display: none; grid-template-columns: 1fr;">
                 
