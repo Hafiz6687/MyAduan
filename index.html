@@ -6601,94 +6601,25 @@ function hapusPengaduBerkumpulan(index) {
 // --- FUNGSI DIKEMASKINI: Tukar penomboran bermula dari Pengadu 2 ---
 function janaJadualPengaduTambahan(bilangan) {
     const container = document.getElementById('ruanganPengaduTambahan');
-    if (!container) return;
-    
-    container.innerHTML = ''; 
-    
-    // HAPUSKAN memori pengadu yang terbatal jika user tiba-tiba kurangkan bilangan (Cth: dari 5 ke 3)
+    if (container) container.innerHTML = ''; // Pastikan ruang HTML lama dikosongkan
+
+    // Urus pemadaman memori jika user kurangkan pengadu
     for (let key in memoriTuntutanTambahan) {
-        // Kerana index sekarang bermula dari 2 hingga bilangan, kita buang key yang lebih dari 'bilangan'
         if (parseInt(key) > bilangan) {
             delete memoriTuntutanTambahan[key];
         }
     }
-    // Auto-kira supaya jadual bawah juga turut membuang tuntutan pengadu yang terbatal
-    autoKiraTuntutanBerkumpulan();
-    renderJadualTuntutan();
     
+    if (typeof autoKiraTuntutanBerkumpulan === 'function') autoKiraTuntutanBerkumpulan();
+    if (typeof renderJadualTuntutan === 'function') renderJadualTuntutan();
+
     if (bilangan > 1) {
-        // MULA DARI INDEX 2 (kerana Index 1 adalah Ketua Pengadu)
         for (let i = 2; i <= bilangan; i++) {
             if (!memoriTuntutanTambahan[i]) memoriTuntutanTambahan[i] = [];
-
-            const pengaduDiv = document.createElement('div');
-            pengaduDiv.style.marginTop = '20px';
-            pengaduDiv.style.border = '1px solid var(--border-color)';
-            pengaduDiv.style.borderRadius = '8px';
-            pengaduDiv.style.overflow = 'hidden';
-            pengaduDiv.style.backgroundColor = '#ffffff';
-            
-            pengaduDiv.innerHTML = `
-                <div class="togol-header" style="background: #f8fafc; padding: 12px 15px; margin-bottom: 0; border-bottom: 1px solid var(--border-color);" onclick="togglePengaduTambahan(${i})">
-                    <h5 style="margin: 0; color: var(--primary-blue); font-size: 1.05em;">Maklumat Pengadu ${i}</h5>
-                    <span id="labelTogolPengadu${i}" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #e2e8f0; padding: 4px 12px; border-radius: 20px;">▼ Buka</span>
-                </div>
-                
-                <div id="kandunganPengadu${i}" style="display: none; padding: 20px;">
-                    <div class="grid-2">
-                        <div class="form-group" style="grid-template-columns: 1fr; gap: 6px; margin-bottom: 10px;">
-                            <label style="text-align: left; margin: 0;">Nama Pengadu <span>*</span></label>
-                            <input type="text" id="namaPengaduTambahan${i}" placeholder="Nama penuh Pengadu ${i}" oninput="hurufBesarSetiapPerkataan(this)">
-                        </div>
-                        <div class="form-group" style="grid-template-columns: 1fr; gap: 6px; margin-bottom: 10px;">
-                            <label style="text-align: left; margin: 0;">No. MyKad / Pasport <span>*</span></label>
-                            <input type="text" id="kpPengaduTambahan${i}" placeholder="Contoh: 880101-01-1234" oninput="formatMyKadTambahan(this)">
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                        <h6 style="color: var(--text-main); margin: 0; font-size: 0.95em;">Jadual Tuntutan Pengadu ${i}</h6>
-                        <button type="button" class="btn-add btn-terapung" style="margin: 0; background-color: #0ea5e9; white-space: nowrap; padding: 8px 15px; font-size: 0.85em;" onclick="bukaModalTuntutan('tambahan_${i}')">+ Tambah Tuntutan Pengadu ${i}</button>
-                    </div>
-
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
-                        <thead style="background-color: var(--card-header-bg);">
-                            <tr>
-                                <th style="width: 5%; text-align: center; border-bottom: 1px solid var(--border-color);">Bil.</th>
-                                <th style="width: 25%; border-bottom: 1px solid var(--border-color);">Jenis Tuntutan</th>
-                                <th style="width: 35%; border-bottom: 1px solid var(--border-color);">Keterangan Tuntutan</th>
-                                <th style="width: 15%; text-align: right; border-bottom: 1px solid var(--border-color);">Jumlah (RM)</th>
-                                <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Kemaskini</th>
-                                <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Hapus</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyTuntutanTambahan${i}"></tbody>
-                    </table>
-                </div>
-            `;
-            container.appendChild(pengaduDiv);
-            renderJadualTuntutanTambahan(i);
         }
     }
 }
-
-        // --- FUNGSI BARU: Togol untuk jadual Pengadu Tambahan ---
-        function togglePengaduTambahan(index) {
-            const kandungan = document.getElementById(`kandunganPengadu${index}`);
-            const labelTogol = document.getElementById(`labelTogolPengadu${index}`);
-            
-            if (kandungan.style.display === 'none') {
-                kandungan.style.display = 'block';
-                labelTogol.innerHTML = '▲ Sembunyi';
-                labelTogol.style.backgroundColor = '#eff6ff';
-                labelTogol.style.color = 'var(--primary-blue)';
-            } else {
-                kandungan.style.display = 'none';
-                labelTogol.innerHTML = '▼ Buka';
-                labelTogol.style.backgroundColor = '#e2e8f0';
-                labelTogol.style.color = 'var(--text-muted)';
-            }
-        }
+// (Fungsi togglePengaduTambahan telah didelete sepenuhnya kerana subheader sudah tiada)
 
         // --- FUNGSI BARU: Format IC tanpa trigger detect jantina ---
         function formatMyKadTambahan(inputElement) {
