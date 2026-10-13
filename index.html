@@ -1591,7 +1591,15 @@ function populasikanLampiran2() {
                 }
             }
 
-            let hasilElaun = statusElaun ? (statusElaun + butiranElaun) : (getVal('bayaranLain') || '-');
+            let hasilElaun = "";
+            if (statusElaun === 'YA') {
+                hasilElaun = statusElaun + butiranElaun;
+            } else if (statusElaun === 'TIDAK') {
+                hasilElaun = "-Tiada-";
+            } else {
+                hasilElaun = getVal('bayaranLain') || '-';
+            }
+            
             document.getElementById('l2_bayaran_lain').innerText = hasilElaun;
         }
                             
