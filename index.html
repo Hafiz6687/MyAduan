@@ -1563,50 +1563,56 @@ function populasikanLampiran2() {
         // (16) Bayaran-bayaran Lain (Menerima Elaun)
         if (document.getElementById('l2_bayaran_lain')) {
             let statusElaun = '';
+            
+            // 1. CARI STATUS YA/TIDAK
+            let radioTanda = document.querySelector('input[name="menerimaElaun"]:checked, input[name="elaunPengadu"]:checked');
+            if (radioTanda) {
+                statusElaun = radioTanda.value.toUpperCase();
+            } else {
+                let lblMenerima = Array.from(document.querySelectorAll('label')).find(l => l.innerText.includes('Menerima Elaun'));
+                if (lblMenerima) {
+                    let radioDlm = lblMenerima.parentElement.querySelector('input[type="radio"]:checked');
+                    if (radioDlm) statusElaun = radioDlm.value.toUpperCase();
+                }
+            }
+
+            // 2. CARI KOTAK ELAUN SECARA MENYELURUH (SAPU SEMUA)
             let senarai = [];
+            let semuaInput = document.querySelectorAll('input[type="text"], input[type="number"]');
             
-            // 1. CARI STATUS "YA/TIDAK" MENGGUNAKAN TEKS LABEL "Menerima Elaun"
-            let semuaLabel = document.querySelectorAll('label');
-            for (let lbl of semuaLabel) {
-                if (lbl.innerText.includes('Menerima Elaun')) {
-                    let kontenaRadio = lbl.nextElementSibling || lbl.parentElement;
-                    let radioDitekan = kontenaRadio.querySelector('input[type="radio"]:checked');
-                    if (radioDitekan) statusElaun = radioDitekan.value.toUpperCase();
-                    break;
+            let inputJenis = [];
+            let inputAmaun = [];
+            
+            semuaInput.forEach(inp => {
+                let ph = inp.placeholder ? inp.placeholder.toLowerCase() : '';
+                let id = inp.id ? inp.id.toLowerCase() : '';
+                
+                if (ph.includes('jenis elaun') || id.includes('jeniselaun')) {
+                    inputJenis.push(inp);
+                }
+                if (ph.includes('rm') || id.includes('jumlah') || id.includes('amaun')) {
+                    inputAmaun.push(inp);
+                }
+            });
+
+            for (let i = 0; i < inputJenis.length; i++) {
+                let jenis = inputJenis[i].value.trim();
+                let jumlah = inputAmaun[i] ? inputAmaun[i].value.trim() : '';
+                if (jenis) {
+                    senarai.push(jenis.toUpperCase() + (jumlah ? " (RM " + jumlah + ")" : ""));
                 }
             }
 
-            // 2. CARI KOTAK INPUT BERDASARKAN BUTANG "+ Tambah Elaun"
-            let butangTambah = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Tambah Elaun'));
-            
-            if (butangTambah) {
-                // Cari semua kotak input teks dan nombor di sekeliling butang tersebut
-                let kontenaElaun = butangTambah.parentElement;
-                let semuaInputElaun = kontenaElaun.querySelectorAll('input[type="text"], input[type="number"]');
-                
-                // Susun secara berpasangan: [Jenis Elaun, Jumlah RM]
-                for (let i = 0; i < semuaInputElaun.length; i += 2) {
-                    let jenis = semuaInputElaun[i] ? semuaInputElaun[i].value.trim() : '';
-                    let jumlah = semuaInputElaun[i+1] ? semuaInputElaun[i+1].value.trim() : '';
-                    
-                    if (jenis) {
-                        senarai.push(jenis.toUpperCase() + (jumlah ? " (RM " + jumlah + ")" : ""));
-                    }
-                }
-                
-                // Force status jadi YA jika ada elaun diisi (penyelamat jika radio button gagal dibaca)
-                if (senarai.length > 0) statusElaun = 'YA';
-            }
+            // 3. TETAPKAN OUTPUT AKHIR
+            if (senarai.length > 0) statusElaun = 'YA';
 
-            let butiranElaun = senarai.length > 0 ? " - " + senarai.join(", ") : "";
             let hasilElaun = "";
-
             if (statusElaun === 'YA') {
-                hasilElaun = statusElaun + butiranElaun;
+                hasilElaun = "YA" + (senarai.length > 0 ? " - " + senarai.join(", ") : "");
             } else if (statusElaun === 'TIDAK') {
                 hasilElaun = "-Tiada-";
             } else {
-                let fallback = document.getElementById('bayaranLain') ? document.getElementById('bayaranLain').value.toUpperCase() : '';
+                let fallback = document.getElementById('bayaranLain') ? document.getElementById('bayaranLain').value.trim().toUpperCase() : '';
                 hasilElaun = fallback || '-';
             }
             
