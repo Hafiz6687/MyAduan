@@ -2720,7 +2720,8 @@ Portal rasmi : jtksm.mohr.gov.my
                                 <select id="jenisPengaduDropdown" onchange="toggleAduan()">
                                     <option value="Individu" selected>Pekerja Individu</option>
                                     <option value="Berkumpulan">Pekerja Berkumpulan</option>
-                                    <option value="Bukan Pekerja">Bukan Pekerja</option>
+                                    <option value="Bukan Pekerja">Bukan Pekerja (Individu)</option>
+                                    <option value="Bukan Pekerja (Berkumpulan)">Bukan Pekerja (Berkumpulan)</option>
                                 </select>
                             </div>
                             <!-- Input terselindung (hidden) untuk keserasian fungsi sistem asal tanpa ralat -->
@@ -7533,10 +7534,11 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
             const radioIndividu = document.getElementById('aduanIndividu');
             const radioBerkumpulan = document.getElementById('aduanBerkumpulan');
             
-            if (dropdownPengadu === 'Berkumpulan') {
+            // Jika pilihan adalah apa-apa yang berkaitan dengan Kumpulan
+            if (dropdownPengadu === 'Berkumpulan' || dropdownPengadu === 'Bukan Pekerja (Berkumpulan)') {
                 if (radioBerkumpulan) radioBerkumpulan.checked = true;
             } else {
-                // Untuk Individu atau Bukan Pekerja, kita setkan kepada Individu
+                // Untuk Pekerja Individu atau Bukan Pekerja (Individu)
                 if (radioIndividu) radioIndividu.checked = true;
             }
 
