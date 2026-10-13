@@ -2809,8 +2809,14 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
-                        <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanPengadu" placeholder="Jawatan"></div></div>
                         <div class="form-group">
+                            <label id="labelJawatan">Jawatan <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="jawatanPengadu" placeholder="Jawatan">
+                                <p id="remarkJawatan" style="display: none; font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*cth: Orang Awam/NGO</p>
+                            </div>
+                        </div>
+                        <div class="form-group" id="ruanganGajiPokok">
                             <label>Gaji Pokok <span>*</span></label>
                             <div class="input-wrapper" style="position: relative; width: 60%;">
                                 <span style="position: absolute; left: 12px; top: 10px; color: var(--text-muted); font-weight: 600;">RM</span>
@@ -7486,11 +7492,9 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
             const radioIndividu = document.getElementById('aduanIndividu');
             const radioBerkumpulan = document.getElementById('aduanBerkumpulan');
             
-            // Jika pilihan adalah apa-apa yang berkaitan dengan Kumpulan
             if (dropdownPengadu === 'Berkumpulan' || dropdownPengadu === 'Bukan Pekerja (Berkumpulan)') {
                 if (radioBerkumpulan) radioBerkumpulan.checked = true;
             } else {
-                // Untuk Pekerja Individu atau Bukan Pekerja (Individu)
                 if (radioIndividu) radioIndividu.checked = true;
             }
 
@@ -7506,11 +7510,31 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
                 ruanganBilangan.style.display = 'none'; 
                 labelNama.innerHTML = 'Nama <span>*</span>'; 
             }
+
+            // 4. KAWALAN KHAS UNTUK BUKAN PEKERJA (INDIVIDU/BERKUMPULAN)
+            const labelJawatan = document.getElementById('labelJawatan');
+            const remarkJawatan = document.getElementById('remarkJawatan');
+            const inputJawatan = document.getElementById('jawatanPengadu');
+            const ruanganGaji = document.getElementById('ruanganGajiPokok');
+            const blokPerkhidmatan = document.getElementById('blokMaklumatPerkhidmatan');
+
+            if (dropdownPengadu === 'Bukan Pekerja (Individu)' || dropdownPengadu === 'Bukan Pekerja (Berkumpulan)') {
+                if (labelJawatan) labelJawatan.innerHTML = 'Status Pengadu <span>*</span>';
+                if (remarkJawatan) remarkJawatan.style.display = 'block';
+                if (inputJawatan) inputJawatan.placeholder = 'Status Pengadu';
+                if (ruanganGaji) ruanganGaji.style.display = 'none';
+                if (blokPerkhidmatan) blokPerkhidmatan.style.display = 'none';
+            } else {
+                if (labelJawatan) labelJawatan.innerHTML = 'Jawatan <span>*</span>';
+                if (remarkJawatan) remarkJawatan.style.display = 'none';
+                if (inputJawatan) inputJawatan.placeholder = 'Jawatan';
+                if (ruanganGaji) ruanganGaji.style.display = 'grid'; 
+                if (blokPerkhidmatan) blokPerkhidmatan.style.display = 'block';
+            }
             
             kawalJenisAduanTuntutan(); 
             kemaskiniDropdownPendaftaran(); 
         }
-
         function setStatusBorang(isReadonly) {
             const container = document.getElementById('viewPendaftaranKes');
             const inputs = container.querySelectorAll('input, select, textarea');
