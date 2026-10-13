@@ -3116,18 +3116,28 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
 
-<!-- KAD 3: TUNTUTAN KETUA PENGADU (Hanya Muncul Jika Berkumpulan) -->
+<!-- KAD 3: MAKLUMAT PENGADU BERKUMPULAN -->
 <div class="card full-width" id="kad3_ketua" style="order: 3; display: none;">
-        <div class="card-header">
+    <div class="card-header">
         <div style="display: flex; flex-direction: column; gap: 4px;">
             <span>Maklumat Pengadu</span>
             <span style="font-size: 0.75em; font-weight: 500; color: var(--primary-blue); font-style: italic; text-transform: none;">
                 * Senarai butiran pengadu yang terlibat dalam aduan berkumpulan.
             </span>
         </div>
+        
+        <div class="action-dropdown-container" style="margin-left: auto; position: relative; display: flex; align-items: center;">
+            <button type="button" style="width: 46px; height: 30px; background-color: #334155; color: white; border: none; border-radius: 6px; font-size: 24px; font-weight: 900; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 6px; transition: all 0.2s ease;" onclick="document.getElementById('dropdownG1').classList.toggle('show')" title="Tindakan">
+                ⋯
+            </button>
+            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
+                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Ketua');">📄 G1 Ketua</a>
+                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Borang');">📄 G1 Borang</a>
+            </div>
+        </div>
     </div>
+    
     <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
-        <!-- JADUAL BUTIRAN PENGADU (MATCHING BAHAGIAN B) -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
             <h5 style="margin: 0; color: var(--primary-blue); font-size: 1.05em;">Senarai Pengadu Berkumpulan</h5>
             <button type="button" class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap; padding: 8px 15px; font-size: 0.85em;" onclick="tambahPengaduBerkumpulan()">+ Pengadu</button>
@@ -3149,16 +3159,44 @@ Portal rasmi : jtksm.mohr.gov.my
         </table>
 
         <div id="ruanganPengaduTambahan" style="margin-top: 20px;"></div>
+    </div>
+</div>
 
-        <!-- Butang Seterusnya -->
-        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+<!-- KAD 4: MAKLUMAT TUNTUTAN KESELURUHAN -->
+<div class="card full-width" id="kad4_biasa" style="order: 4;">
+    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
+    
+    <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
+            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
+        </div>
+        
+        <table id="jadualTuntutan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
+            <thead style="background-color: var(--card-header-bg);">
+                <tr>
+                    <th style="width: 5%; text-align: center; border-bottom: 1px solid var(--border-color);">Bil.</th>
+                    <th style="width: 25%; border-bottom: 1px solid var(--border-color);">Jenis Aduan</th>
+                    <th style="width: 50%; border-bottom: 1px solid var(--border-color);">Keterangan Aduan</th>
+                    <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Kemaskini</th>
+                    <th style="width: 10%; text-align: center; border-bottom: 1px solid var(--border-color);">Hapus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Butang Seterusnya -->
+    <div class="card-body" id="ruanganButangSeterusnyaTab1" style="padding-top: 0; display: none;">
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
             <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
         </div>
-    </div> <!-- Ini penutup card-body -->
-</div> <!-- Ini penutup card kad3_ketua -->
-
-<!-- 🔴 MASUKKAN KODING INI: PENUTUP TAB 1 YANG TERCICIR 🔴 -->
+    </div>
 </div>
+
+</div> <!-- PENUTUP TAB 1 YANG HILANG SEBELUM INI -->
 
 <!-- TAB 2: KENYATAAN PENGADU -->
 <div class="content-area" id="tab2" style="display: none; grid-template-columns: 1fr;">
