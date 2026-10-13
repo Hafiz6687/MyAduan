@@ -2862,13 +2862,13 @@ Portal rasmi : jtksm.mohr.gov.my
                                 </div>
                             </div>
 
-                            <div id="kandunganMaklumatPerkhidmatan" style="display: none;">
-                                
+    <div id="kandunganMaklumatPerkhidmatan" style="display: none;"> 
+        
 <div class="form-group" style="align-items: center; margin-bottom: 15px;">
     <label style="margin-top: 0;">Tempoh Perkhidmatan</label>
     <div class="input-wrapper radio-group" style="margin: 0; display: flex; gap: 15px;">
         <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="radio" name="jenisTempoh" value="Pasti" onchange="document.getElementById('ruanganTempohPasti').style.display=''; document.getElementById('ruanganTempohTidakPasti').style.display='none';" checked> Pasti
+            <input type="radio" name="jenisTempoh" value="Pasti" onchange="document.getElementById('ruanganTempohPasti').style.display='flex'; document.getElementById('ruanganTempohTidakPasti').style.display='none';"> Pasti
         </label>
         <label style="display: flex; align-items: center; cursor: pointer;">
             <input type="radio" name="jenisTempoh" value="Tidak Pasti" onchange="document.getElementById('ruanganTempohPasti').style.display='none'; document.getElementById('ruanganTempohTidakPasti').style.display='flex';"> Tidak Pasti
@@ -2876,7 +2876,7 @@ Portal rasmi : jtksm.mohr.gov.my
     </div>
 </div>
 
-<div class="form-group" id="ruanganTempohPasti" style="align-items: center; margin-bottom: 15px;">
+<div class="form-group" id="ruanganTempohPasti" style="display: none; align-items: center; margin-bottom: 15px;">
     <label style="margin-top: 0;">Tarikh Mula Kerja <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal; font-style: italic;">*Boleh key-in manually</span></label>
     <div class="input-wrapper">
         <input type="date" id="tarikhMulaKerja" style="width: 100%; max-width: 300px; min-width: 160px; box-sizing: border-box;">
