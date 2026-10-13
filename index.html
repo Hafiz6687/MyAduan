@@ -7526,11 +7526,32 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
         }
 
         function toggleAduan() {
+            // 1. Tangkap nilai dari Dropdown Jenis Pengadu
+            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value;
+            
+            // 2. Selaraskan (Tandakan) Radio Button Tersembunyi mengikut pilihan Dropdown
+            const radioIndividu = document.getElementById('aduanIndividu');
+            const radioBerkumpulan = document.getElementById('aduanBerkumpulan');
+            
+            if (dropdownPengadu === 'Berkumpulan') {
+                if (radioBerkumpulan) radioBerkumpulan.checked = true;
+            } else {
+                // Untuk Individu atau Bukan Pekerja, kita setkan kepada Individu
+                if (radioIndividu) radioIndividu.checked = true;
+            }
+
+            // 3. Teruskan logik asal memaparkan/menyembunyikan Bilangan Pengadu dan menukar label
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
             const ruanganBilangan = document.getElementById('ruanganBilanganPengadu');
             const labelNama = document.getElementById('labelNamaPengadu');
-            if (aduanBerkumpulan) { ruanganBilangan.style.display = 'grid'; labelNama.innerHTML = 'Ketua Pengadu <span>*</span>'; } 
-            else { ruanganBilangan.style.display = 'none'; labelNama.innerHTML = 'Nama <span>*</span>'; }
+            
+            if (aduanBerkumpulan) { 
+                ruanganBilangan.style.display = 'grid'; 
+                labelNama.innerHTML = 'Ketua Pengadu <span>*</span>'; 
+            } else { 
+                ruanganBilangan.style.display = 'none'; 
+                labelNama.innerHTML = 'Nama <span>*</span>'; 
+            }
             
             kawalJenisAduanTuntutan(); 
             kemaskiniDropdownPendaftaran(); 
