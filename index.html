@@ -1562,8 +1562,37 @@ function populasikanLampiran2() {
         
         // (16) Bayaran-bayaran Lain (Menerima Elaun)
         if(document.getElementById('l2_bayaran_lain')) {
-            let elaun = getVal('elaunPengadu') || getVal('menerimaElaun') || getVal('bayaranLain') || '';
-            document.getElementById('l2_bayaran_lain').innerText = elaun;
+            let statusElaun = '';
+            let radioElaun = document.querySelector('input[name="menerimaElaun"]:checked') || document.querySelector('input[name="elaunPengadu"]:checked');
+            
+            if (radioElaun) {
+                statusElaun = radioElaun.value.toUpperCase();
+            } else if (document.getElementById('menerimaElaun')) {
+                statusElaun = document.getElementById('menerimaElaun').value.toUpperCase();
+            }
+
+            let butiranElaun = "";
+            if (statusElaun === 'YA') {
+                let senarai = [];
+                // Mengambil semua input 'jenis elaun' dan 'jumlah/amaun elaun' dinamik
+                let jenisInputs = document.querySelectorAll('input[id^="jenisElaun"], input[placeholder*="Jenis Elaun"], input[placeholder*="jenis elaun"]');
+                let jumlahInputs = document.querySelectorAll('input[id^="jumlahElaun"], input[id^="amaunElaun"], input[placeholder*="RM"]');
+                
+                for(let i = 0; i < jenisInputs.length; i++) {
+                    let jenis = jenisInputs[i].value.trim();
+                    let jumlah = jumlahInputs[i] ? jumlahInputs[i].value.trim() : '';
+                    if(jenis) {
+                        // Gabungkan Jenis + RM
+                        senarai.push(jenis.toUpperCase() + (jumlah ? " (RM " + jumlah + ")" : ""));
+                    }
+                }
+                if(senarai.length > 0) {
+                    butiranElaun = " - " + senarai.join(", ");
+                }
+            }
+
+            let hasilElaun = statusElaun ? (statusElaun + butiranElaun) : (getVal('bayaranLain') || '-');
+            document.getElementById('l2_bayaran_lain').innerText = hasilElaun;
         }
                             
         // --- KAWALAN PAPARAN JADUAL PENGADU LAIN (BERKUMPULAN VS INDIVIDU) ---
