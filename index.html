@@ -6732,53 +6732,10 @@ function kawalPaparanTab3(tabId) {
 function pergiKeTabBorang(tabId) {
     // === TAMBAHAN KOD VALIDASI TUNTUTAN ===
     if (document.getElementById('tab1').style.display !== 'none' && (tabId === 'tab2' || tabId === 'tab3')) {
-        const isBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
-        const isMajikan = document.getElementById('majikan')?.checked;
-        
-        if (isBerkumpulan && !isMajikan) {
-            // 1. Semak tuntutan Ketua Pengadu
-            if (memoriTuntutanKetua.length === 0) {
-                alert("Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu sebelum meneruskan ke langkah seterusnya.");
-                document.getElementById('kad3_ketua').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return; // Hentikan pertukaran tab
-            }
-
-            // 2. Semak tuntutan Pengadu Tambahan (Pengadu 2, 3...)
-            const bilPengaduInput = document.getElementById('bilPengadu')?.value;
-            const bilangan = parseInt(bilPengaduInput) || 1;
-            
-            for (let i = 2; i <= bilangan; i++) {
-                if (!memoriTuntutanTambahan[i] || memoriTuntutanTambahan[i].length === 0) {
-                    alert(`Sila isi sekurang-kurangnya SATU tuntutan untuk Pengadu ${i} sebelum meneruskan ke langkah seterusnya.`);
-                    
-                    // Buka kotak togol jika ia sedang tertutup supaya user nampak
-                    const kandungan = document.getElementById(`kandunganPengadu${i}`);
-                    const labelTogol = document.getElementById(`labelTogolPengadu${i}`);
-                    if (kandungan && kandungan.style.display === 'none') {
-                        kandungan.style.display = 'block';
-                        if (labelTogol) {
-                            labelTogol.innerHTML = '▲ Sembunyi';
-                            labelTogol.style.backgroundColor = '#eff6ff';
-                            labelTogol.style.color = 'var(--primary-blue)';
-                        }
-                    }
-                    
-                    // Skrol terus ke kotak pengadu yang tertinggal itu
-                    const pengaduDiv = document.getElementById(`kandunganPengadu${i}`)?.parentElement;
-                    if (pengaduDiv) {
-                        pengaduDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return; // Hentikan pertukaran tab
-                }
-            }
-
-        } else {
-            // Semak tuntutan biasa (untuk aduan Individu / Majikan)
-            if (memoriTuntutan.length === 0) {
-                alert("Sila isi sekurang-kurangnya SATU maklumat tuntutan sebelum meneruskan ke langkah seterusnya.");
-                document.getElementById('kad4_biasa').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return; // Hentikan pertukaran tab
-            }
+        if (memoriTuntutan.length === 0) {
+            alert("Sila isi sekurang-kurangnya SATU maklumat tuntutan sebelum meneruskan ke langkah seterusnya.");
+            document.getElementById('kad4_biasa').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return; // Hentikan pertukaran tab
         }
     }
     // === TAMAT KOD VALIDASI ===
@@ -6807,53 +6764,10 @@ function pergiKeTabBorang(tabId) {
 function bukaTab(tabId, elemenTab) {
     // === TAMBAHAN KOD VALIDASI TUNTUTAN ===
     if (document.getElementById('tab1').style.display !== 'none' && (tabId === 'tab2' || tabId === 'tab3')) {
-        const isBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
-        const isMajikan = document.getElementById('majikan')?.checked;
-        
-        if (isBerkumpulan && !isMajikan) {
-            // 1. Semak tuntutan Ketua Pengadu
-            if (memoriTuntutanKetua.length === 0) {
-                alert("Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu sebelum meneruskan ke langkah seterusnya.");
-                document.getElementById('kad3_ketua').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return; // Hentikan pertukaran tab
-            }
-
-            // 2. Semak tuntutan Pengadu Tambahan (Pengadu 2, 3...)
-            const bilPengaduInput = document.getElementById('bilPengadu')?.value;
-            const bilangan = parseInt(bilPengaduInput) || 1;
-            
-            for (let i = 2; i <= bilangan; i++) {
-                if (!memoriTuntutanTambahan[i] || memoriTuntutanTambahan[i].length === 0) {
-                    alert(`Sila isi sekurang-kurangnya SATU tuntutan untuk Pengadu ${i} sebelum meneruskan ke langkah seterusnya.`);
-                    
-                    // Buka kotak togol jika ia sedang tertutup supaya user nampak
-                    const kandungan = document.getElementById(`kandunganPengadu${i}`);
-                    const labelTogol = document.getElementById(`labelTogolPengadu${i}`);
-                    if (kandungan && kandungan.style.display === 'none') {
-                        kandungan.style.display = 'block';
-                        if (labelTogol) {
-                            labelTogol.innerHTML = '▲ Sembunyi';
-                            labelTogol.style.backgroundColor = '#eff6ff';
-                            labelTogol.style.color = 'var(--primary-blue)';
-                        }
-                    }
-                    
-                    // Skrol terus ke kotak pengadu yang tertinggal itu
-                    const pengaduDiv = document.getElementById(`kandunganPengadu${i}`)?.parentElement;
-                    if (pengaduDiv) {
-                        pengaduDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return; // Hentikan pertukaran tab
-                }
-            }
-
-        } else {
-            // Semak tuntutan biasa (untuk aduan Individu / Majikan)
-            if (memoriTuntutan.length === 0) {
-                alert("Sila isi sekurang-kurangnya SATU maklumat tuntutan sebelum meneruskan ke langkah seterusnya.");
-                document.getElementById('kad4_biasa').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return; // Hentikan pertukaran tab
-            }
+        if (memoriTuntutan.length === 0) {
+            alert("Sila isi sekurang-kurangnya SATU maklumat tuntutan sebelum meneruskan ke langkah seterusnya.");
+            document.getElementById('kad4_biasa').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return; // Hentikan pertukaran tab
         }
     }
     // === TAMAT KOD VALIDASI ===
