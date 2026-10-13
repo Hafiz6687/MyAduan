@@ -1631,7 +1631,7 @@ function populasikanLampiran2() {
             </button>
             <div id="actionMenu" class="dropdown-menu">
                 <a href="#" id="menuKemaskini" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
-                <a href="#" id="menuCetakBorang" onclick="document.getElementById('actionMenu').classList.remove('show'); document.getElementById('printArea').innerHTML = document.getElementById('lampiran2BorangAduan').outerHTML; window.print(); setTimeout(() => { document.getElementById('modalPreview').style.display = 'none'; tukarView('senarai'); }, 500);">🖨️ Cetak Borang Aduan</a>
+                <a href="#" id="menuCetakBorang" onclick="document.getElementById('actionMenu').classList.remove('show'); document.getElementById('printArea').innerHTML = document.getElementById('lampiran2BorangAduan').outerHTML; window.print(); setTimeout(() => { document.getElementById('menuCetakBorang').style.display = 'none'; document.getElementById('menuDaftar').style.display = 'flex'; }, 500);">🖨️ Cetak Borang Aduan</a>
                 <a href="#" id="menuCetakG1" onclick="document.getElementById('actionMenu').classList.remove('show'); window.print();" style="display: none;">🖨️ Cetak G1</a>
                 <a href="#" id="menuDaftar" onclick="daftarDariPreview()" style="display: none;">🚀 Daftar</a>
                 <a href="#" id="menuSelesai" onclick="selesaiPemfailan()" style="display: none; color: #10b981; font-weight: bold;">✅ Selesai</a>
