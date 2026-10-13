@@ -1561,43 +1561,53 @@ function populasikanLampiran2() {
         if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
         
         // (16) Bayaran-bayaran Lain (Menerima Elaun)
-        if(document.getElementById('l2_bayaran_lain')) {
+        if (document.getElementById('l2_bayaran_lain')) {
             let statusElaun = '';
-            let radioElaun = document.querySelector('input[name="menerimaElaun"]:checked') || document.querySelector('input[name="elaunPengadu"]:checked');
+            let senarai = [];
             
-            if (radioElaun) {
-                statusElaun = radioElaun.value.toUpperCase();
-            } else if (document.getElementById('menerimaElaun')) {
-                statusElaun = document.getElementById('menerimaElaun').value.toUpperCase();
+            // 1. CARI STATUS "YA/TIDAK" MENGGUNAKAN TEKS LABEL "Menerima Elaun"
+            let semuaLabel = document.querySelectorAll('label');
+            for (let lbl of semuaLabel) {
+                if (lbl.innerText.includes('Menerima Elaun')) {
+                    let kontenaRadio = lbl.nextElementSibling || lbl.parentElement;
+                    let radioDitekan = kontenaRadio.querySelector('input[type="radio"]:checked');
+                    if (radioDitekan) statusElaun = radioDitekan.value.toUpperCase();
+                    break;
+                }
             }
 
-            let butiranElaun = "";
-            if (statusElaun === 'YA') {
-                let senarai = [];
-                // Mengambil semua input 'jenis elaun' dan 'jumlah/amaun elaun' dinamik
-                let jenisInputs = document.querySelectorAll('input[id^="jenisElaun"], input[placeholder*="Jenis Elaun"], input[placeholder*="jenis elaun"]');
-                let jumlahInputs = document.querySelectorAll('input[id^="jumlahElaun"], input[id^="amaunElaun"], input[placeholder*="RM"]');
+            // 2. CARI KOTAK INPUT BERDASARKAN BUTANG "+ Tambah Elaun"
+            let butangTambah = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Tambah Elaun'));
+            
+            if (butangTambah) {
+                // Cari semua kotak input teks dan nombor di sekeliling butang tersebut
+                let kontenaElaun = butangTambah.parentElement;
+                let semuaInputElaun = kontenaElaun.querySelectorAll('input[type="text"], input[type="number"]');
                 
-                for(let i = 0; i < jenisInputs.length; i++) {
-                    let jenis = jenisInputs[i].value.trim();
-                    let jumlah = jumlahInputs[i] ? jumlahInputs[i].value.trim() : '';
-                    if(jenis) {
-                        // Gabungkan Jenis + RM
+                // Susun secara berpasangan: [Jenis Elaun, Jumlah RM]
+                for (let i = 0; i < semuaInputElaun.length; i += 2) {
+                    let jenis = semuaInputElaun[i] ? semuaInputElaun[i].value.trim() : '';
+                    let jumlah = semuaInputElaun[i+1] ? semuaInputElaun[i+1].value.trim() : '';
+                    
+                    if (jenis) {
                         senarai.push(jenis.toUpperCase() + (jumlah ? " (RM " + jumlah + ")" : ""));
                     }
                 }
-                if(senarai.length > 0) {
-                    butiranElaun = " - " + senarai.join(", ");
-                }
+                
+                // Force status jadi YA jika ada elaun diisi (penyelamat jika radio button gagal dibaca)
+                if (senarai.length > 0) statusElaun = 'YA';
             }
 
+            let butiranElaun = senarai.length > 0 ? " - " + senarai.join(", ") : "";
             let hasilElaun = "";
+
             if (statusElaun === 'YA') {
                 hasilElaun = statusElaun + butiranElaun;
             } else if (statusElaun === 'TIDAK') {
                 hasilElaun = "-Tiada-";
             } else {
-                hasilElaun = getVal('bayaranLain') || '-';
+                let fallback = document.getElementById('bayaranLain') ? document.getElementById('bayaranLain').value.toUpperCase() : '';
+                hasilElaun = fallback || '-';
             }
             
             document.getElementById('l2_bayaran_lain').innerText = hasilElaun;
