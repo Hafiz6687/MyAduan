@@ -3120,21 +3120,21 @@ Portal rasmi : jtksm.mohr.gov.my
                 </div>
 
                 <!-- KAD 3: MAKLUMAT PENGADU BERKUMPULAN -->
-                <div class="card full-width" id="kad3_ketua" style="order: 3; display: none;">
-                    <div class="card-header">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <span>Maklumat Pengadu</span>
-                            <span style="font-size: 0.75em; font-weight: 500; color: var(--primary-blue); font-style: italic; text-transform: none;">
-                                * Senarai butiran pengadu yang terlibat dalam aduan berkumpulan.
-                            </span>
-                        </div>
-                    </div>                    
-                    <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                            <h5 style="margin: 0; color: var(--primary-blue); font-size: 1.05em;">Senarai Pengadu Berkumpulan</h5>
-                            <button type="button" class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap; padding: 8px 15px; font-size: 0.85em;" onclick="tambahPengaduBerkumpulan()">+ Pengadu</button>
-                        </div>
-
+<div class="card full-width" id="kad3_ketua" style="order: 3; display: none;">
+    <div class="card-header">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span>Maklumat Pengadu-pengadu Lain</span>
+            <span style="font-size: 0.75em; font-weight: 500; color: var(--primary-blue); font-style: italic; text-transform: none;">
+                * Senarai butiran pengadu yang terlibat dalam aduan berkumpulan.
+            </span>
+        </div>
+    </div>
+    
+    <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <h5 style="margin: 0; color: var(--primary-blue); font-size: 1.05em;">Senarai Pengadu Berkumpulan</h5>
+            <button type="button" class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="tambahPengaduBerkumpulan()">+ Tambah Pengadu</button>
+        </div>
                         <table id="jadualPengaduBerkumpulan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color); margin-bottom: 20px;">
                             <thead style="background-color: var(--card-header-bg);">
                                 <tr style="text-align: center; font-weight: bold;">
@@ -3155,15 +3155,14 @@ Portal rasmi : jtksm.mohr.gov.my
                 </div>
 
                 <!-- KAD 4: MAKLUMAT TUNTUTAN KESELURUHAN -->
-                <div class="card full-width" id="kad4_biasa" style="order: 4;">
-                    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
-                    
-                    <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-                            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
-                        </div>
-                        
+<div class="card full-width" id="kad4_biasa" style="order: 4;">
+    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Aduan</div>
+    
+    <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
+            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTuntutan('biasa')">+ Jenis Aduan</button>
+        </div>                        
                         <table id="jadualTuntutan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
                             <thead style="background-color: var(--card-header-bg);">
                                 <tr>
