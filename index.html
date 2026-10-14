@@ -7868,7 +7868,6 @@ function renderSenaraiTugas() {
     });
 }
 
-// FUNGSI BARU UNTUK KUMPUL SEMUA DATA BORANG
 function kumpulDataBorang() {
     let formData = {};
     const inputs = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
@@ -7891,7 +7890,7 @@ function kumpulDataBorang() {
         }
     });
 
-    // --- TAMBAHAN: Tangkap dan simpan data pengadu berkumpulan tambahan ---
+    // --- Tangkap dan simpan data pengadu berkumpulan tambahan ---
     let pengaduBerkumpulanData = [];
     let bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
     for (let i = 2; i <= bilP; i++) {
@@ -7908,7 +7907,6 @@ function kumpulDataBorang() {
             });
         }
     }
-    // ---------------------------------------------------------------------
 
     let senaraiElaunDinamik = [];
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
@@ -7923,7 +7921,10 @@ function kumpulDataBorang() {
         pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
         tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua)),
-        tuntutanTambahan: JSON.parse(
+        tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan))
+    };
+}
+       
 function daftarKesSistem() {
     let noKesAsal = document.getElementById('noKes').value;
     let noKesBersih = noKesAsal.split('<br>')[0].trim();
