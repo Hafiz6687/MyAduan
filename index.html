@@ -6674,47 +6674,45 @@ function semakBilanganPengadu(input) {
     }
 }
 
-// FUNGSI BARU UNTUK TAMBAH PENGADU KE JADUAL (Kalis-Hilang Data)
+// FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Asal & Berfungsi)
 function tambahPengaduBerkumpulan() {
     let inputBil = document.getElementById('bilPengadu');
     let semasa = parseInt(inputBil.value) || 1;
-    
-    // Simpan data sedia ada dari jadual sebelum bilangan bertambah
-    let savedValues = {};
-    const tbody = document.getElementById('bodyPengaduBerkumpulan');
-    if (tbody) {
-        tbody.querySelectorAll('tr').forEach((row, idx) => {
-            let realIndex = idx + 2;
-            let nInput = document.getElementById(`namaPengaduTambahan${realIndex}`);
-            let kInput = document.getElementById(`kpPengaduTambahan${realIndex}`);
-            let wInput = document.getElementById(`warganegaraPengaduTambahan${realIndex}`);
-            if (nInput || kInput || wInput) {
-                savedValues[realIndex] = {
-                    nama: nInput ? nInput.value : '',
-                    kp: kInput ? kInput.value : '',
-                    warganegara: wInput ? wInput.value : 'Malaysia'
-                };
-            }
-        });
-    }
-
     semasa++;
     inputBil.value = semasa;
-    
-    // Jana semula jadual dengan bilangan baharu
     semakBilanganPengadu(inputBil);
+    renderJadualPengaduBerkumpulan();
+}
+
+function renderJadualPengaduBerkumpulan() {
+    const tbody = document.getElementById('bodyPengaduBerkumpulan');
+    if (!tbody) return;
+
+    const inputBil = document.getElementById('bilPengadu');
+    const bil = parseInt(inputBil?.value) || 1;
+
+    tbody.innerHTML = '';
     
-    // Pulihkan semula data yang ditaip tadi ke dalam input yang dijana
-    setTimeout(() => {
-        for (let key in savedValues) {
-            let nInput = document.getElementById(`namaPengaduTambahan${key}`);
-            let kInput = document.getElementById(`kpPengaduTambahan${key}`);
-            let wInput = document.getElementById(`warganegaraPengaduTambahan${key}`);
-            if (nInput) nInput.value = savedValues[key].nama;
-            if (kInput) kInput.value = savedValues[key].kp;
-            if (wInput) wInput.value = savedValues[key].warganegara;
-        }
-    }, 50);
+    if (bil <= 1) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada pengadu tambahan direkodkan.</td></tr>`;
+        return;
+    }
+
+    for (let i = 2; i <= bil; i++) {
+        let namaVal = document.getElementById(`namaPengaduTambahan${i}`)?.value || '';
+        let kpVal = document.getElementById(`kpPengaduTambahan${i}`)?.value || '';
+        let warganegaraVal = document.getElementById(`warganegaraPengaduTambahan${i}`)?.value || 'Malaysia';
+
+        tbody.innerHTML += `
+            <tr>
+                <td style="text-align: center; padding: 8px;">(${i - 1})</td>
+                <td style="padding: 8px;"><input type="text" id="namaPengaduTambahan${i}" value="${namaVal}" placeholder="Nama Pengadu ${i}" oninput="hurufBesarSetiapPerkataan(this)" style="width:100%; box-sizing:border-box; padding:6px;"></td>
+                <td style="padding: 8px;"><input type="text" id="kpPengaduTambahan${i}" value="${kpVal}" placeholder="No. KP / Pasport" oninput="formatMyKadTambahan(this)" style="width:100%; box-sizing:border-box; padding:6px;"></td>
+                <td style="padding: 8px;"><input type="text" id="warganegaraPengaduTambahan${i}" value="${warganegaraVal}" placeholder="Warganegara" style="width:100%; box-sizing:border-box; padding:6px;"></td>
+                <td style="text-align: center; padding: 8px;"><button type="button" class="btn-delete-tbl" onclick="hapusPengaduBerkumpulan(${i})">🗑️</button></td>
+            </tr>
+        `;
+    }
 }
 
 // FUNGSI UNTUK RENDER JADUAL PENGADU BERKUMPULAN
