@@ -7903,9 +7903,10 @@ function kumpulDataBorang() {
     return {
         inputs: formData,
         elaun: senaraiElaunDinamik,
+        pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
         tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua)),
-        tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan)) // <--- BARIS TAMBAHAN WAJIB ADA
+        tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan))
     };
 }
 function daftarKesSistem() {
