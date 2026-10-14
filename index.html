@@ -6651,7 +6651,8 @@ function semakBukaMaklumatPerkhidmatan() {
                 input.setSelectionRange(start, end); 
             }
         }
-// --- FUNGSI BARU/DIKEMASKINI: Semak Bilangan Pengadu Berkumpulan ---
+
+       // 1. FUNGSI SEMAK BILANGAN PENGADU (Sync manual input dengan jadual)
 function semakBilanganPengadu(input) {
     if (input.value !== "") {
         let nilai = parseInt(input.value);
@@ -6666,25 +6667,33 @@ function semakBilanganPengadu(input) {
             alert("Tindakan Ditolak: Bagi aduan jenis Berkumpulan, bilangan pengadu mestilah 2 orang atau lebih.");
             input.value = ""; 
             janaJadualPengaduTambahan(0); 
+            renderJadualPengaduBerkumpulan();
         } else {
             janaJadualPengaduTambahan(nilai); 
+            renderJadualPengaduBerkumpulan();
         }
     } else {
         janaJadualPengaduTambahan(0); 
+        renderJadualPengaduBerkumpulan();
     }
 }
 
-// 1. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL
+// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Kira dari baris sebenar)
 function tambahPengaduBerkumpulan() {
     let inputBil = document.getElementById('bilPengadu');
-    let semasa = parseInt(inputBil.value) || 1;
-    semasa++;
-    inputBil.value = semasa;
+    let tbody = document.getElementById('bodyPengaduBerkumpulan');
+    
+    // Kira berapa baris yang wujud dalam jadual sekarang (abaikan row kosong)
+    let jumlahBaris = tbody ? tbody.querySelectorAll('tr:not(.empty-row)').length : 0;
+    
+    // Jumlah Pengadu = Ketua (1) + Baris Sedia Ada + 1 (Baris Baru)
+    let totalPengadu = 1 + jumlahBaris + 1;
+    
+    inputBil.value = totalPengadu;
     semakBilanganPengadu(inputBil);
-    renderJadualPengaduBerkumpulan();
 }
 
-// 2. FUNGSI UNTUK BINA JADUAL (Tangkap Data Dinamik & Kalis Hilang Data)
+// 3. FUNGSI UNTUK BINA JADUAL (Kalis Hilang Data & Tiada Double Row)
 function renderJadualPengaduBerkumpulan() {
     const tbody = document.getElementById('bodyPengaduBerkumpulan');
     if (!tbody) return;
@@ -6706,8 +6715,10 @@ function renderJadualPengaduBerkumpulan() {
         }
     });
 
-    // B. Kosongkan jadual
-    tbody.innerHTML = '';
+    // B. Kosongkan jadual dengan bersih
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
     
     if (bil <= 1) {
         tbody.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada pengadu tambahan direkodkan.</td></tr>`;
@@ -6733,31 +6744,28 @@ function renderJadualPengaduBerkumpulan() {
     }
 }
 
-// 3. FUNGSI UNTUK HAPUS BARIS TERTENTU (Logik Lebih Pintar)
+// 4. FUNGSI UNTUK HAPUS BARIS TERTENTU (Susun semula auto)
 function hapusPengaduBerkumpulan(btnElement) {
     let inputBil = document.getElementById('bilPengadu');
-    let bil = parseInt(inputBil.value) || 1;
+    let tbody = document.getElementById('bodyPengaduBerkumpulan');
 
-    if (bil <= 1) return;
-
-    // A. Buang baris HTML yang ditekan itu sahaja terlebih dahulu
+    // Buang baris yang ditekan itu sahaja terlebih dahulu
     btnElement.closest('tr').remove();
 
-    // B. Tolak bilangan pengadu pada kotak input
-    bil--;
-    inputBil.value = bil;
+    // Kira baki baris yang tinggal dalam jadual
+    let bakiBaris = tbody.querySelectorAll('tr:not(.empty-row)').length;
+    let totalPengadu = 1 + bakiBaris;
+    
+    // Update kotak input dan render semula jadual untuk kemaskini susunan nombor
+    inputBil.value = totalPengadu <= 1 ? "" : totalPengadu;
     semakBilanganPengadu(inputBil);
-
-    // C. Panggil render sekali lagi supaya nombor (1), (2) dan ID disusun semula cantik-cantik ke atas
-    renderJadualPengaduBerkumpulan();
 }
 
-// 4. FUNGSI PENGURUSAN MEMORI TUNTUTAN TAMBAHAN
+// 5. FUNGSI PENGURUSAN MEMORI TUNTUTAN TAMBAHAN
 function janaJadualPengaduTambahan(bilangan) {
     const container = document.getElementById('ruanganPengaduTambahan');
     if (container) container.innerHTML = ''; 
 
-    // Urus pemadaman memori jika user kurangkan pengadu
     for (let key in memoriTuntutanTambahan) {
         if (parseInt(key) > bilangan) {
             delete memoriTuntutanTambahan[key];
@@ -6774,10 +6782,9 @@ function janaJadualPengaduTambahan(bilangan) {
     }
 }
 
-// 5. FUNGSI FORMAT IC/PASPORT
+// 6. FUNGSI FORMAT IC/PASPORT
 function formatMyKadTambahan(inputElement) {
     let val = inputElement.value.replace(/[^0-9A-Za-z]/g, ''); 
-    // Jika semuanya nombor, kita anggap itu IC
     let isMyKad = /^\d+$/.test(val); 
     
     if (isMyKad) {
@@ -6786,6 +6793,7 @@ function formatMyKadTambahan(inputElement) {
     }
     inputElement.value = val;
 }
+       
         function hurufBesarSelepasTitik(input) {
             let start = input.selectionStart;
             let end = input.selectionEnd;
