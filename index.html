@@ -7878,7 +7878,6 @@ function kumpulDataBorang() {
         if (el.type === 'radio') {
             if (el.checked) formData[el.name] = el.value;
         } else if (el.type === 'checkbox') {
-            // --- PENAMBAHBAIKAN: Tangkap nilai (a), (b), (c) sebagai array ---
             if (el.name && !el.id) {
                 if (!formData[el.name]) formData[el.name] = [];
                 if (el.checked) formData[el.name].push(el.value);
@@ -7886,24 +7885,42 @@ function kumpulDataBorang() {
                 let key = el.id || el.name;
                 formData[key] = el.checked;
             }
-            // -----------------------------------------------------------------
         } else {
             let key = el.id || el.name;
             formData[key] = el.value;
         }
     });
 
+    // --- TAMBAHAN: Tangkap dan simpan data pengadu berkumpulan tambahan ---
+    let pengaduBerkumpulanData = [];
+    let bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
+    for (let i = 2; i <= bilP; i++) {
+        let nInput = document.getElementById(`namaPengaduTambahan${i}`);
+        let kInput = document.getElementById(`kpPengaduTambahan${i}`);
+        let wInput = document.getElementById(`warganegaraPengaduTambahan${i}`);
+        
+        if (nInput || kInput || wInput) {
+            pengaduBerkumpulanData.push({
+                index: i,
+                nama: nInput ? nInput.value : '',
+                kp: kInput ? kInput.value : '',
+                warganegara: wInput ? wInput.value : 'Malaysia'
+            });
+        }
+    }
+    // ---------------------------------------------------------------------
+
     let senaraiElaunDinamik = [];
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
+        if(jenis || jumlah) senaraiElaunDinasmik.push({jenis, jumlah});
     });
 
     return {
         inputs: formData,
         elaun: senaraiElaunDinamik,
-        pengaduBerkumpulan: pengaduBerkumpulanData,
+        pengaduBerkumpulan: pengaduBerkumpulanData, // <--- Simpan dalam objek rekod
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
         tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua)),
         tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan))
