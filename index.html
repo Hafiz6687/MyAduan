@@ -1567,8 +1567,10 @@ function populasikanLampiran2() {
             let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : 'Pasti';
             
             if (jenisTempohVal === 'Tidak Pasti') {
-                let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim().toUpperCase() : '';
-                document.getElementById('l2_tempoh').innerText = teksTdKPasti || '-';
+                let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim() : '';
+                // Jadikan huruf pertama perkataan pertama besar, selebihnya kekal free text
+                let formattedTempoh = teksTdKPasti ? teksTdKPasti.charAt(0).toUpperCase() + teksTdKPasti.slice(1) : '-';
+                document.getElementById('l2_tempoh').innerText = formattedTempoh;
             } else {
                 let tMulaVal = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : '';
                 if (tMulaVal) {
@@ -1588,14 +1590,16 @@ function populasikanLampiran2() {
                     }
                     
                     let teksTempohHasil = [];
-                    if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " Tahun");
-                    if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " Bulan");
+                    if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " tahun");
+                    if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " bulan");
                     
                     if (teksTempohHasil.length === 0) {
                         teksTempohHasil.push("Kurang sebulan");
                     }
                     
-                    document.getElementById('l2_tempoh').innerText = teksTempohHasil.join(" ");
+                    let hasilGabung = teksTempohHasil.join("dan ");
+                    // Huruf besar pada huruf pertama ayat
+                    document.getElementById('l2_tempoh').innerText = hasilGabung.charAt(0).toUpperCase() + hasilGabung.slice(1);
                 } else {
                     document.getElementById('l2_tempoh').innerText = '-';
                 }
@@ -1619,12 +1623,17 @@ function populasikanLampiran2() {
                         
                         if (inpJenis) {
                             let jenisText = inpJenis.value.trim();
-                            if (jenisText) {
-                                // Format huruf pertama setiap perkataan besar (Title Case)
+                            let jumlahText = inpJumlah ? inpJumlah.value.trim() : '';
+                            
+                            // Pastikan jenis diisi DAN jumlahnya wujud serta bukan kosong/0.00 berganda
+                            if (jenisText && jumlahText && jumlahText !== "" && jumlahText !== "0.00") {
                                 let jenisTitleCase = jenisText.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-                                let jumlahText = inpJumlah ? inpJumlah.value.trim() : '';
                                 
-                                senaraiElaunFormatted.push(`${jenisTitleCase} (RM ${jumlahText || '0.00'})`);
+                                // Elakkan masukkan entri yang sama dua kali secara tidak sengaja
+                                let formatItem = `${jenisTitleCase} (RM ${jumlahText})`;
+                                if (!senaraiElaunFormatted.includes(formatItem)) {
+                                    senaraiElaunFormatted.push(formatItem);
+                                }
                             }
                         }
                     });
@@ -1633,7 +1642,7 @@ function populasikanLampiran2() {
                 if (senaraiElaunFormatted.length > 0) {
                     document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.join(", ");
                 } else {
-                    document.getElementById('l2_bayaran_lain').innerText = "YA";
+                    document.getElementById('l2_bayaran_lain').innerText = "Tiada";
                 }
             } else {
                 document.getElementById('l2_bayaran_lain').innerText = "Tiada";
