@@ -6652,7 +6652,7 @@ function semakBukaMaklumatPerkhidmatan() {
             }
         }
 
-       // 1. FUNGSI SEMAK BILANGAN PENGADU (Sync manual input dengan jadual)
+// 1. FUNGSI SEMAK BILANGAN PENGADU (Sync manual input dengan jadual)
 function semakBilanganPengadu(input) {
     if (input.value !== "") {
         let nilai = parseInt(input.value);
@@ -6664,33 +6664,40 @@ function semakBilanganPengadu(input) {
         }
 
         if (nilai <= 1) {
-            alert("Tindakan Ditolak: Bagi aduan jenis Berkumpulan, bilangan pengadu mestilah 2 orang atau lebih.");
-            input.value = ""; 
-            janaJadualPengaduTambahan(0); 
+            input.value = ""; // Kosongkan jika user letak 1 atau 0
+            janaJadualPengaduTambahan(1); 
             renderJadualPengaduBerkumpulan();
         } else {
             janaJadualPengaduTambahan(nilai); 
             renderJadualPengaduBerkumpulan();
         }
     } else {
-        janaJadualPengaduTambahan(0); 
+        janaJadualPengaduTambahan(1); 
         renderJadualPengaduBerkumpulan();
     }
 }
 
-// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Kira dari baris sebenar)
+// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Klik Butang)
 function tambahPengaduBerkumpulan() {
     let inputBil = document.getElementById('bilPengadu');
-    let tbody = document.getElementById('bodyPengaduBerkumpulan');
+    let semasa = parseInt(inputBil.value);
     
-    // Kira berapa baris yang wujud dalam jadual sekarang (abaikan row kosong)
-    let jumlahBaris = tbody ? tbody.querySelectorAll('tr:not(.empty-row)').length : 0;
+    // Jika kotak kosong atau NaN, anggap nilai semasa adalah 1 (Ketua sahaja)
+    if (isNaN(semasa) || semasa < 1) {
+        semasa = 1; 
+    }
     
-    // Jumlah Pengadu = Ketua (1) + Baris Sedia Ada + 1 (Baris Baru)
-    let totalPengadu = 1 + jumlahBaris + 1;
+    if (semasa >= 50) {
+        alert("Maksimum 50 orang pengadu sahaja dibenarkan untuk satu pendaftaran.");
+        return;
+    }
+
+    // Tambah 1 row baharu
+    semasa++; 
+    inputBil.value = semasa;
     
-    inputBil.value = totalPengadu;
-    semakBilanganPengadu(inputBil);
+    janaJadualPengaduTambahan(semasa);
+    renderJadualPengaduBerkumpulan();
 }
 
 // 3. FUNGSI UNTUK BINA JADUAL (Kalis Hilang Data & Tiada Double Row)
@@ -6701,7 +6708,7 @@ function renderJadualPengaduBerkumpulan() {
     const inputBil = document.getElementById('bilPengadu');
     let bil = parseInt(inputBil?.value) || 1;
 
-    // A. Kumpul data sedia ada secara terus dari kotak input
+    // A. Kumpul data sedia ada secara terus dari kotak input sebelum render
     let dataSediaAda = [];
     const rows = tbody.querySelectorAll('tr:not(.empty-row)');
     rows.forEach(row => {
@@ -6716,9 +6723,7 @@ function renderJadualPengaduBerkumpulan() {
     });
 
     // B. Kosongkan jadual dengan bersih
-    while (tbody.firstChild) {
-        tbody.removeChild(tbody.firstChild);
-    }
+    tbody.innerHTML = '';
     
     if (bil <= 1) {
         tbody.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada pengadu tambahan direkodkan.</td></tr>`;
@@ -6754,11 +6759,18 @@ function hapusPengaduBerkumpulan(btnElement) {
 
     // Kira baki baris yang tinggal dalam jadual
     let bakiBaris = tbody.querySelectorAll('tr:not(.empty-row)').length;
-    let totalPengadu = 1 + bakiBaris;
+    let totalPengaduTerkini = 1 + bakiBaris; // 1 Ketua + Baki Row
     
-    // Update kotak input dan render semula jadual untuk kemaskini susunan nombor
-    inputBil.value = totalPengadu <= 1 ? "" : totalPengadu;
-    semakBilanganPengadu(inputBil);
+    // Kemaskini kotak input
+    if (totalPengaduTerkini <= 1) {
+        inputBil.value = ""; // Kosongkan kalau tinggal ketua sahaja
+    } else {
+        inputBil.value = totalPengaduTerkini;
+    }
+
+    // Kemaskini memori tuntutan dan susun semula jadual
+    janaJadualPengaduTambahan(totalPengaduTerkini);
+    renderJadualPengaduBerkumpulan();
 }
 
 // 5. FUNGSI PENGURUSAN MEMORI TUNTUTAN TAMBAHAN
