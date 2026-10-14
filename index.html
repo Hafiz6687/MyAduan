@@ -6688,6 +6688,24 @@ function renderJadualPengaduBerkumpulan() {
     const tbody = document.getElementById('bodyPengaduBerkumpulan');
     if (!tbody) return;
 
+    // 1. Simpan nilai yang sedang ditaip pengguna sebelum jadual di-render semula
+    let savedValues = {};
+    const existingRows = tbody.querySelectorAll('tr');
+    existingRows.forEach((row, idx) => {
+        let realIndex = idx + 2; // Bermula dari Pengadu 2
+        let nInput = document.getElementById(`namaPengaduTambahan${realIndex}`);
+        let kInput = document.getElementById(`kpPengaduTambahan${realIndex}`);
+        let wInput = document.getElementById(`warganegaraPengaduTambahan${realIndex}`);
+        
+        if (nInput || kInput || wInput) {
+            savedValues[realIndex] = {
+                nama: nInput ? nInput.value : '',
+                kp: kInput ? kInput.value : '',
+                warganegara: wInput ? wInput.value : 'Malaysia'
+            };
+        }
+    });
+
     const inputBil = document.getElementById('bilPengadu');
     const bil = parseInt(inputBil?.value) || 1;
 
@@ -6699,9 +6717,10 @@ function renderJadualPengaduBerkumpulan() {
     }
 
     for (let i = 2; i <= bil; i++) {
-        let namaVal = document.getElementById(`namaPengaduTambahan${i}`)?.value || '';
-        let kpVal = document.getElementById(`kpPengaduTambahan${i}`)?.value || '';
-        let warganegaraVal = document.getElementById(`warganegaraPengaduTambahan${i}`)?.value || 'Malaysia';
+        // Ambil semula nilai yang disimpan, atau kosong jika baris baharu
+        let namaVal = (savedValues[i] && savedValues[i].nama !== undefined) ? savedValues[i].nama : (document.getElementById(`namaPengaduTambahan${i}`)?.value || '');
+        let kpVal = (savedValues[i] && savedValues[i].kp !== undefined) ? savedValues[i].kp : (document.getElementById(`kpPengaduTambahan${i}`)?.value || '');
+        let warganegaraVal = (savedValues[i] && savedValues[i].warganegara !== undefined) ? savedValues[i].warganegara : (document.getElementById(`warganegaraPengaduTambahan${i}`)?.value || 'Malaysia');
 
         tbody.innerHTML += `
             <tr>
