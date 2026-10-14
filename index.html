@@ -7540,7 +7540,8 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
             kawalJenisAduanTuntutan(); 
             kemaskiniDropdownPendaftaran(); 
         }
-        function setStatusBorang(isReadonly) {
+
+function setStatusBorang(isReadonly) {
             const container = document.getElementById('viewPendaftaranKes');
             const inputs = container.querySelectorAll('input, select, textarea');
             inputs.forEach(el => { if (el.id !== 'carianTugasan') { el.disabled = isReadonly; } });
@@ -7552,6 +7553,22 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
             });
             const btnEdit = document.getElementById('btnEditBorangKes');
             if (btnEdit) { btnEdit.style.display = isReadonly ? 'inline-block' : 'none'; }
+
+            // --- TAMBAHAN: Semak dan papar ruangan Tempoh Perkhidmatan secara automatik ---
+            if (!isReadonly) {
+                const radioPasti = document.querySelector('input[name="jenisTempoh"][value="Pasti"]');
+                const radioTidakPasti = document.querySelector('input[name="jenisTempoh"][value="Tidak Pasti"]');
+                const ruangPasti = document.getElementById('ruanganTempohPasti');
+                const ruangTidakPasti = document.getElementById('ruanganTempohTidakPasti');
+                
+                if (radioPasti && radioPasti.checked) {
+                    if (ruangPasti) ruangPasti.style.display = 'flex';
+                    if (ruangTidakPasti) ruangTidakPasti.style.display = 'none';
+                } else if (radioTidakPasti && radioTidakPasti.checked) {
+                    if (ruangPasti) ruangPasti.style.display = 'none';
+                    if (ruangTidakPasti) ruangTidakPasti.style.display = 'flex';
+                }
+            }
         }
 
 // MASUKKAN KOD BARU INI:
