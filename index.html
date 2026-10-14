@@ -7914,18 +7914,16 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDinasmik.push({jenis, jumlah});
+        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
     });
 
     return {
         inputs: formData,
         elaun: senaraiElaunDinamik,
-        pengaduBerkumpulan: pengaduBerkumpulanData, // <--- Simpan dalam objek rekod
+        pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
         tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua)),
-        tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan))
-    };
-}
+        tuntutanTambahan: JSON.parse(
 function daftarKesSistem() {
     let noKesAsal = document.getElementById('noKes').value;
     let noKesBersih = noKesAsal.split('<br>')[0].trim();
