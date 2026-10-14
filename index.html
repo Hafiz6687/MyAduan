@@ -1588,11 +1588,11 @@ function populasikanLampiran2() {
                     }
                     
                     let teksTempohHasil = [];
-                    if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " TAHUN");
-                    if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " BULAN");
+                    if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " Tahun");
+                    if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " Bulan");
                     
                     if (teksTempohHasil.length === 0) {
-                        teksTempohHasil.push("KURANG SEBULAN");
+                        teksTempohHasil.push("Kurang sebulan");
                     }
                     
                     document.getElementById('l2_tempoh').innerText = teksTempohHasil.join(" ");
