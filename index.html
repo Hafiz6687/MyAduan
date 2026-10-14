@@ -6673,14 +6673,48 @@ function semakBilanganPengadu(input) {
         janaJadualPengaduTambahan(0); 
     }
 }
-       // FUNGSI BARU UNTUK TAMBAH PENGADU KE JADUAL
+
+// FUNGSI BARU UNTUK TAMBAH PENGADU KE JADUAL (Kalis-Hilang Data)
 function tambahPengaduBerkumpulan() {
     let inputBil = document.getElementById('bilPengadu');
     let semasa = parseInt(inputBil.value) || 1;
+    
+    // Simpan data sedia ada dari jadual sebelum bilangan bertambah
+    let savedValues = {};
+    const tbody = document.getElementById('bodyPengaduBerkumpulan');
+    if (tbody) {
+        tbody.querySelectorAll('tr').forEach((row, idx) => {
+            let realIndex = idx + 2;
+            let nInput = document.getElementById(`namaPengaduTambahan${realIndex}`);
+            let kInput = document.getElementById(`kpPengaduTambahan${realIndex}`);
+            let wInput = document.getElementById(`warganegaraPengaduTambahan${realIndex}`);
+            if (nInput || kInput || wInput) {
+                savedValues[realIndex] = {
+                    nama: nInput ? nInput.value : '',
+                    kp: kInput ? kInput.value : '',
+                    warganegara: wInput ? wInput.value : 'Malaysia'
+                };
+            }
+        });
+    }
+
     semasa++;
     inputBil.value = semasa;
+    
+    // Jana semula jadual dengan bilangan baharu
     semakBilanganPengadu(inputBil);
-    renderJadualPengaduBerkumpulan();
+    
+    // Pulihkan semula data yang ditaip tadi ke dalam input yang dijana
+    setTimeout(() => {
+        for (let key in savedValues) {
+            let nInput = document.getElementById(`namaPengaduTambahan${key}`);
+            let kInput = document.getElementById(`kpPengaduTambahan${key}`);
+            let wInput = document.getElementById(`warganegaraPengaduTambahan${key}`);
+            if (nInput) nInput.value = savedValues[key].nama;
+            if (kInput) kInput.value = savedValues[key].kp;
+            if (wInput) wInput.value = savedValues[key].warganegara;
+        }
+    }, 50);
 }
 
 // FUNGSI UNTUK RENDER JADUAL PENGADU BERKUMPULAN
