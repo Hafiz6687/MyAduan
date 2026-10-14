@@ -1524,10 +1524,12 @@ function populasikanLampiran2() {
             let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
             document.getElementById('l2_nama').innerText = namaL || daftarOleh;
         }
+        // (2) Jantina (Ekstrak terus dari radio button jantinaPengadu)
+        if(document.getElementById('l2_jantina')) {
+            let jantinaRad = document.querySelector('input[name="jantinaPengadu"]:checked');
+            document.getElementById('l2_jantina').innerText = jantinaRad ? jantinaRad.value.toUpperCase() : '';
+        }
         
-        // (2) Jantina
-        if(document.getElementById('l2_jantina')) document.getElementById('l2_jantina').innerText = getVal('jantinaPengadu');
-
         // (3) Umur (Ditambah perkataan TAHUN)
         if(document.getElementById('l2_umur')) {
             const jP = document.getElementById('jenisDaftarPengadu')?.value;
@@ -1558,65 +1560,84 @@ function populasikanLampiran2() {
 
         if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
         if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
-        if(document.getElementById('l2_tempoh')) document.getElementById('l2_tempoh').innerText = getVal('tarikhMulaKerja');
         
-        // (16) Bayaran-bayaran Lain (Menerima Elaun)
+        // (14) Tempoh Berkhidmat (Mengikut radio button jenisTempoh)
+        if(document.getElementById('l2_tempoh')) {
+            let jenisTempohRad = document.querySelector('input[name="jenisTempoh"]:checked');
+            let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : 'Pasti';
+            
+            if (jenisTempohVal === 'Tidak Pasti') {
+                let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim().toUpperCase() : '';
+                document.getElementById('l2_tempoh').innerText = teksTdKPasti || '-';
+            } else {
+                let tMulaVal = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : '';
+                if (tMulaVal) {
+                    let dMula = new Date(tMulaVal);
+                    let dSemasa = new Date();
+                    
+                    let tahunDiff = dSemasa.getFullYear() - dMula.getFullYear();
+                    let bulanDiff = dSemasa.getMonth() - dMula.getMonth();
+                    let hariDiff = dSemasa.getDate() - dMula.getDate();
+                    
+                    if (hariDiff < 0) {
+                        bulanDiff--;
+                    }
+                    if (bulanDiff < 0) {
+                        tahunDiff--;
+                        bulanDiff += 12;
+                    }
+                    
+                    let teksTempohHasil = [];
+                    if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " TAHUN");
+                    if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " BULAN");
+                    
+                    if (teksTempohHasil.length === 0) {
+                        teksTempohHasil.push("KURANG SEBULAN");
+                    }
+                    
+                    document.getElementById('l2_tempoh').innerText = teksTempohHasil.join(" ");
+                } else {
+                    document.getElementById('l2_tempoh').innerText = '-';
+                }
+            }
+        }
+        
+        // (16) Bayaran-bayaran Lain (Mengikut radio button adaElaun)
         if (document.getElementById('l2_bayaran_lain')) {
-            let statusElaun = '';
+            let adaElaunRad = document.querySelector('input[name="adaElaun"]:checked');
+            let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : false;
             
-            // 1. CARI STATUS YA/TIDAK
-            let radioTanda = document.querySelector('input[name="menerimaElaun"]:checked, input[name="elaunPengadu"]:checked');
-            if (radioTanda) {
-                statusElaun = radioTanda.value.toUpperCase();
-            } else {
-                let lblMenerima = Array.from(document.querySelectorAll('label')).find(l => l.innerText.includes('Menerima Elaun'));
-                if (lblMenerima) {
-                    let radioDlm = lblMenerima.parentElement.querySelector('input[type="radio"]:checked');
-                    if (radioDlm) statusElaun = radioDlm.value.toUpperCase();
-                }
-            }
-
-            // 2. CARI KOTAK ELAUN SECARA MENYELURUH (SAPU SEMUA)
-            let senarai = [];
-            let semuaInput = document.querySelectorAll('input[type="text"], input[type="number"]');
-            
-            let inputJenis = [];
-            let inputAmaun = [];
-            
-            semuaInput.forEach(inp => {
-                let ph = inp.placeholder ? inp.placeholder.toLowerCase() : '';
-                let id = inp.id ? inp.id.toLowerCase() : '';
+            if (isAdaElaun) {
+                let senaraiElaunFormatted = [];
+                let containerElaun = document.getElementById('senaraiElaun');
                 
-                if (ph.includes('jenis elaun') || id.includes('jeniselaun')) {
-                    inputJenis.push(inp);
+                if (containerElaun) {
+                    let rows = containerElaun.querySelectorAll('div');
+                    rows.forEach(div => {
+                        let inpJenis = div.querySelector('.input-elaun-jenis');
+                        let inpJumlah = div.querySelector('.input-elaun-jumlah');
+                        
+                        if (inpJenis) {
+                            let jenisText = inpJenis.value.trim();
+                            if (jenisText) {
+                                // Format huruf pertama setiap perkataan besar (Title Case)
+                                let jenisTitleCase = jenisText.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+                                let jumlahText = inpJumlah ? inpJumlah.value.trim() : '';
+                                
+                                senaraiElaunFormatted.push(`${jenisTitleCase} (RM ${jumlahText || '0.00'})`);
+                            }
+                        }
+                    });
                 }
-                if (ph.includes('rm') || id.includes('jumlah') || id.includes('amaun')) {
-                    inputAmaun.push(inp);
+                
+                if (senaraiElaunFormatted.length > 0) {
+                    document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.join(", ");
+                } else {
+                    document.getElementById('l2_bayaran_lain').innerText = "YA";
                 }
-            });
-
-            for (let i = 0; i < inputJenis.length; i++) {
-                let jenis = inputJenis[i].value.trim();
-                let jumlah = inputAmaun[i] ? inputAmaun[i].value.trim() : '';
-                if (jenis) {
-                    senarai.push(jenis.toUpperCase() + (jumlah ? " (RM " + jumlah + ")" : ""));
-                }
-            }
-
-            // 3. TETAPKAN OUTPUT AKHIR
-            if (senarai.length > 0) statusElaun = 'YA';
-
-            let hasilElaun = "";
-            if (statusElaun === 'YA') {
-                hasilElaun = senarai.length > 0 ? senarai.join(", ") : "YA";
-            } else if (statusElaun === 'TIDAK') {
-                hasilElaun = "-Tiada-";
             } else {
-                let fallback = document.getElementById('bayaranLain') ? document.getElementById('bayaranLain').value.trim().toUpperCase() : '';
-                hasilElaun = fallback || '-';
+                document.getElementById('l2_bayaran_lain').innerText = "Tiada";
             }
-            
-            document.getElementById('l2_bayaran_lain').innerText = hasilElaun;
         }
                             
         // --- KAWALAN PAPARAN JADUAL PENGADU LAIN (BERKUMPULAN VS INDIVIDU) ---
@@ -8767,17 +8788,17 @@ function janaKenyataanAwal() {
 
         let ayatDefendan = "";
         if (jenisDef === 'SSM (Sdn. Bhd./Bhd./Enterprise)' || jenisDef === 'SSM (Sdn. Bhd./Bhd.)' || jenisDef === 'Lain-lain') {
-            if (defNo) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`; } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
+            if (defNo) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} (No. Pendaftaran: ${defNo})`; } else { ayatDefendan = `Saya bekerja dengan majikan ${defNama}`; }
         } else if (jenisDef === 'MyKad') {
-            if (defNo) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. MyKad: ${defNo})`; } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
+            if (defNo) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} (No. MyKad: ${defNo})`; } else { ayatDefendan = `Saya bekerja dengan majikan ${defNama}`; }
         } else if (jenisDef === 'SSM (Enterprise)') {
-            if (defNo && pemilik && kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`; } 
-            else if (!defNo && pemilik && kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`; } 
-            else if (!defNo && pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik}`; } 
-            else if (defNo && !pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`; } 
-            else if (defNo && pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik}`; } 
-            else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
-        } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
+            if (defNo && pemilik && kpPemilik) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`; } 
+            else if (!defNo && pemilik && kpPemilik) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`; } 
+            else if (!defNo && pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} yang dimiliki oleh ${pemilik}`; } 
+            else if (defNo && !pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} (No. Pendaftaran: ${defNo})`; } 
+            else if (defNo && pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan majikan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik}`; } 
+            else { ayatDefendan = `Saya bekerja dengan majikan ${defNama}`; }
+        } else { ayatDefendan = `Saya bekerja dengan majikan ${defNama}`; }
         
         // --- LOGIK TEMPOH PERKHIDMATAN (PASTI / TIDAK PASTI) ---
         const radioTidakPasti = document.querySelector('input[name="jenisTempoh"]:checked')?.value === 'Tidak Pasti';
