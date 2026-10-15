@@ -6652,7 +6652,7 @@ function semakBukaMaklumatPerkhidmatan() {
             }
         }
 
-// 1. FUNGSI SEMAK BILANGAN PENGADU (Sync manual input dengan jadual)
+// 1. FUNGSI SEMAK BILANGAN PENGADU (Sync manual input kepada jadual)
 function semakBilanganPengadu(input) {
     if (input.value !== "") {
         let nilai = parseInt(input.value);
@@ -6664,7 +6664,7 @@ function semakBilanganPengadu(input) {
         }
 
         if (nilai <= 1) {
-            input.value = ""; // Kosongkan jika user letak 1 atau 0
+            input.value = ""; // Kosongkan jika user letak 1 atau 0 (hanya Ketua)
             janaJadualPengaduTambahan(1); 
             renderJadualPengaduBerkumpulan();
         } else {
@@ -6677,27 +6677,33 @@ function semakBilanganPengadu(input) {
     }
 }
 
-// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Klik Butang)
+// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Sync jadual kepada manual input)
 function tambahPengaduBerkumpulan() {
     let inputBil = document.getElementById('bilPengadu');
-    let semasa = parseInt(inputBil.value);
+    let tbody = document.getElementById('bodyPengaduBerkumpulan');
     
-    // Jika kotak kosong atau NaN, anggap nilai semasa adalah 1 (Ketua sahaja)
-    if (isNaN(semasa) || semasa < 1) {
-        semasa = 1; 
+    // Kira berapa baris yang SAH terpapar dalam jadual sekarang (abaikan row kosong)
+    let jumlahBaris = 0;
+    if (tbody) {
+        let rows = tbody.querySelectorAll('tr');
+        rows.forEach(tr => {
+            if (!tr.classList.contains('empty-row')) {
+                jumlahBaris++;
+            }
+        });
     }
     
-    if (semasa >= 50) {
+    // Jumlah Pengadu Baru = 1 (Ketua) + Baris Paparan Sedia Ada + 1 (Baris Tambahan)
+    let totalPengadu = 1 + jumlahBaris + 1;
+    
+    if (totalPengadu > 50) {
         alert("Maksimum 50 orang pengadu sahaja dibenarkan untuk satu pendaftaran.");
         return;
     }
-
-    // Tambah 1 row baharu
-    semasa++; 
-    inputBil.value = semasa;
     
-    janaJadualPengaduTambahan(semasa);
-    renderJadualPengaduBerkumpulan();
+    // Update kotak input dan arahkan sistem susun/render jadual
+    inputBil.value = totalPengadu;
+    semakBilanganPengadu(inputBil);
 }
 
 // 3. FUNGSI UNTUK BINA JADUAL (Kalis Hilang Data & Tiada Double Row)
@@ -6708,7 +6714,7 @@ function renderJadualPengaduBerkumpulan() {
     const inputBil = document.getElementById('bilPengadu');
     let bil = parseInt(inputBil?.value) || 1;
 
-    // A. Kumpul data sedia ada secara terus dari kotak input sebelum render
+    // A. Kumpul data sedia ada secara terus dari kotak input
     let dataSediaAda = [];
     const rows = tbody.querySelectorAll('tr:not(.empty-row)');
     rows.forEach(row => {
@@ -6749,7 +6755,7 @@ function renderJadualPengaduBerkumpulan() {
     }
 }
 
-// 4. FUNGSI UNTUK HAPUS BARIS TERTENTU (Susun semula auto)
+// 4. FUNGSI UNTUK HAPUS BARIS TERTENTU (Susun semula auto dan Sync input)
 function hapusPengaduBerkumpulan(btnElement) {
     let inputBil = document.getElementById('bilPengadu');
     let tbody = document.getElementById('bodyPengaduBerkumpulan');
@@ -6758,7 +6764,16 @@ function hapusPengaduBerkumpulan(btnElement) {
     btnElement.closest('tr').remove();
 
     // Kira baki baris yang tinggal dalam jadual
-    let bakiBaris = tbody.querySelectorAll('tr:not(.empty-row)').length;
+    let bakiBaris = 0;
+    if (tbody) {
+        let rows = tbody.querySelectorAll('tr');
+        rows.forEach(tr => {
+            if (!tr.classList.contains('empty-row')) {
+                bakiBaris++;
+            }
+        });
+    }
+    
     let totalPengaduTerkini = 1 + bakiBaris; // 1 Ketua + Baki Row
     
     // Kemaskini kotak input
@@ -6768,9 +6783,8 @@ function hapusPengaduBerkumpulan(btnElement) {
         inputBil.value = totalPengaduTerkini;
     }
 
-    // Kemaskini memori tuntutan dan susun semula jadual
-    janaJadualPengaduTambahan(totalPengaduTerkini);
-    renderJadualPengaduBerkumpulan();
+    // Kemaskini memori tuntutan dan susun semula jadual secara automatik
+    semakBilanganPengadu(inputBil);
 }
 
 // 5. FUNGSI PENGURUSAN MEMORI TUNTUTAN TAMBAHAN
