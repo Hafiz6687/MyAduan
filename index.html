@@ -6652,76 +6652,60 @@ function semakBukaMaklumatPerkhidmatan() {
             }
         }
 
-// 1. FUNGSI SEMAK BILANGAN PENGADU (Sync dari Manual Input ke Jadual)
+// 1. FUNGSI SEMAK BILANGAN PENGADU (Sync dari Kotak ke Jadual)
 function semakBilanganPengadu(input) {
     let nilaiText = input.value.trim();
-    
-    // Jika kotak dikosongkan
-    if (nilaiText === "") {
-        janaJadualPengaduTambahan(1); 
-        renderJadualPengaduBerkumpulan(1);
-        return;
-    }
-
     let nilai = parseInt(nilaiText);
-    
-    // Halang nombor tidak logik atau 1 (Sebab berkumpulan mesti ada pengadu tambahan)
+
     if (isNaN(nilai) || nilai <= 1) {
-        alert("Bagi aduan jenis Berkumpulan, bilangan pengadu mestilah 2 orang atau lebih.");
-        input.value = "2"; // Auto-force jadi 2 (Visi: 1 Ketua + 1 Row Jadual)
-        janaJadualPengaduTambahan(2); 
-        renderJadualPengaduBerkumpulan(2);
-    } 
-    else if (nilai > 50) {
+        // Jika kotak kosong atau taip 1, sistem paksa jadi 2 (1 Ketua + 1 Baris Jadual)
+        input.value = "2"; 
+        janaJadualPengaduTambahan(2);
+        renderJadualPengaduBerkumpulan(); // <-- PENYELAMAT: Jadual terus terbina
+    } else if (nilai > 50) {
         alert("Maksimum 50 orang pengadu sahaja dibenarkan.");
         input.value = "50";
-        janaJadualPengaduTambahan(50); 
-        renderJadualPengaduBerkumpulan(50);
-    } 
-    else {
-        // Jika nombor logik (contoh: taip 3, jadual papar 2)
-        janaJadualPengaduTambahan(nilai); 
-        renderJadualPengaduBerkumpulan(nilai);
+        janaJadualPengaduTambahan(50);
+        renderJadualPengaduBerkumpulan();
+    } else {
+        // Jika user taip 3, jadual terus papar 2 row secara automatik!
+        janaJadualPengaduTambahan(nilai);
+        renderJadualPengaduBerkumpulan();
     }
 }
 
-// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Sync dari Butang ke Input)
+// 2. FUNGSI UNTUK TAMBAH PENGADU KE JADUAL (Sync dari Butang ke Kotak)
 function tambahPengaduBerkumpulan() {
     let inputBil = document.getElementById('bilPengadu');
-    let tbody = document.getElementById('bodyPengaduBerkumpulan');
     
-    // Kira berapa baris yang SAH terpapar dalam jadual sekarang (abaikan row -Tiada-)
-    let jumlahBarisSediaAda = 0;
-    if (tbody) {
-        jumlahBarisSediaAda = tbody.querySelectorAll('tr:not(.empty-row)').length;
+    // Baca nilai sedia ada dalam kotak (Jika kosong, anggap 1)
+    let semasa = parseInt(inputBil.value);
+    if (isNaN(semasa) || semasa < 1) {
+        semasa = 1;
     }
     
-    // Formula Visi Anda: 1 (Ketua) + Row Sedia Ada + 1 (Tambahan Baru)
-    let totalPengadu = 1 + jumlahBarisSediaAda + 1;
-    
-    if (totalPengadu > 50) {
+    if (semasa >= 50) {
         alert("Maksimum 50 orang pengadu sahaja dibenarkan.");
         return;
     }
+
+    // Tambah +1 pengadu (tambah 1 row)
+    semasa++;
+    inputBil.value = semasa;
     
-    // Masukkan nombor baru ke dalam kotak dan update jadual
-    inputBil.value = totalPengadu;
-    janaJadualPengaduTambahan(totalPengadu);
-    renderJadualPengaduBerkumpulan(totalPengadu);
+    // Arahkan sistem semak dan bina jadual dengan nilai baharu
+    semakBilanganPengadu(inputBil);
 }
 
 // 3. FUNGSI UNTUK BINA JADUAL (Kalis Hilang Data)
-function renderJadualPengaduBerkumpulan(bilanganPasti = null) {
+function renderJadualPengaduBerkumpulan() {
     const tbody = document.getElementById('bodyPengaduBerkumpulan');
     if (!tbody) return;
 
-    let bil = bilanganPasti;
-    if (bil === null) {
-        let inputBil = document.getElementById('bilPengadu');
-        bil = parseInt(inputBil?.value) || 1;
-    }
+    const inputBil = document.getElementById('bilPengadu');
+    let bil = parseInt(inputBil?.value) || 1;
 
-    // A. Kumpul data yang ada di skrin sekarang supaya tak hilang
+    // A. Kumpul data sedia ada di dalam jadual sebelum di-refresh supaya tak hilang
     let dataSediaAda = [];
     const rows = tbody.querySelectorAll('tr:not(.empty-row)');
     rows.forEach(row => {
@@ -6762,7 +6746,7 @@ function renderJadualPengaduBerkumpulan(bilanganPasti = null) {
     }
 }
 
-// 4. FUNGSI UNTUK HAPUS BARIS (Sync dari Jadual ke Input)
+// 4. FUNGSI UNTUK HAPUS BARIS TERTENTU (Sync Auto dari Jadual ke Kotak)
 function hapusPengaduBerkumpulan(btnElement) {
     let inputBil = document.getElementById('bilPengadu');
     let tbody = document.getElementById('bodyPengaduBerkumpulan');
@@ -6777,13 +6761,12 @@ function hapusPengaduBerkumpulan(btnElement) {
     // Kemaskini kotak input
     if (totalPengaduTerkini <= 1) {
         inputBil.value = ""; // Jika tinggal ketua, kosongkan kotak
+        janaJadualPengaduTambahan(1);
+        renderJadualPengaduBerkumpulan();
     } else {
         inputBil.value = totalPengaduTerkini;
+        semakBilanganPengadu(inputBil);
     }
-
-    // Kemaskini memori sistem & susun semula nombor urutan (1), (2), (3)
-    janaJadualPengaduTambahan(totalPengaduTerkini);
-    renderJadualPengaduBerkumpulan(totalPengaduTerkini);
 }
 
 // 5. FUNGSI PENGURUSAN MEMORI TUNTUTAN TAMBAHAN
