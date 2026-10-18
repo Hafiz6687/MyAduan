@@ -7351,33 +7351,44 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
         }
 
         function toggleAduan() {
-            // 1. Tangkap nilai dari Dropdown Jenis Pengadu
-            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value;
+            // 1. Tangkap nilai daripada Dropdown Jenis Pengadu
+            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || 'Individu';
             
-            // 2. Selaraskan (Tandakan) Radio Button Tersembunyi mengikut pilihan Dropdown
+            // 2. Tentukan sama ada ia mod berkumpulan secara automatik berdasarkan teks dropdown
+            const isBerkumpulan = dropdownPengadu.includes('Berkumpulan');
+            
+            // 3. Selaraskan nilai radio tersembunyi sistem asal secara automatik
             const radioIndividu = document.getElementById('aduanIndividu');
             const radioBerkumpulan = document.getElementById('aduanBerkumpulan');
             
-            if (dropdownPengadu === 'Berkumpulan' || dropdownPengadu === 'Bukan Pekerja (Berkumpulan)') {
+            if (isBerkumpulan) {
                 if (radioBerkumpulan) radioBerkumpulan.checked = true;
             } else {
                 if (radioIndividu) radioIndividu.checked = true;
             }
 
-            // 3. Teruskan logik asal memaparkan/menyembunyikan Bilangan Pengadu dan menukar label
-            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
+            // 4. Kawalan Automatik Medannya: Paparkan/Sembunyikan Bilangan Pengadu & Tukar Label Nama
             const ruanganBilangan = document.getElementById('ruanganBilanganPengadu');
+            const inputBilPengadu = document.getElementById('bilPengadu');
             const labelNama = document.getElementById('labelNamaPengadu');
             
-            if (aduanBerkumpulan) { 
-                ruanganBilangan.style.display = 'grid'; 
-                labelNama.innerHTML = 'Ketua Pengadu <span>*</span>'; 
-            } else { 
-                ruanganBilangan.style.display = 'none'; 
-                labelNama.innerHTML = 'Nama <span>*</span>'; 
+            if (isBerkumpulan) {
+                if (ruanganBilangan) ruanganBilangan.style.display = 'grid';
+                if (labelNama) labelNama.innerHTML = 'Ketua Pengadu <span>*</span>';
+                // Jika kotak bilangan kosong atau kurang dari 2, tetapkan sekurang-kurangnya 2 secara automatik
+                if (inputBilPengadu && (parseInt(inputBilPengadu.value) < 2 || !inputBilPengadu.value)) {
+                    inputBilPengadu.value = "2";
+                    if (typeof semakBilanganPengadu === 'function') semakBilanganPengadu(inputBilPengadu);
+                }
+            } else {
+                if (ruanganBilangan) ruanganBilangan.style.display = 'none';
+                if (labelNama) labelNama.innerHTML = 'Nama <span>*</span>';
+                // Jika individu, setkan bilangan pengadu kepada 1 secara latar belakang
+                if (inputBilPengadu) inputBilPengadu.value = "1";
+                if (typeof janaJadualPengaduTambahan === 'function') janaJadualPengaduTambahan(0);
             }
 
-            // 4. KAWALAN KHAS UNTUK BUKAN PEKERJA (INDIVIDU/BERKUMPULAN)
+            // 5. Kawalan Khas untuk Kategori Bukan Pekerja
             const labelJawatan = document.getElementById('labelJawatan');
             const remarkJawatan = document.getElementById('remarkJawatan');
             const inputJawatan = document.getElementById('jawatanPengadu');
@@ -7398,8 +7409,9 @@ async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
                 if (blokPerkhidmatan) blokPerkhidmatan.style.display = 'block';
             }
             
-            kawalJenisAduanTuntutan(); 
-            kemaskiniDropdownPendaftaran(); 
+            // Kekalkan fungsi berkaitan yang lain tanpa terusik
+            if (typeof kawalJenisAduanTuntutan === 'function') kawalJenisAduanTuntutan(); 
+            if (typeof kemaskiniDropdownPendaftaran === 'function') kemaskiniDropdownPendaftaran(); 
         }
 
 function setStatusBorang(isReadonly) {
