@@ -6854,24 +6854,19 @@ function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.d
        
 function renderJadualTuntutan() {
     const tbody = document.querySelector("#jadualTuntutan tbody");
-    const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
-    
-    // isMajikan telah dibuang, jadi isAutoGroup bergantung pada aduanBerkumpulan sahaja
-    const isAutoGroup = aduanBerkumpulan; 
 
     if (tbody) {
         tbody.innerHTML = ""; 
         if (memoriTuntutan.length === 0) { 
-            // Tukar colspan ke 5
             tbody.innerHTML = `<tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr>`; 
         } else {
             memoriTuntutan.forEach((item, index) => {
                 
-                // Kekalkan logik Auto-Kira (berkumpulan) untuk sembunyikan butang edit/hapus
-                const actionHtml = isAutoGroup 
-                    ? `<td colspan="2" style="text-align: center; color: var(--text-muted); font-style: italic; font-size: 0.85em; background-color: #f8fafc;">🔒 Auto-Salin dari Ketua</td>`
-                    : `<td style="text-align:center;"><button type="button" class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
-                       <td style="text-align:center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>`;
+                // Sentiasa paparkan butang Edit dan Hapus untuk setiap baris tuntutan
+                const actionHtml = `
+                    <td style="text-align:center;"><button type="button" class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
+                    <td style="text-align:center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>
+                `;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -6882,7 +6877,6 @@ function renderJadualTuntutan() {
                 `;
                 tbody.appendChild(tr);
             });
-            // Baris trTotal (JUMLAH KESELURUHAN) telah dibuang sepenuhnya
         }
     }
 
@@ -6890,7 +6884,6 @@ function renderJadualTuntutan() {
     if (tbodyKetua) {
         tbodyKetua.innerHTML = ""; 
         if (memoriTuntutanKetua.length === 0) { 
-            // Tukar colspan ke 5
             tbodyKetua.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>`; 
         } else {
             memoriTuntutanKetua.forEach((item, index) => {
@@ -6904,7 +6897,6 @@ function renderJadualTuntutan() {
                 `;
                 tbodyKetua.appendChild(tr);
             });
-            // Baris trTotalKetua (JUMLAH KESELURUHAN KETUA) telah dibuang sepenuhnya
         }
     }
 }
