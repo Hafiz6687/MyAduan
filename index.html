@@ -7643,6 +7643,8 @@ function renderSenaraiTugas() {
             <td style="color: var(--text-muted); font-weight: 500;">${kes.tarikh}</td>
             <td style="text-align: center; display: flex; gap: 5px; justify-content: center;">
                 <button class="btn-edit-tbl" onclick="bukaMaklumatKes(${index})">📂 Buka</button>
+                <!-- BUTANG CETAK PANTAS DITAMBAH DI SINI -->
+                <button class="btn-save" style="font-size: 0.85em; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; color: white; background-color: #10b981;" onclick="cetakBorangDariSenarai(${index})">🖨️ Cetak</button>
                 <button class="btn-delete-tbl" onclick="hapusKesDidaftar(${index})">🗑️ Hapus</button>
             </td>
         `;
@@ -7650,6 +7652,14 @@ function renderSenaraiTugas() {
     });
 }
 
+// Fungsi sokongan untuk cetak terus dari Senarai Tugasan
+window.cetakBorangDariSenarai = function(index) {
+    bukaKesDidaftar(index); // Muatkan data ke borang secara senyap
+    setTimeout(() => {
+        bukaPreview(); // Terus buka tetingkap cetak Borang Aduan
+    }, 500); // Beri sistem masa separuh saat untuk render maklumat
+};
+       
 function kumpulDataBorang() {
     let formData = {};
     const inputs = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
