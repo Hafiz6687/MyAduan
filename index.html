@@ -1652,26 +1652,16 @@ function populasikanLampiran2() {
         // --- KAWALAN PAPARAN JADUAL PENGADU LAIN (BERKUMPULAN VS INDIVIDU) ---
         const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
         if (tbodyPengaduLain) {
-            let isKumpulan = false;
+            // 1. Sentiasa rujuk kepada pilihan semasa di skrin terlebih dahulu!
+            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || '';
+            const isKumpulan = dropdownPengadu.includes('Berkumpulan');
             let dataKumpulan = [];
             
-            // 1. Kenal pasti sama ada ini cetakan dari Senarai (Memori) atau Borang Langsung
-            if (typeof isEditMode !== 'undefined' && isEditMode && indexKesSemasa > -1) {
-                const kes = memoriSenaraiKes[indexKesSemasa];
-                if (kes) {
-                    isKumpulan = kes.jenisAduan === 'Berkumpulan';
-                    // Sedut maklumat terus dari database/memory jika ada
-                    if (kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
-                        dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
-                    }
-                }
-            } else {
-                const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || '';
-                isKumpulan = dropdownPengadu.includes('Berkumpulan');
-                
+            if (isKumpulan) {
                 const bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
-                if (bilP > 1) {
-                    // Sedut maklumat dari kotak input borang yang sedang ditaip
+                
+                // Cuba sedut dari input skrin (jika pengguna sedang mengisi borang/kemaskini)
+                if (document.getElementById('namaPengaduTambahan2')) {
                     for (let i = 2; i <= bilP; i++) {
                         dataKumpulan.push({
                             index: i,
@@ -1680,13 +1670,17 @@ function populasikanLampiran2() {
                             warganegara: document.getElementById('warganegaraPengaduTambahan'+i)?.value || 'MALAYSIA'
                         });
                     }
+                } 
+                // Jika input tiada di skrin (contohnya pengguna tekan Cetak terus dari Senarai Tugas)
+                else if (typeof isEditMode !== 'undefined' && isEditMode && indexKesSemasa > -1) {
+                    const kes = memoriSenaraiKes[indexKesSemasa];
+                    if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
+                        dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
+                    }
                 }
-            }
-            
-            // 2. Lukis Jadual Berdasarkan Data Yang Diekstrak
-            if (isKumpulan) {
-                let barisHtml = '';
                 
+                // 2. Lukis Jadual Berdasarkan Data Yang Diekstrak
+                let barisHtml = '';
                 if (dataKumpulan.length > 0) {
                     dataKumpulan.forEach(pengadu => {
                         barisHtml += `
@@ -1699,7 +1693,7 @@ function populasikanLampiran2() {
                         `;
                     });
                 } else {
-                    // Tunjuk 3 baris kosong secara lalai jika bilangan tambahan belum diisi
+                    // Tunjuk baris kosong lalai jika bilangan tambahan belum diisi
                     barisHtml = `
                         <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
                         <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
@@ -1708,7 +1702,7 @@ function populasikanLampiran2() {
                 }
                 tbodyPengaduLain.innerHTML = barisHtml;
             } else {
-                // Tunjuk -Tiada- jika aduan individu
+                // Tunjuk -Tiada- jika aduan individu (Sentiasa tepat berdasarkan dropdown skrin)
                 tbodyPengaduLain.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 8px; font-style: italic; font-weight: bold;">-Tiada-</td></tr>`;
             }
         }
