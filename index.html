@@ -1652,29 +1652,52 @@ function populasikanLampiran2() {
         // --- KAWALAN PAPARAN JADUAL PENGADU LAIN (BERKUMPULAN VS INDIVIDU) ---
         const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
         if (tbodyPengaduLain) {
-            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || '';
-            const isKumpulan = dropdownPengadu.includes('Berkumpulan');
+            let isKumpulan = false;
+            let dataKumpulan = [];
             
-            if (isKumpulan) {
+            // 1. Kenal pasti sama ada ini cetakan dari Senarai (Memori) atau Borang Langsung
+            if (typeof isEditMode !== 'undefined' && isEditMode && indexKesSemasa > -1) {
+                const kes = memoriSenaraiKes[indexKesSemasa];
+                if (kes) {
+                    isKumpulan = kes.jenisAduan === 'Berkumpulan';
+                    // Sedut maklumat terus dari database/memory jika ada
+                    if (kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
+                        dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
+                    }
+                }
+            } else {
+                const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || '';
+                isKumpulan = dropdownPengadu.includes('Berkumpulan');
+                
                 const bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
+                if (bilP > 1) {
+                    // Sedut maklumat dari kotak input borang yang sedang ditaip
+                    for (let i = 2; i <= bilP; i++) {
+                        dataKumpulan.push({
+                            index: i,
+                            nama: document.getElementById('namaPengaduTambahan'+i)?.value || '',
+                            kp: document.getElementById('kpPengaduTambahan'+i)?.value || '',
+                            warganegara: document.getElementById('warganegaraPengaduTambahan'+i)?.value || 'MALAYSIA'
+                        });
+                    }
+                }
+            }
+            
+            // 2. Lukis Jadual Berdasarkan Data Yang Diekstrak
+            if (isKumpulan) {
                 let barisHtml = '';
                 
-                if (bilP > 1) {
-                    // Ekstrak data sebenar dari senarai pengadu tambahan di borang
-                    for (let i = 2; i <= bilP; i++) {
-                        let namaTambahan = document.getElementById('namaPengaduTambahan'+i)?.value || '';
-                        let kpTambahan = document.getElementById('kpPengaduTambahan'+i)?.value || '';
-                        let wargaTambahan = document.getElementById('warganegaraPengaduTambahan'+i)?.value || 'MALAYSIA';
-                        
+                if (dataKumpulan.length > 0) {
+                    dataKumpulan.forEach(pengadu => {
                         barisHtml += `
                             <tr>
-                                <td style="text-align: center; padding: 4px;">(${i - 1})</td>
-                                <td style="padding: 4px;">${namaTambahan.toUpperCase()}</td>
-                                <td style="padding: 4px;">${kpTambahan.toUpperCase()}</td>
-                                <td style="padding: 4px;">${wargaTambahan.toUpperCase()}</td>
+                                <td style="text-align: center; padding: 4px;">(${pengadu.index - 1})</td>
+                                <td style="padding: 4px;">${pengadu.nama.toUpperCase()}</td>
+                                <td style="padding: 4px;">${pengadu.kp.toUpperCase()}</td>
+                                <td style="padding: 4px;">${pengadu.warganegara.toUpperCase()}</td>
                             </tr>
                         `;
-                    }
+                    });
                 } else {
                     // Tunjuk 3 baris kosong secara lalai jika bilangan tambahan belum diisi
                     barisHtml = `
