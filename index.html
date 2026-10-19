@@ -1656,12 +1656,34 @@ function populasikanLampiran2() {
             const isKumpulan = dropdownPengadu.includes('Berkumpulan');
             
             if (isKumpulan) {
-                // Tunjuk 3 baris kosong secara lalai jika aduan adalah berkumpulan
-                tbodyPengaduLain.innerHTML = `
-                    <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
-                    <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
-                    <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
-                `;
+                const bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
+                let barisHtml = '';
+                
+                if (bilP > 1) {
+                    // Ekstrak data sebenar dari senarai pengadu tambahan di borang
+                    for (let i = 2; i <= bilP; i++) {
+                        let namaTambahan = document.getElementById('namaPengaduTambahan'+i)?.value || '';
+                        let kpTambahan = document.getElementById('kpPengaduTambahan'+i)?.value || '';
+                        let wargaTambahan = document.getElementById('warganegaraPengaduTambahan'+i)?.value || 'MALAYSIA';
+                        
+                        barisHtml += `
+                            <tr>
+                                <td style="text-align: center; padding: 4px;">(${i - 1})</td>
+                                <td style="padding: 4px;">${namaTambahan.toUpperCase()}</td>
+                                <td style="padding: 4px;">${kpTambahan.toUpperCase()}</td>
+                                <td style="padding: 4px;">${wargaTambahan.toUpperCase()}</td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    // Tunjuk 3 baris kosong secara lalai jika bilangan tambahan belum diisi
+                    barisHtml = `
+                        <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
+                        <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
+                        <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
+                    `;
+                }
+                tbodyPengaduLain.innerHTML = barisHtml;
             } else {
                 // Tunjuk -Tiada- jika aduan individu
                 tbodyPengaduLain.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 8px; font-style: italic; font-weight: bold;">-Tiada-</td></tr>`;
