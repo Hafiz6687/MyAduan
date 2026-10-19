@@ -7680,12 +7680,21 @@ function renderSenaraiTugas() {
 }
 
 // Fungsi sokongan untuk cetak terus dari Senarai Tugasan
-window.cetakBorangDariSenarai = function(index) {
-    bukaKesDidaftar(index); // Muatkan data ke borang secara senyap
-    setTimeout(() => {
-        bukaPreview(); // Terus buka tetingkap cetak Borang Aduan
-    }, 500); // Beri sistem masa separuh saat untuk render maklumat
-};
+        window.cetakBorangDariSenarai = function(index) {
+            // 1. Panggil fungsi asal sistem untuk memuatkan kes yang dipilih ke dalam paparan
+            bukaMaklumatKes(index); 
+            
+            setTimeout(() => {
+                // 2. Tekan butang 'Kemaskini' secara senyap supaya data dipam masuk ke dalam kotak borang
+                const btnKemaskini = document.getElementById('btnEditRekodKes');
+                if (btnKemaskini) btnKemaskini.click();
+                
+                setTimeout(() => {
+                    // 3. Selepas borang siap diisi (pam) dengan data yang betul, baru buka tetingkap preview Lampiran 2
+                    bukaPreview(); 
+                }, 500); // Beri sistem masa separuh saat untuk melukis maklumat ke dalam borang
+            }, 200); // Tunggu sebentar selepas rekod dibuka
+        };
        
 function kumpulDataBorang() {
     let formData = {};
