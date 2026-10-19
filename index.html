@@ -3328,25 +3328,6 @@ Portal rasmi : jtksm.mohr.gov.my
                         </div>
                     </div>
                 </div>
-
-                <div class="card full-width">
-                    <div class="card-header">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <span>Kenyataan Pengadu / Kronologi Kes</span>
-                            <span style="font-size: 0.75em; font-weight: 500; color: var(--text-muted); font-style: italic;">(Sambungan dari kenyataan awal pengadu)</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <label style="text-align: left; font-size: 1em; margin-bottom: 10px;">
-                                Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span>
-                                <span style="display: block; font-size: 0.75em; color: var(--text-muted); font-weight: 500; font-style: italic; margin-top: 4px;">Taipkan kronologi dan masalah berkaitan tuntutan di sini...</span>
-                            </label>
-                            <textarea id="kronologiKes" class="teks-justify auto-expand" style="padding: 15px;" placeholder="Taipkan kronologi dan masalah berkaitan aduan di sini..." oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="card full-width">
                     <div class="card-header">Maklumat Tambahan</div>
                     <div class="card-body">
@@ -6729,7 +6710,11 @@ function pergiKeTabBorang(tabId) {
 
     if (tabId === 'tab2') {
         janaKenyataanAwal();
-        setTimeout(() => { autoResize(document.getElementById('kenyataanAwal')); autoResize(document.getElementById('kronologiKes')); }, 10);
+        setTimeout(() => { 
+            if(document.getElementById('kenyataanAwal')) {
+                autoResize(document.getElementById('kenyataanAwal')); 
+            }
+        }, 10);
     }
     document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' }); 
 }
@@ -6759,7 +6744,11 @@ function bukaTab(tabId, elemenTab) {
 
     if (tabId === 'tab2') {
         janaKenyataanAwal();
-        setTimeout(() => { autoResize(document.getElementById('kenyataanAwal')); autoResize(document.getElementById('kronologiKes')); }, 10);
+        setTimeout(() => { 
+            if(document.getElementById('kenyataanAwal')) {
+                autoResize(document.getElementById('kenyataanAwal')); 
+            }
+        }, 10);
     }
     document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' }); 
 }
@@ -8675,7 +8664,7 @@ function janaKenyataanAwal() {
             } else if (jenisDef === 'MyKad') {
                 if (defNo) teksDefendanKumpulan += ` (No. MyKad: ${defNo})`;
             }
-            p0 = `Saya telah diberi kuasa/dilantik mewakili ${wakil} orang yang lain untuk membuat tuntutan terhadap defendan ${teksDefendanKumpulan}.`;
+            p0 = `Saya telah diberi kuasa/dilantik mewakili ${wakil} orang yang lain untuk membuat aduan terhadap majikan ${teksDefendanKumpulan}.`;
         }
 
         let ayatDefendan = "";
