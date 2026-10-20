@@ -1762,6 +1762,22 @@ function populasikanLampiran2() {
         // BAHAGIAN III: ADUAN
         if(document.getElementById('l2_aduan')) {
             let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
+            aduanPenuh = aduanPenuh.trim();
+            
+            // --- TAMBAHAN: Ekstrak Nama Majikan & Jadual Tuntutan ---
+            let namaMajikan = document.getElementById('namaDefendan') ? document.getElementById('namaDefendan').value : 'Majikan';
+            aduanPenuh += `\n\nBerikut adalah aduan terhadap ${namaMajikan}:-\n`;
+            
+            if (typeof memoriTuntutan !== 'undefined' && memoriTuntutan.length > 0) {
+                memoriTuntutan.forEach((tuntutan, index) => {
+                    let keteranganTambahan = tuntutan.keterangan ? ` - ${tuntutan.keterangan}` : '';
+                    aduanPenuh += `${index + 1}. ${tuntutan.jenis}${keteranganTambahan}\n`;
+                });
+            } else {
+                aduanPenuh += "- Tiada maklumat tuntutan direkodkan -\n";
+            }
+            // --------------------------------------------------------
+            
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
         
