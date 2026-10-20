@@ -7941,6 +7941,25 @@ function bukaKesDidaftar(index) {
     isEditMode = true; 
     indexKesSemasa = index;
     
+    // --- MULA: SABUN PENCUCI (RESET BORANG) ---
+    // 1. Kosongkan semua jenis kotak input dalam borang pendaftaran
+    const semuaKotak = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
+    semuaKotak.forEach(el => {
+        if (el.type === 'radio' || el.type === 'checkbox') {
+            el.checked = false;
+        } else {
+            el.value = ''; 
+        }
+    });
+    
+    // 2. Setkan bilangan pengadu kembali kepada lalai (1)
+    if(document.getElementById('bilPengadu')) document.getElementById('bilPengadu').value = '1';
+    
+    // 3. Cuci mana-mana jadual tambahan yang dijana oleh kes sebelum ini (supaya tak melimpah)
+    const jadualTambahan = document.querySelector('#viewPendaftaranKes table tbody'); 
+    if (jadualTambahan && jadualTambahan.id !== 'tbodyTuntutan') jadualTambahan.innerHTML = '';
+    // --- TAMAT: SABUN PENCUCI ---
+
     const kes = memoriSenaraiKes[index];
     
     if (kes.dataBorang) {
@@ -7973,10 +7992,6 @@ function bukaKesDidaftar(index) {
             if (btnKenyataan) btnKenyataan.innerHTML = '✏️ Edit Kenyataan';
         }
 
-        const allInputs = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
-        allInputs.forEach(el => {
-            if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
-        });
 
         for (const key in formData) {
             if (Array.isArray(formData[key])) {
