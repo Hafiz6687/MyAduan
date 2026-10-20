@@ -6527,18 +6527,31 @@ function renderJadualPengaduBerkumpulan() {
     let bil = parseInt(inputBil?.value) || 1;
 
     // A. Kumpul data sedia ada di dalam jadual sebelum di-refresh supaya tak hilang
-    let dataSediaAda = [];
-    const rows = tbody.querySelectorAll('tr:not(.empty-row)');
-    rows.forEach(row => {
-        let inputs = row.querySelectorAll('input');
-        if (inputs.length >= 3) {
-            dataSediaAda.push({
-                nama: inputs[0].value,
-                kp: inputs[1].value,
-                warganegara: inputs[2].value
+            let dataSediaAda = [];
+            const rows = tbody.querySelectorAll('tr:not(.empty-row)');
+            rows.forEach(row => {
+                let inputs = row.querySelectorAll('input');
+                if (inputs.length >= 3) {
+                    dataSediaAda.push({
+                        nama: inputs[0].value,
+                        kp: inputs[1].value,
+                        warganegara: inputs[2].value
+                    });
+                }
             });
-        }
-    });
+
+            // --- TAMBAHAN KOD KEMASKINI: Sedut memori jika jadual kosong semasa tekan butang edit ---
+            if (dataSediaAda.length === 0 && typeof isEditMode !== 'undefined' && isEditMode && typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) {
+                const kes = memoriSenaraiKes[indexKesSemasa];
+                if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
+                    dataSediaAda = kes.dataBorang.pengaduBerkumpulan.map(p => ({
+                        nama: p.nama,
+                        kp: p.kp,
+                        warganegara: p.warganegara
+                    }));
+                }
+            }
+            // ----------------------------------------------------------------------------------------
 
     // B. Kosongkan jadual dengan bersih
     tbody.innerHTML = '';
