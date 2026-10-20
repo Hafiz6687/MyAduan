@@ -6527,31 +6527,50 @@ function renderJadualPengaduBerkumpulan() {
     let bil = parseInt(inputBil?.value) || 1;
 
     // A. Kumpul data sedia ada di dalam jadual sebelum di-refresh supaya tak hilang
-            let dataSediaAda = [];
-            const rows = tbody.querySelectorAll('tr:not(.empty-row)');
-            rows.forEach(row => {
-                let inputs = row.querySelectorAll('input');
-                if (inputs.length >= 3) {
-                    dataSediaAda.push({
-                        nama: inputs[0].value,
-                        kp: inputs[1].value,
-                        warganegara: inputs[2].value
-                    });
-                }
+    let dataSediaAda = [];
+    const rows = tbody.querySelectorAll('tr:not(.empty-row)');
+    rows.forEach(row => {
+        let inputs = row.querySelectorAll('input');
+        if (inputs.length >= 3) {
+            dataSediaAda.push({
+                nama: inputs[0].value,
+                kp: inputs[1].value,
+                warganegara: inputs[2].value
             });
+        }
+    });
 
-            // --- TAMBAHAN KOD KEMASKINI: Sedut memori jika jadual kosong semasa tekan butang edit ---
-            if (dataSediaAda.length === 0 && typeof isEditMode !== 'undefined' && isEditMode && typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) {
-                const kes = memoriSenaraiKes[indexKesSemasa];
-                if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
-                    dataSediaAda = kes.dataBorang.pengaduBerkumpulan.map(p => ({
-                        nama: p.nama,
-                        kp: p.kp,
-                        warganegara: p.warganegara
-                    }));
+    // --- TAMBAHAN KOD KEMASKINI: Sedut memori jika jadual kosong semasa tekan butang edit ---
+    if (dataSediaAda.length === 0 && typeof isEditMode !== 'undefined' && isEditMode && typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) {
+        const kes = memoriSenaraiKes[indexKesSemasa];
+        if (kes && kes.dataBorang) {
+            
+            // Pelan A: Sedut dari array pengaduBerkumpulan (Untuk kes-kes pendaftaran BAHARU)
+            if (kes.dataBorang.pengaduBerkumpulan && kes.dataBorang.pengaduBerkumpulan.length > 0) {
+                dataSediaAda = kes.dataBorang.pengaduBerkumpulan.map(p => ({
+                    nama: p.nama || '',
+                    kp: p.kp || '',
+                    warganegara: p.warganegara || 'MALAYSIA'
+                }));
+            } 
+            
+            // Pelan B: Sedut secara manual dari raw input (Untuk kes-kes SEDIA ADA / LAMA)
+            else if (kes.dataBorang.inputs) {
+                const bilP = parseInt(kes.dataBorang.inputs.bilPengadu) || 1;
+                for (let i = 2; i <= bilP; i++) {
+                    const namaLama = kes.dataBorang.inputs['namaPengaduTambahan' + i];
+                    if (namaLama) {
+                        dataSediaAda.push({
+                            nama: namaLama,
+                            kp: kes.dataBorang.inputs['kpPengaduTambahan' + i] || '',
+                            warganegara: kes.dataBorang.inputs['warganegaraPengaduTambahan' + i] || 'MALAYSIA'
+                        });
+                    }
                 }
             }
-            // ----------------------------------------------------------------------------------------
+        }
+    }
+    // ----------------------------------------------------------------------------------------
 
     // B. Kosongkan jadual dengan bersih
     tbody.innerHTML = '';
