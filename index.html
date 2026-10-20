@@ -1781,11 +1781,31 @@ function populasikanLampiran2() {
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
         
-        // PENGAKUAN
+        // PENGAKUAN (Tarikh, Masa & Nama Pengadu untuk Tandatangan)
         if(document.getElementById('l2_tarikhPengakuan')) {
-            let harini = new Date();
-            document.getElementById('l2_tarikhPengakuan').innerText = harini.toLocaleDateString('ms-MY');
+            let tarikhKes = kes.tarikh || new Date().toLocaleDateString('ms-MY');
+            document.getElementById('l2_tarikhPengakuan찧') ? '' : null; // kekalkan keselamatan DOM
+            document.getElementById('l2_tarikhPengakuan').innerText = tarikhKes;
         }
+
+        // Jika anda mempunyai elemen khusus untuk masa pengakuan atau tandatangan di Lampiran 2:
+        const elTandatangan = document.getElementById('l2_tandatanganPengadu');
+        if (elTandatangan) {
+            elTandatangan.innerText = kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '') : '';
+        }
+
+        // UNTUK KEGUNAAN PEJABAT TENAGA KERJA (Tarikh, Masa & Nama Pegawai)
+        const elTarikhPejabat = document.getElementById('l2_tarikhPejabat');
+        if (elTarikhPejabat) {
+            elTarikhPejabat.innerText = kes.tarikh || new Date().toLocaleDateString('ms-MY');
+        }
+
+        const elNamaPegawai = document.getElementById('l2_namaPegawai');
+        if (elNamaPegawai) {
+            // Mengambil nama pegawai jika disimpan dalam sistem, atau paparkan Pegawai Bertugas
+            elNamaPegawai.innerText = kes.namaPegawaiBertugas || "PEGAWAI BERTUGAS (JTK KLUANG)";
+        }
+        
     } catch (err) {
         console.log("Ralat mengekstrak data Lampiran 2:", err);
     }
