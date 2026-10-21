@@ -1469,7 +1469,7 @@ body {
                             </tbody>
                         </table>
 
-                        <!-- WRAP BAHAGIAN III HINGGA PENGAKUAN -->
+                        <!-- PENGAKUAN -->
                         <div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 30px;">
                             <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px; background: #e2e8f0; padding: 4px;">BAHAGIAN III: ADUAN</div>
                             <div style="font-weight: bold; font-size: 10pt; margin-bottom: 5px;">BUTIRAN ADUAN</div>
@@ -1487,18 +1487,21 @@ body {
                                         <div>Tarikh:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_tarikhPengakuan"></div>
                                     </div>
                                     <div style="display: flex; gap: 8px; align-items: flex-end;">
-                                        <div>Masa:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;"></div>
+                                        <div>Masa:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_masaPengakuan"></div>
                                     </div>
                                 </div>
-                                <!-- Card 2 (Kanan) -->
-                                <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
-                                    <div style="border-bottom: 1px dotted #000; min-height: 40px;"></div>
-                                    <div style="text-align: center;">Tandatangan:</div>
+                                <!-- Card 2 (Kanan - Susunan Betul: Garisan atas, Tandatangan & Nama di bawah) -->
+                                <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 4px;">
+                                    <div style="border-bottom: 1px dotted #000; min-height: 45px; width: 100%;"></div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px;">
+                                        <span>Tandatangan:</span>
+                                        <span style="font-weight: bold; text-transform: uppercase; text-align: right;" id="l2_namaTandatanganPengadu"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- WRAP ULASAN PEGAWAI HINGGA TANDATANGAN BAWAH -->
+                        <!-- ULASAN PEGAWAI BERTUGAS -->
                         <div style="page-break-inside: avoid; break-inside: avoid;">
                             <div style="font-weight: bold; font-size: 10pt; border: 1px solid #000; padding: 8px 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box; background: #e2e8f0;">UNTUK KEGUNAAN PEJABAT TENAGA KERJA - ULASAN PEGAWAI BERTUGAS</div>
                             
@@ -1508,16 +1511,16 @@ body {
                                 <!-- Card 1 (Kiri) -->
                                 <div style="display: flex; flex-direction: column; gap: 20px; justify-content: flex-end;">
                                     <div style="display: flex; gap: 8px; align-items: flex-end;">
-                                        <div>Tarikh:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;"></div>
+                                        <div>Tarikh:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_tarikhPejabat"></div>
                                     </div>
                                     <div style="display: flex; gap: 8px; align-items: flex-end;">
-                                        <div>Masa:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;"></div>
+                                        <div>Masa:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_masaPejabat"></div>
                                     </div>
                                 </div>
                                 <!-- Card 2 (Kanan) -->
                                 <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
                                     <div style="border-bottom: 1px dotted #000; min-height: 40px;"></div>
-                                    <div style="text-align: center;">Nama Pegawai: <span id="l2_namaPegawai"></span></div>
+                                    <div style="text-align: center;">Nama Pegawai: <span id="l2_namaPegawai" style="font-weight: bold; text-transform: uppercase;"></span></div>
                                 </div>
                             </div>
                         </div>
@@ -1539,14 +1542,12 @@ function populasikanLampiran2() {
             return '';
         };
         
-        // (1) Nama Pengadu
         if(document.getElementById('l2_nama')) {
             let namaL = getVal('namaPengadu');
             let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
             document.getElementById('l2_nama').innerText = namaL || daftarOleh;
         }
 
-        // (2) Jantina
         if(document.getElementById('l2_jantina')) {
             let jantinaVal = "";
             let jantinaRad = document.querySelector('input[name="jantinaPengadu"]:checked');
@@ -1555,7 +1556,6 @@ function populasikanLampiran2() {
             document.getElementById('l2_jantina').innerText = jantinaVal ? jantinaVal.toUpperCase() : '';
         }
         
-        // (3) Umur
         if(document.getElementById('l2_umur')) {
             const jP = document.getElementById('jenisDaftarPengadu')?.value || inputsData['jenisDaftarPengadu'];
             let valUmur = "";
@@ -1585,7 +1585,6 @@ function populasikanLampiran2() {
         if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
         if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
         
-        // Tempoh Berkhidmat
         if(document.getElementById('l2_tempoh')) {
             let jenisTempohRad = document.querySelector('input[name="jenisTempoh"]:checked');
             let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : (inputsData['jenisTempoh'] || 'Pasti');
@@ -1617,7 +1616,6 @@ function populasikanLampiran2() {
             }
         }
         
-        // Bayaran Lain / Elaun
         if (document.getElementById('l2_bayaran_lain')) {
             let adaElaunRad = document.querySelector('input[name="adaElaun"]:checked');
             let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : (inputsData['adaElaun'] === 'Ya');
@@ -1638,7 +1636,6 @@ function populasikanLampiran2() {
             }
         }
                             
-        // JADUAL PENGADU LAIN (BERKUMPULAN) - DIKEMASKINI SUPAYA MASUK DALAM PREVIEW LAMPIRAN 2
         const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
         if (tbodyPengaduLain) {
             const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || inputsData['jenisPengaduDropdown'] || '';
@@ -1683,11 +1680,9 @@ function populasikanLampiran2() {
             }
         }
                             
-        // Alamat Pengadu
         let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
         if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
         
-        // Majikan / Defendan
         if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
         
         let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
@@ -1743,25 +1738,19 @@ function populasikanLampiran2() {
         }
         
         let tarikhSemasa = (kes && kes.tarikh) ? kes.tarikh : new Date().toLocaleDateString('ms-MY');
-        if(document.getElementById('l2_tarikhPengakuan')) {
-            document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
-        }
+        let masaSemasa = new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
+
+        if(document.getElementById('l2_tarikhPengakuan')) document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
+        if(document.getElementById('l2_masaPengakuan')) document.getElementById('l2_masaPengakuan').innerText = masaSemasa;
+        if(document.getElementById('l2_tarikhPejabat')) document.getElementById('l2_tarikhPejabat').innerText = tarikhSemasa;
+        if(document.getElementById('l2_masaPejabat')) document.getElementById('l2_masaPejabat').innerText = masaSemasa;
 
         let namaPengaduBersih = getVal('namaPengadu');
         if (!namaPengaduBersih && kes && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
         
-        const parentTandatanganKanan = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2)');
-        if (parentTandatanganKanan) {
-            let divNamaTandatangan = parentTandatanganKanan.querySelector('.nama-tandatangan-pengadu');
-            if (!divNamaTandatangan) {
-                divNamaTandatangan = document.createElement('div');
-                divNamaTandatangan.className = 'nama-tandatangan-pengadu';
-                divNamaTandatangan.style.textAlign = 'center';
-                divNamaTandatangan.style.fontWeight = 'bold';
-                divNamaTandatangan.style.marginBottom = '4px';
-                parentTandatanganKanan.insertBefore(divNamaTandatangan, parentTandatanganKanan.firstChild);
-            }
-            divNamaTandatangan.innerText = namaPengaduBersih.toUpperCase();
+        const elTandatanganP = document.getElementById('l2_namaTandatanganPengadu');
+        if (elTandatanganP) {
+            elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
         }
 
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
