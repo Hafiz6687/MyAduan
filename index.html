@@ -1760,18 +1760,17 @@ function populasikanLampiran2() {
                 }
 
                 // ULASAN PEGAWAI BERTUGAS (DI KEMASKINI DARI TAB 2)
-                // ULASAN PEGAWAI BERTUGAS (PASTI BERJAYA)
                 const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
                 if (elUlasanPejabat) {
                     let ulasanText = "";
-                    const inputTab2 = document.getElementById('ulasanPegawaiTab2');
+                    const inputTab2 = document.getElementById('ulasanPegawaiTab2'); // <--- ID YANG BETUL
                     
                     if (inputTab2 && inputTab2.value.trim() !== "") {
                         ulasanText = inputTab2.value.trim();
-                    } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
-                        ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
                     } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
                         ulasanText = String(kes.ulasanPegawai).trim();
+                    } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
+                        ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
                     }
                     
                     elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
