@@ -1759,26 +1759,22 @@ function populasikanLampiran2() {
             elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
         }
 
-        // =========================================================================
-        // ULASAN PEGAWAI BERTUGAS (DIKEMASKINI: SEDUT SEMUA SUMBER TANPA GAGAL)
-        // =========================================================================
-        const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
-        if (elUlasanPejabat) {
-            let ulasanText = "";
-            const inputTab2 = document.getElementById('ulasanPegawaiTab2');
-            
-            if (inputTab2 && inputTab2.value.trim() !== "") {
-                ulasanText = inputTab2.value.trim();
-            } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
-                ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
-            } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
-                ulasanText = String(kes.ulasanPegawai).trim();
-            } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
-                ulasanText = String(inputsData['ulasanPegawai']).trim();
-            }
-            
-            elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
-        }
+        // ULASAN PEGAWAI BERTUGAS (EXTRACT DARI TAB 2)
+                const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
+                if (elUlasanPejabat) {
+                    let ulasanText = "";
+                    const inputTab2 = document.getElementById('ulasanPegawaiTab2');
+                    
+                    if (inputTab2 && inputTab2.value.trim() !== "") {
+                        ulasanText = inputTab2.value.trim();
+                    } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
+                        ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
+                    } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
+                        ulasanText = String(kes.ulasanPegawai).trim();
+                    }
+                    
+                    elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
+                }
 
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
