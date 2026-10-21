@@ -16456,7 +16456,21 @@ window.selesaiPemfailanLuarPreview = function() {
         if (typeof tukarView === 'function') tukarView('senarai');
     }
 };
-     
+     // --- PEMBAIKAN KEBAL: PAKSA BUTANG SEMAK & CETAK BERFUNGSI ---
+document.addEventListener('click', function(event) {
+    // Cari jika elemen yang ditekan adalah butang semak & cetak atau mengandungi teks cetak/preview
+    const target = event.target.closest('#btnBukaPreviewTop') || event.target.closest('button');
+    if (target && (target.innerText.includes('Semak & Cetak') || target.id === 'btnBukaPreviewTop')) {
+        event.preventDefault();
+        if (typeof populasikanLampiran2 === 'function') {
+            populasikanLampiran2();
+        }
+        const modal = document.getElementById('modalPreview');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+});
 </script>
 
 <!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
