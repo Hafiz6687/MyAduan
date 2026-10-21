@@ -1784,10 +1784,14 @@ function populasikanLampiran2() {
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
             let ulasanText = "";
-            const inputUlasanScreen = document.getElementById('ulasanPegawai');
+            
+            // 1. Cuba cari terus dari elemen skrin utama (cuba pelbagai selector)
+            const inputUlasanScreen = document.getElementById('ulasanPegawai') || document.querySelector('textarea[name="ulasanPegawai"]');
             if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
                 ulasanText = inputUlasanScreen.value.trim();
-            } else if (inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+            } 
+            // 2. Jika kosong, baru semak dari inputsData / memori kes
+            else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
                 ulasanText = String(inputsData['ulasanPegawai']).trim();
             } else if (kes && kes.ulasanPegawai) {
                 ulasanText = kes.ulasanPegawai;
@@ -1795,14 +1799,11 @@ function populasikanLampiran2() {
                 ulasanText = kes.dataBorang.ulasanPegawai;
             } else if (kes && kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ulasanPegawai']) {
                 ulasanText = kes.dataBorang.inputs['ulasanPegawai'];
-            } else {
-                const fallbackUlasan = document.querySelector('textarea[name="ulasanPegawai"]') || document.querySelector('#ulasanPegawai');
-                if (fallbackUlasan && fallbackUlasan.value.trim() !== "") {
-                    ulasanText = fallbackUlasan.value.trim();
-                }
             }
+            
             elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
         }
+
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
             const profilSidebar = document.getElementById('namaProfilEdit');
