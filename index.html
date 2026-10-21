@@ -1583,7 +1583,7 @@ function populasikanLampiran2() {
         if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : (inputsData['emelPengadu'] || '');
         if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
         if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
-        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || getVal('tarikhLuputPasPengadu') || '';
+        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = document.getElementById('tarikhLuputPas') ? document.getElementById('tarikhLuputPas').value : (inputsData['tarikhLuputPas'] || inputsData['tarikhLuputPasPengadu'] || '');
         if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
         if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
         if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
@@ -1688,7 +1688,7 @@ function populasikanLampiran2() {
         if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
 
         if(document.getElementById('l2_alamatKerja')) {
-            let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true || inputsData['alamatBerbeza'] === "true";
+            let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true;
             if(isAlamatBerbeza) {
                 let alamatKerja = [getVal('namaTempatKerja'), getVal('alamatKerja1'), getVal('alamatKerja2'), getVal('alamatKerja3'), getVal('poskodKerja'), getVal('bandarKerja'), getVal('negeriKerja')].filter(Boolean).join(', ');
                 document.getElementById('l2_alamatKerja').innerText = alamatKerja;
@@ -1759,22 +1759,26 @@ function populasikanLampiran2() {
             elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
         }
 
-        // ULASAN PEGAWAI BERTUGAS (EXTRACT DARI TAB 2)
-                const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
-                if (elUlasanPejabat) {
-                    let ulasanText = "";
-                    const inputTab2 = document.getElementById('ulasanPegawaiTab2');
-                    
-                    if (inputTab2 && inputTab2.value.trim() !== "") {
-                        ulasanText = inputTab2.value.trim();
-                    } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
-                        ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
-                    } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
-                        ulasanText = String(kes.ulasanPegawai).trim();
-                    }
-                    
-                    elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
-                }
+        // =========================================================================
+        // ULASAN PEGAWAI BERTUGAS (FIXED AGGRESSIVE EXTRACTION)
+        // =========================================================================
+        const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
+        if (elUlasanPejabat) {
+            let ulasanText = "";
+            const inputTab2 = document.getElementById('ulasanPegawaiTab2');
+            
+            if (inputTab2 && inputTab2.value.trim() !== "") {
+                ulasanText = inputTab2.value.trim();
+            } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
+                ulasanText = String(kes.ulasanPegawai).trim();
+            } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
+                ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
+            } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+                ulasanText = String(inputsData['ulasanPegawai']).trim();
+            }
+            
+            elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
+        }
 
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
