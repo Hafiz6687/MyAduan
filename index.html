@@ -1529,28 +1529,41 @@ body {
 
 function populasikanLampiran2() {
     try {
-        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.toUpperCase() : '';
+        const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined') ? memoriSenaraiKes[indexKesSemasa] : null;
+        const inputsData = (kes && kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
+
+        const getVal = (id) => {
+            let el = document.getElementById(id);
+            if (el && el.value && el.value.trim() !== "") return el.value.toUpperCase();
+            if (inputsData[id] && String(inputsData[id]).trim() !== "") return String(inputsData[id]).toUpperCase();
+            return '';
+        };
         
+        // (1) Nama Pengadu
         if(document.getElementById('l2_nama')) {
             let namaL = getVal('namaPengadu');
             let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
             document.getElementById('l2_nama').innerText = namaL || daftarOleh;
         }
-        // (2) Jantina (Ekstrak terus dari radio button jantinaPengadu)
+
+        // (2) Jantina
         if(document.getElementById('l2_jantina')) {
+            let jantinaVal = "";
             let jantinaRad = document.querySelector('input[name="jantinaPengadu"]:checked');
-            document.getElementById('l2_jantina').innerText = jantinaRad ? jantinaRad.value.toUpperCase() : '';
+            if (jantinaRad) jantinaVal = jantinaRad.value;
+            else if (inputsData['jantinaPengadu']) jantinaVal = inputsData['jantinaPengadu'];
+            document.getElementById('l2_jantina').innerText = jantinaVal ? jantinaVal.toUpperCase() : '';
         }
         
-        // (3) Umur (Ditambah perkataan TAHUN)
+        // (3) Umur
         if(document.getElementById('l2_umur')) {
-            const jP = document.getElementById('jenisDaftarPengadu')?.value;
+            const jP = document.getElementById('jenisDaftarPengadu')?.value || inputsData['jenisDaftarPengadu'];
             let valUmur = "";
             if (jP === 'Pasport') {
-                let uPasport = document.getElementById('umurPasportPengadu')?.value || "";
+                let uPasport = document.getElementById('umurPasportPengadu')?.value || inputsData['umurPasportPengadu'] || "";
                 valUmur = uPasport ? uPasport + " TAHUN" : "";
             } else {
-                let noKpVal = document.getElementById('noPendPengadu')?.value || "";
+                let noKpVal = document.getElementById('noPendPengadu')?.value || inputsData['noPendPengadu'] || "";
                 let kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad({ value: noKpVal }) : "";
                 valUmur = kiraUmur ? kiraUmur + " TAHUN" : "";
             }
@@ -1562,150 +1575,102 @@ function populasikanLampiran2() {
         
         let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
         if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
-        if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : '';
+        if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : (inputsData['emelPengadu'] || '');
         if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
         
-        // (10) & (11) Pasport dan Tarikh Luput
         if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
-        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || '';
+        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || getVal('tarikhLuputPasPengadu') || '';
         if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
 
         if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
         if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
         
-        // (14) Tempoh Berkhidmat (Mengikut radio button jenisTempoh)
+        // Tempoh Berkhidmat
         if(document.getElementById('l2_tempoh')) {
             let jenisTempohRad = document.querySelector('input[name="jenisTempoh"]:checked');
-            let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : 'Pasti';
+            let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : (inputsData['jenisTempoh'] || 'Pasti');
             
             if (jenisTempohVal === 'Tidak Pasti') {
-                let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim() : '';
-                // Jadikan huruf pertama perkataan pertama besar, selebihnya kekal free text
+                let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim() : (inputsData['teksTempohTidakPasti'] || '');
                 let formattedTempoh = teksTdKPasti ? teksTdKPasti.charAt(0).toUpperCase() + teksTdKPasti.slice(1) : '-';
                 document.getElementById('l2_tempoh').innerText = formattedTempoh;
             } else {
-                let tMulaVal = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : '';
+                let tMulaVal = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : (inputsData['tarikhMulaKerja'] || '');
                 if (tMulaVal) {
                     let dMula = new Date(tMulaVal);
                     let dSemasa = new Date();
-                    
                     let tahunDiff = dSemasa.getFullYear() - dMula.getFullYear();
                     let bulanDiff = dSemasa.getMonth() - dMula.getMonth();
                     let hariDiff = dSemasa.getDate() - dMula.getDate();
-                    
-                    if (hariDiff < 0) {
-                        bulanDiff--;
-                    }
-                    if (bulanDiff < 0) {
-                        tahunDiff--;
-                        bulanDiff += 12;
-                    }
+                    if (hariDiff < 0) bulanDiff--;
+                    if (bulanDiff < 0) { tahunDiff--; bulanDiff += 12; }
                     
                     let teksTempohHasil = [];
                     if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " tahun");
                     if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " bulan");
+                    if (teksTempohHasil.length === 0) teksTempohHasil.push("Kurang sebulan");
                     
-                    if (teksTempohHasil.length === 0) {
-                        teksTempohHasil.push("Kurang sebulan");
-                    }
-                    
-                    let hasilGabung = teksTempohHasil.join("dan ");
-                    // Huruf besar pada huruf pertama ayat
-                    document.getElementById('l2_tempoh').innerText = hasilGabung.charAt(0).toUpperCase() + hasilGabung.slice(1);
+                    document.getElementById('l2_tempoh').innerText = teksTempohHasil.join("dan ").charAt(0).toUpperCase() + teksTempohHasil.join("dan ").slice(1);
                 } else {
                     document.getElementById('l2_tempoh').innerText = '-';
                 }
             }
         }
         
-        // (16) Bayaran-bayaran Lain (Mengikut radio button adaElaun)
+        // Bayaran Lain / Elaun
         if (document.getElementById('l2_bayaran_lain')) {
             let adaElaunRad = document.querySelector('input[name="adaElaun"]:checked');
-            let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : false;
+            let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : (inputsData['adaElaun'] === 'Ya');
             
             if (isAdaElaun) {
                 let senaraiElaunFormatted = [];
-                let containerElaun = document.getElementById('senaraiElaun');
-                
-                if (containerElaun) {
-                    let rows = containerElaun.querySelectorAll('div');
-                    rows.forEach(div => {
-                        let inpJenis = div.querySelector('.input-elaun-jenis');
-                        let inpJumlah = div.querySelector('.input-elaun-jumlah');
-                        
-                        if (inpJenis) {
-                            let jenisText = inpJenis.value.trim();
-                            let jumlahText = inpJumlah ? inpJumlah.value.trim() : '';
-                            
-                            // Pastikan jenis diisi DAN jumlahnya wujud serta bukan kosong/0.00 berganda
-                            if (jenisText && jumlahText && jumlahText !== "" && jumlahText !== "0.00") {
-                                let jenisTitleCase = jenisText.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-                                
-                                // Elakkan masukkan entri yang sama dua kali secara tidak sengaja
-                                let formatItem = `${jenisTitleCase} (RM ${jumlahText})`;
-                                if (!senaraiElaunFormatted.includes(formatItem)) {
-                                    senaraiElaunFormatted.push(formatItem);
-                                }
-                            }
+                if (kes && kes.dataBorang && kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
+                    kes.dataBorang.elaun.forEach(el => {
+                        if (el.jenis && el.jumlah) {
+                            let tCase = el.jenis.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                            senaraiElaunFormatted.push(`${tCase} (RM ${el.jumlah})`);
                         }
                     });
                 }
-                
-                if (senaraiElaunFormatted.length > 0) {
-                    document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.join(", ");
-                } else {
-                    document.getElementById('l2_bayaran_lain').innerText = "Tiada";
-                }
+                document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.length > 0 ? senaraiElaunFormatted.join(", ") : "Tiada";
             } else {
                 document.getElementById('l2_bayaran_lain').innerText = "Tiada";
             }
         }
                             
-        // --- KAWALAN PAPARAN JADUAL PENGADU LAIN (BERKUMPULAN VS INDIVIDU) ---
+        // JADUAL PENGADU LAIN (BERKUMPULAN) - DIKEMASKINI SUPAYA MASUK DALAM PREVIEW LAMPIRAN 2
         const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
         if (tbodyPengaduLain) {
-            // 1. Sentiasa rujuk kepada pilihan semasa di skrin terlebih dahulu!
-            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || '';
-            const isKumpulan = dropdownPengadu.includes('Berkumpulan');
+            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || inputsData['jenisPengaduDropdown'] || '';
+            const isKumpulan = dropdownPengadu.includes('Berkumpulan') || (kes && kes.jenisAduan === 'Berkumpulan') || (inputsData['aduan'] === 'Berkumpulan');
             let dataKumpulan = [];
             
             if (isKumpulan) {
-                const bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
-                
-                // Cuba sedut dari input skrin (jika pengguna sedang mengisi borang/kemaskini)
-                if (document.getElementById('namaPengaduTambahan2')) {
+                if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan && kes.dataBorang.pengaduBerkumpulan.length > 0) {
+                    dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
+                } else {
+                    let bilP = parseInt(document.getElementById('bilPengadu')?.value || inputsData['bilPengadu']) || 1;
                     for (let i = 2; i <= bilP; i++) {
-                        dataKumpulan.push({
-                            index: i,
-                            nama: document.getElementById('namaPengaduTambahan'+i)?.value || '',
-                            kp: document.getElementById('kpPengaduTambahan'+i)?.value || '',
-                            warganegara: document.getElementById('warganegaraPengaduTambahan'+i)?.value || 'MALAYSIA'
-                        });
-                    }
-                } 
-                // Jika input tiada di skrin (contohnya pengguna tekan Cetak terus dari Senarai Tugas)
-                else if (typeof isEditMode !== 'undefined' && isEditMode && indexKesSemasa > -1) {
-                    const kes = memoriSenaraiKes[indexKesSemasa];
-                    if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
-                        dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
+                        let namaT = document.getElementById('namaPengaduTambahan'+i)?.value || inputsData['namaPengaduTambahan'+i] || '';
+                        let kpT = document.getElementById('kpPengaduTambahan'+i)?.value || inputsData['kpPengaduTambahan'+i] || '';
+                        let wT = document.getElementById('warganegaraPengaduTambahan'+i)?.value || inputsData['warganegaraPengaduTambahan'+i] || 'MALAYSIA';
+                        if (namaT) dataKumpulan.push({ index: i, nama: namaT, kp: kpT, warganegara: wT });
                     }
                 }
                 
-                // 2. Lukis Jadual Berdasarkan Data Yang Diekstrak
                 let barisHtml = '';
                 if (dataKumpulan.length > 0) {
-                    dataKumpulan.forEach(pengadu => {
+                    dataKumpulan.forEach((pengadu, idx) => {
                         barisHtml += `
                             <tr>
-                                <td style="text-align: center; padding: 4px;">(${pengadu.index - 1})</td>
-                                <td style="padding: 4px;">${pengadu.nama.toUpperCase()}</td>
-                                <td style="padding: 4px;">${pengadu.kp.toUpperCase()}</td>
-                                <td style="padding: 4px;">${pengadu.warganegara.toUpperCase()}</td>
+                                <td style="text-align: center; padding: 4px;">(${idx + 1})</td>
+                                <td style="padding: 4px;">${(pengadu.nama || '').toUpperCase()}</td>
+                                <td style="padding: 4px;">${(pengadu.kp || '').toUpperCase()}</td>
+                                <td style="padding: 4px;">${(pengadu.warganegara || 'MALAYSIA').toUpperCase()}</td>
                             </tr>
                         `;
                     });
                 } else {
-                    // Tunjuk baris kosong lalai jika bilangan tambahan belum diisi
                     barisHtml = `
                         <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
                         <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
@@ -1714,72 +1679,59 @@ function populasikanLampiran2() {
                 }
                 tbodyPengaduLain.innerHTML = barisHtml;
             } else {
-                // Tunjuk -Tiada- jika aduan individu (Sentiasa tepat berdasarkan dropdown skrin)
                 tbodyPengaduLain.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 8px; font-style: italic; font-weight: bold;">-Tiada-</td></tr>`;
             }
         }
-        // ----------------------------------------------------------------------
                             
-        // BAHAGIAN I: Alamat Pengadu
+        // Alamat Pengadu
         let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
         if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
         
-        // BAHAGIAN II: BUTIR-BUTIR TEMPAT PEKERJAAN
+        // Majikan / Defendan
         if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
         
-        // Alamat Majikan
         let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
         if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
 
-        // (3) Alamat Tempat Pekerjaan (Berdasarkan Checkbox)
         if(document.getElementById('l2_alamatKerja')) {
-            let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked;
+            let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true || inputs['alamatBerbeza'] === "true";
             if(isAlamatBerbeza) {
-                // Ekstrak dari ruangan tempat pekerjaan jika di-tick
                 let alamatKerja = [getVal('namaTempatKerja'), getVal('alamatKerja1'), getVal('alamatKerja2'), getVal('alamatKerja3'), getVal('poskodKerja'), getVal('bandarKerja'), getVal('negeriKerja')].filter(Boolean).join(', ');
                 document.getElementById('l2_alamatKerja').innerText = alamatKerja;
             } else {
-                // Ekstrak alamat majikan/defendan jika tidak di-tick
                 document.getElementById('l2_alamatKerja').innerText = alamatDef;
             }
         }
 
-        // (4) Nama Pengurus
         if(document.getElementById('l2_pengurus')) {
             document.getElementById('l2_pengurus').innerText = getVal('namaPengurusDefendan') || getVal('namaPemilikDefendan') || '';
         }
 
         if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
-        if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : '';
+        if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : (inputsData['emelDefendan'] || '');
         
-        // (6) Jenis Perusahaan (Gabungan Sektor & Jenis Perniagaan)
         if(document.getElementById('l2_sektor')) {
             let sektor = getVal('sektorDefendan');
             let jenisNiaga = getVal('jenisPerniagaan');
             document.getElementById('l2_sektor').innerText = [sektor, jenisNiaga].filter(Boolean).join(' - ');
         }
         
-        // BAHAGIAN III: ADUAN (Kenyataan Awal + Kronologi Kes + Senarai Tuntutan)
+        // Aduan
         if(document.getElementById('l2_aduan')) {
-            let teksKenyataan = document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value.trim() : '';
-            let teksKronologi = document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value.trim() : '';
+            let teksKenyataan = document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value.trim() : (inputsData['kenyataanAwal'] || '');
+            let teksKronologi = document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value.trim() : (inputsData['kronologiKes'] || '');
             
-            // Gabungkan kenyataan awal dan kronologi
             let aduanPenuh = teksKenyataan;
-            if (teksKronologi) {
-                aduanPenuh += (aduanPenuh ? '\n\n' : '') + teksKronologi;
-            }
+            if (teksKronologi) aduanPenuh += (aduanPenuh ? '\n\n' : '') + teksKronologi;
             
-            // --- Ekstrak Nama Majikan & Jadual Tuntutan di bawahnya ---
-            let namaMajikan = document.getElementById('namaDefendan') ? document.getElementById('namaDefendan').value : 'Majikan';
-            if (namaMajikan.includes('<br>')) {
-                namaMajikan = namaMajikan.split('<br>')[0]; // Bersihkan tag HTML jika ada
-            }
+            let namaMajikan = getVal('namaDefendan') || 'Majikan';
+            if (namaMajikan.includes('<BR>')) namaMajikan = namaMajikan.split('<BR>')[0];
             
             aduanPenuh += `\n\nBerikut adalah aduan terhadap ${namaMajikan}:-\n`;
             
-            if (typeof memoriTuntutan !== 'undefined' && memoriTuntutan.length > 0) {
-                memoriTuntutan.forEach((tuntutan, index) => {
+            let targetTuntutan = (kes && kes.dataBorang && kes.dataBorang.tuntutanBiasa) ? kes.dataBorang.tuntutanBiasa : (typeof memoriTuntutan !== 'undefined' ? memoriTuntutan : []);
+            if (targetTuntutan.length > 0) {
+                targetTuntutan.forEach((tuntutan, index) => {
                     let keteranganTambahan = tuntutan.keterangan ? ` - ${tuntutan.keterangan}` : '';
                     aduanPenuh += `${index + 1}. ${tuntutan.jenis}${keteranganTambahan}\n`;
                 });
@@ -1790,33 +1742,14 @@ function populasikanLampiran2() {
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
         
-        // --- 1. BAHAGIAN PENGAKUAN ---
-        let tarikhSemasa = kes.tarikh || new Date().toLocaleDateString('ms-MY');
-        let masaSemasa = new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
-
-        // Tarikh dan Masa Pengakuan
-        document.querySelectorAll('#lampiran2BorangAduan div').forEach(el => {});
-        const pengakuanTarikhElements = document.querySelectorAll('#lampiran2BorangAduan div');
-        
-        // Isi tarikh pengakuan (pada bahagian atas)
+        let tarikhSemasa = (kes && kes.tarikh) ? kes.tarikh : new Date().toLocaleDateString('ms-MY');
         if(document.getElementById('l2_tarikhPengakuan')) {
             document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
         }
 
-        // Cari elemen div kosong di sebelah "Masa:" yang pertama untuk isi masa pengakuan
-        // (Berdasarkan struktur HTML anda, masa pengakuan berada di bawah tarikh pengakuan)
-        const kontenaPengakuanMasa = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2) > div');
-        if (kontenaPengakuanMasa && !kontenaPengakuanMasa.id) {
-            kontenaPengakuanMasa.innerText = masaSemasa;
-        }
-
-        // Tandatangan Pengadu (Extract Nama Pengadu di bawah ruang tandatangan)
-        let namaPengadu Bersih = document.getElementById('namaPengadu') ? document.getElementById('namaPengadu').value : '';
-        if (!namaPengaduBersih && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
+        let namaPengaduBersih = getVal('namaPengadu');
+        if (!namaPengaduBersih && kes && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
         
-        // Sisipkan nama pengadu di ruang tandatangan jika belum wujud
-        const ruangTandatangan = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2) > div:first-child');
-        // Jika kotak tandatangan kosong, letakkan nama pengadu di atas label "Tandatangan:"
         const parentTandatanganKanan = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2)');
         if (parentTandatanganKanan) {
             let divNamaTandatangan = parentTandatanganKanan.querySelector('.nama-tandatangan-pengadu');
@@ -1831,40 +1764,15 @@ function populasikanLampiran2() {
             divNamaTandatangan.innerText = namaPengaduBersih.toUpperCase();
         }
 
-        // --- 2. BAHAGIAN PEJABAT TENAGA KERJA (ULASAN & TARIKH/MASA/PEGAWAI) ---
-        const elTarikhPejabat = document.getElementById('l2_tarikhPejabat');
-        if (elTarikhPejabat) {
-            elTarikhPejabat.innerText = tarikhSemasa;
-        } else {
-            // Cari elemen tarikh di bahagian bawah pejabat secara manual jika id tidak dijumpai
-            const semuaBarisTarikhPejabat = document.querySelectorAll('#lampiran2BorangAduan div');
-        }
-
-        // Ekstrak Ulasan Pegawai dari kotak input utama 'ulasanPegawai'
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
             let ulasanText = "";
             const inputUlasanScreen = document.getElementById('ulasanPegawai');
-            if (inputUlasanScreen) {
-                ulasanText = inputUlasanScreen.value.trim();
-            } else if (kes.dataBorang && kes.dataBorang.inputs) {
-                ulasanText = kes.dataBorang.inputs['ulasanPegawai'] || "";
-            }
+            if (inputUlasanScreen) ulasanText = inputUlasanScreen.value.trim();
+            else if (inputsData['ulasanPegawai']) ulasanText = inputsData['ulasanPegawai'];
             elUlasanPejabat.innerText = ulasanText || "- Tiada ulasan direkodkan -";
         }
 
-        // Tarikh dan Masa di Bahagian Bawah Pejabat
-        // Mengisi tarikh dan masa pada blok bawah ruang pejabat
-        const blokBawahPejabat = document.querySelectorAll('#lampiran2BorangAduan div');
-        // Kita sasarkan elemen masa di bahagian bawah sekali
-        const semuaDivBawah = document.querySelectorAll('#lampiran2BorangAduan div');
-        semuaDivBawah.forEach(div => {
-            if (div.innerText && div.innerText.trim() === "Masa:" && div.nextElementSibling && div.nextElementSibling.innerText === "") {
-                div.nextElementSibling.innerText = masaSemasa;
-            }
-        });
-
-// Nama Pegawai di Bahagian Bawah Kanan (Extract dari Sidebar)
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
             const profilSidebar = document.getElementById('namaProfilEdit');
@@ -8104,11 +8012,29 @@ function bukaKesDidaftar(index) {
         if(formData['jenisDaftarDefendan']) document.getElementById('jenisDaftarDefendan').value = formData['jenisDaftarDefendan'];
         kawalJenisDaftarDefendan();
         
+        // Semak status aduan berkumpulan dan pulihkan jadual pengadu lain
         const bilPengaduRekod = parseInt(formData['bilPengadu']) || 1;
-        if (formData['aduan'] === 'Berkumpulan') {
+        if (formData['aduan'] === 'Berkumpulan' || (kes.jenisAduan === 'Berkumpulan')) {
+            const dropdownPengadu = document.getElementById('jenisPengaduDropdown');
+            if (dropdownPengadu) dropdownPengadu.value = 'Pekerja Berkumpulan';
+            
             if (bilPengaduRekod > 1) {
+                document.getElementById('bilPengadu').value = bilPengaduRekod;
                 janaJadualPengaduTambahan(bilPengaduRekod);
+                
+                // Masukkan semula data nama dan no KP pengadu tambahan ke dalam jadual
+                if (kes.dataBorang && kes.dataBorang.pengaduBerkumpulan) {
+                    kes.dataBorang.pengaduBerkumpulan.forEach(p => {
+                        let nInp = document.getElementById('namaPengaduTambahan' + p.index);
+                        let kInp = document.getElementById('kpPengaduTambahan' + p.index);
+                        let wInp = document.getElementById('warganegaraPengaduTambahan' + p.index);
+                        if (nInp) nInp.value = p.nama || '';
+                        if (kInp) kInp.value = p.kp || '';
+                        if (wInp) wInp.value = p.warganegara || 'MALAYSIA';
+                    });
+                }
             }
+            renderJadualPengaduBerkumpulan();
         }
       
         isKenyataanEdited = formData['isKenyataanEdited'] === true || formData['isKenyataanEdited'] === "true";
