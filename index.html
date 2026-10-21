@@ -1550,7 +1550,10 @@ function populasikanLampiran2() {
             let jantinaRad = document.querySelector('input[name="jantinaPengadu"]:checked');
             if (jantinaRad) jantinaVal = jantinaRad.value;
             else if (inputsData['jantinaPengadu']) jantinaVal = inputsData['jantinaPengadu'];
-            document.getElementById('l2_jantina').innerText = jantinaVal ? jantinaVal.toUpperCase() : '';
+            
+            let elJ = document.getElementById('l2_jantina');
+            elJ.innerText = jantinaVal ? jantinaVal.toUpperCase() : '';
+            elJ.style.fontWeight = 'normal';
         }
         
         if(document.getElementById('l2_umur')) {
@@ -1564,10 +1567,16 @@ function populasikanLampiran2() {
                 let kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad({ value: noKpVal }) : "";
                 valUmur = kiraUmur ? kiraUmur + " TAHUN" : "";
             }
-            document.getElementById('l2_umur').innerText = valUmur;
+            let elUmur = document.getElementById('l2_umur');
+            elUmur.innerText = valUmur;
+            elUmur.style.fontWeight = 'normal';
         }
 
-        if(document.getElementById('l2_bangsa')) document.getElementById('l2_bangsa').innerText = getVal('bangsaPengadu');
+        if(document.getElementById('l2_bangsa')) {
+            let elB = document.getElementById('l2_bangsa');
+            elB.innerText = getVal('bangsaPengadu');
+            elB.style.fontWeight = 'normal';
+        }
         if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
         
         let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
