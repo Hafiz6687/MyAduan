@@ -1722,19 +1722,13 @@ function populasikanLampiran2() {
             document.getElementById('l2_sektor').innerText = [sektor, jenisNiaga].filter(Boolean).join(' - ');
         }
         
-        // Aduan
+        // Aduan (Ulasan Pegawai dibuang dari paparan ini)
         if(document.getElementById('l2_aduan')) {
             let teksKenyataan = document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value.trim() : (inputsData['kenyataanAwal'] || '');
-            let teksKronologi = document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value.trim() : (inputsData['kronologiKes'] || '');
-            
             let aduanPenuh = teksKenyataan;
-            if (teksKronologi) aduanPenuh += (aduanPenuh ? '\n\n' : '') + teksKronologi;
-            
             let namaMajikan = getVal('namaDefendan') || 'Majikan';
             if (namaMajikan.includes('<BR>')) namaMajikan = namaMajikan.split('<BR>')[0];
-            
             aduanPenuh += `\n\nBerikut adalah aduan terhadap ${namaMajikan}:-\n`;
-            
             let targetTuntutan = (kes && kes.dataBorang && kes.dataBorang.tuntutanBiasa) ? kes.dataBorang.tuntutanBiasa : (typeof memoriTuntutan !== 'undefined' ? memoriTuntutan : []);
             if (targetTuntutan.length > 0) {
                 targetTuntutan.forEach((tuntutan, index) => {
@@ -1744,7 +1738,6 @@ function populasikanLampiran2() {
             } else {
                 aduanPenuh += "- Tiada maklumat tuntutan direkodkan -\n";
             }
-            
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
         
