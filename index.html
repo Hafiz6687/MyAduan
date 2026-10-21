@@ -1984,7 +1984,7 @@ Portal rasmi : jtksm.mohr.gov.my
             <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Aduan</span></div>
             <div style="display: flex; gap: 10px;" id="butangCetakHeader">
                 <!-- Butang ini disembunyikan secara lalai (display: none) -->
-                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="document.getElementById('modalPreview').style.display='flex'; populasikanLampiran2();">📄 Semak & Cetak</button>
+                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="bukaPreview()">📄 Semak & Cetak</button>
             </div>
         </div>
         
@@ -6850,19 +6850,23 @@ function kawalPaparanTab3(tabId) {
     const ruanganNoKes = document.getElementById('ruanganNoKes');
     const btnPreviewTop = document.getElementById('btnBukaPreviewTop');
     
-    // Sentiasa paparkan butang semak & cetak tanpa mengira tab
-    if (ruanganNoKes) ruanganNoKes.style.display = 'flex';
-    if (btnPreviewTop) {
-        btnPreviewTop.style.display = 'block';
-        
-        // --- LOGIK BARU: Tukar Butang Preview Ikut Flow ---
-        if (window.paparanSemasa === 'urus') {
-            btnPreviewTop.innerHTML = '📄 Preview Pengurusan Kes';
-            btnPreviewTop.setAttribute('onclick', 'bukaPreviewUrus()');
-        } else {
-            btnPreviewTop.innerHTML = '📄 Semak & Cetak';
-            btnPreviewTop.setAttribute('onclick', 'bukaPreview()');
+    if (tabId === 'tab3') {
+        if (ruanganNoKes) ruanganNoKes.style.display = 'flex';
+        if (btnPreviewTop) {
+            btnPreviewTop.style.display = 'block';
+            
+            // --- LOGIK BARU: Tukar Butang Preview Ikut Flow ---
+            if (window.paparanSemasa === 'urus') {
+                btnPreviewTop.innerHTML = '📄 Preview Pengurusan Kes';
+                btnPreviewTop.setAttribute('onclick', 'bukaPreviewUrus()');
+            } else {
+                btnPreviewTop.innerHTML = '📄 Semak & Cetak';
+                btnPreviewTop.setAttribute('onclick', 'bukaPreview()');
+            }
         }
+    } else {
+        if (ruanganNoKes) ruanganNoKes.style.display = 'none';
+        if (btnPreviewTop) btnPreviewTop.style.display = 'none';
     }
 }
 
@@ -16456,32 +16460,7 @@ window.selesaiPemfailanLuarPreview = function() {
         if (typeof tukarView === 'function') tukarView('senarai');
     }
 };
-     // --- PEMBAIKAN KEBAL: PAKSA BUTANG SEMAK & CETAK BERFUNGSI ---
-document.addEventListener('click', function(event) {
-    const target = event.target.closest('#btnBukaPreviewTop') || event.target.closest('button');
-    if (target && (target.innerText.includes('Semak & Cetak') || target.id === 'btnBukaPreviewTop' || target.innerText.includes('Preview'))) {
-        event.preventDefault();
-        
-        // 1. Simpan semula nilai semasa dari input skrin ke dalam memori kes aktif
-        if (typeof memoriSenaraiKes !== 'undefined' && typeof indexKesSemasa !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
-            let kesAktif = memoriSenaraiKes[indexKesSemasa];
-            if (document.getElementById('kenyataanAwal')) kesAktif.kenyataanAwal = document.getElementById('kenyataanAwal').value;
-            if (document.getElementById('kronologiKes')) kesAktif.kronologiKes = document.getElementById('kronologiKes').value;
-            if (document.getElementById('ulasanPegawai')) kesAktif.ulasanPegawai = document.getElementById('ulasanPegawai').value;
-        }
 
-        // 2. Jalankan fungsi populasi Lampiran 2 supaya ia sedut data kemaskini
-        if (typeof populasikanLampiran2 === 'function') {
-            populasikanLampiran2();
-        }
-        
-        // 3. Paparkan modal preview
-        const modal = document.getElementById('modalPreview');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
-    }
-});
 </script>
 
 <!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
