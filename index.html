@@ -1688,7 +1688,7 @@ function populasikanLampiran2() {
                 if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
 
                 if(document.getElementById('l2_alamatKerja')) {
-                    let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true || inputs['alamatBerbeza'] === "true";
+                    let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true || inputsData['alamatBerbeza'] === "true";
                     if(isAlamatBerbeza) {
                         let alamatKerja = [getVal('namaTempatKerja'), getVal('alamatKerja1'), getVal('alamatKerja2'), getVal('alamatKerja3'), getVal('poskodKerja'), getVal('bandarKerja'), getVal('negeriKerja')].filter(Boolean).join(', ');
                         document.getElementById('l2_alamatKerja').innerText = alamatKerja;
@@ -1759,11 +1759,11 @@ function populasikanLampiran2() {
                     elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
                 }
 
-                // ULASAN PEGAWAI BERTUGAS (DI KEMASKINI DARI TAB 2)
+                // ULASAN PEGAWAI BERTUGAS (SELESAI SEKALI JALAN)
                 const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
                 if (elUlasanPejabat) {
                     let ulasanText = "";
-                    const inputTab2 = document.getElementById('ulasanPegawaiTab2'); // <--- ID YANG BETUL
+                    const inputTab2 = document.getElementById('ulasanPegawaiTab2');
                     
                     if (inputTab2 && inputTab2.value.trim() !== "") {
                         ulasanText = inputTab2.value.trim();
@@ -1771,10 +1771,13 @@ function populasikanLampiran2() {
                         ulasanText = String(kes.ulasanPegawai).trim();
                     } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
                         ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
+                    } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+                        ulasanText = String(inputsData['ulasanPegawai']).trim();
                     }
                     
                     elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
                 }
+
                 const elNamaPegawai = document.getElementById('l2_namaPegawai');
                 if (elNamaPegawai) {
                     const profilSidebar = document.getElementById('namaProfilEdit');
@@ -7782,7 +7785,13 @@ function kumpulDataBorang() {
         }
     });
 
-    // --- Tangkap dan simpan data pengadu berkumpulan tambahan ---
+    // --- PASTI NILAI ULASAN PEGAWAI DI-CAPTURE ---
+    let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
+    if (elUlasanTab2) {
+        formData['ulasanPegawaiTab2'] = elUlasanTab2.value;
+    }
+    // ---------------------------------------------
+
     let pengaduBerkumpulanData = [];
     let bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
     for (let i = 2; i <= bilP; i++) {
@@ -7804,7 +7813,7 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
+        if(jenis || jumlah) senaraiElaunDilinamik.push({jenis, jumlah});
     });
 
     return {
@@ -8083,6 +8092,19 @@ function bukaKesDidaftar(index) {
             }
         }
         
+        // --- TAMBAHAN PEMULIHAN ULASAN PEGAWAI DALAM BUKA KES ---
+        let elUlasanTarget = document.getElementById('ulasanPegawaiTab2');
+        if (elUlasanTarget) {
+            if (formData['ulasanPegawaiTab2']) {
+                elUlasanTarget.value = formData['ulasanPegawaiTab2'];
+            } else if (kes.ulasanPegawai) {
+                elUlasanTarget.value = kes.ulasanPegawai;
+            } else {
+                elUlasanTarget.value = "";
+            }
+        }
+        // --------------------------------------------------------
+
         const bekasElaun = document.getElementById('senaraiElaun');
         if (bekasElaun) bekasElaun.innerHTML = ''; 
         if (kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
