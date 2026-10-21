@@ -1802,8 +1802,10 @@ function populasikanLampiran2() {
 
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
-            // Mengambil nama pegawai jika disimpan dalam sistem, atau paparkan Pegawai Bertugas
-            elNamaPegawai.innerText = kes.namaPegawaiBertugas || "PEGAWAI BERTUGAS (JTK KLUANG)";
+            // Sedut nama pegawai bertugas dari profil sidebar dan buang elemen <br> jika ada
+            const profilSidebar = document.getElementById('namaProfilEdit');
+            let namaPegawaiSidebar = profilSidebar ? profilSidebar.innerText.replace(/\n/g, ' ') : "MOHAMAD HAFIZ BIN ABU BAKAR";
+            elNamaPegawai.innerText = namaPegawaiSidebar.toUpperCase();
         }
         
     } catch (err) {
