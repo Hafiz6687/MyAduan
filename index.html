@@ -1528,293 +1528,275 @@ body {
                 <script>
 
 function populasikanLampiran2() {
-    try {
-        const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined') ? memoriSenaraiKes[indexKesSemasa] : null;
-        const inputsData = (kes && kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
+            try {
+                const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined') ? memoriSenaraiKes[indexKesSemasa] : null;
+                const inputsData = (kes && kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
 
-        const getVal = (id) => {
-            let el = document.getElementById(id);
-            if (el && el.value && el.value.trim() !== "") return el.value.toUpperCase();
-            if (inputsData[id] && String(inputsData[id]).trim() !== "") return String(inputsData[id]).toUpperCase();
-            return '';
-        };
-        
-        if(document.getElementById('l2_nama')) {
-            let namaL = getVal('namaPengadu');
-            let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
-            document.getElementById('l2_nama').innerText = namaL || daftarOleh;
-        }
+                const getVal = (id) => {
+                    let el = document.getElementById(id);
+                    if (el && el.value && el.value.trim() !== "") return el.value.toUpperCase();
+                    if (inputsData[id] && String(inputsData[id]).trim() !== "") return String(inputsData[id]).toUpperCase();
+                    return '';
+                };
 
-        if(document.getElementById('l2_jantina')) {
-            let jantinaVal = "";
-            let jantinaRad = document.querySelector('input[name="jantinaPengadu"]:checked');
-            if (jantinaRad) jantinaVal = jantinaRad.value;
-            else if (inputsData['jantinaPengadu']) jantinaVal = inputsData['jantinaPengadu'];
-            
-            let elJ = document.getElementById('l2_jantina');
-            elJ.innerText = jantinaVal ? jantinaVal.toUpperCase() : '';
-            elJ.style.fontWeight = 'normal';
-        }
-        
-        if(document.getElementById('l2_umur')) {
-            const jP = document.getElementById('jenisDaftarPengadu')?.value || inputsData['jenisDaftarPengadu'];
-            let valUmur = "";
-            if (jP === 'Pasport') {
-                let uPasport = document.getElementById('umurPasportPengadu')?.value || inputsData['umurPasportPengadu'] || "";
-                valUmur = uPasport ? uPasport + " TAHUN" : "";
-            } else {
-                let noKpVal = document.getElementById('noPendPengadu')?.value || inputsData['noPendPengadu'] || "";
-                let kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad({ value: noKpVal }) : "";
-                valUmur = kiraUmur ? kiraUmur + " TAHUN" : "";
-            }
-            let elUmur = document.getElementById('l2_umur');
-            elUmur.innerText = valUmur;
-            elUmur.style.fontWeight = 'normal';
-        }
-
-        if(document.getElementById('l2_bangsa')) {
-            let elB = document.getElementById('l2_bangsa');
-            elB.innerText = getVal('bangsaPengadu');
-            elB.style.fontWeight = 'normal';
-        }
-        if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
-        
-        let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
-        if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
-        if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : (inputsData['emelPengadu'] || '');
-        if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
-        
-        if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
-        if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || getVal('tarikhLuputPasPengadu') || '';
-        if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
-
-        if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
-        if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
-        
-        if(document.getElementById('l2_tempoh')) {
-            let jenisTempohRad = document.querySelector('input[name="jenisTempoh"]:checked');
-            let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : (inputsData['jenisTempoh'] || 'Pasti');
-            
-            if (jenisTempohVal === 'Tidak Pasti') {
-                let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim() : (inputsData['teksTempohTidakPasti'] || '');
-                let formattedTempoh = teksTdKPasti ? teksTdKPasti.charAt(0).toUpperCase() + teksTdKPasti.slice(1) : '-';
-                document.getElementById('l2_tempoh').innerText = formattedTempoh;
-            } else {
-                let tMulaVal = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : (inputsData['tarikhMulaKerja'] || '');
-                if (tMulaVal) {
-                    let dMula = new Date(tMulaVal);
-                    let dSemasa = new Date();
-                    let tahunDiff = dSemasa.getFullYear() - dMula.getFullYear();
-                    let bulanDiff = dSemasa.getMonth() - dMula.getMonth();
-                    let hariDiff = dSemasa.getDate() - dMula.getDate();
-                    if (hariDiff < 0) bulanDiff--;
-                    if (bulanDiff < 0) { tahunDiff--; bulanDiff += 12; }
-                    
-                    let teksTempohHasil = [];
-                    if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " tahun");
-                    if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " bulan");
-                    if (teksTempohHasil.length === 0) teksTempohHasil.push("Kurang sebulan");
-                    
-                    document.getElementById('l2_tempoh').innerText = teksTempohHasil.join(" dan ").charAt(0).toUpperCase() + teksTempohHasil.join(" dan ").slice(1);
-                } else {
-                    document.getElementById('l2_tempoh').innerText = '-';
+                if(document.getElementById('l2_nama')) {
+                    let namaL = getVal('namaPengadu');
+                    let daftarOleh = document.getElementById('mk_daftar_oleh') ? document.getElementById('mk_daftar_oleh').innerText.toUpperCase() : '';
+                    document.getElementById('l2_nama').innerText = namaL || daftarOleh;
                 }
-            }
-        }
-        
-        if (document.getElementById('l2_bayaran_lain')) {
-            let adaElaunRad = document.querySelector('input[name="adaElaun"]:checked');
-            let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : (inputsData['adaElaun'] === 'Ya');
-            
-            if (isAdaElaun) {
-                let senaraiElaunFormatted = [];
-                if (kes && kes.dataBorang && kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
-                    kes.dataBorang.elaun.forEach(el => {
-                        if (el.jenis && el.jumlah) {
-                            let tCase = el.jenis.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                            senaraiElaunFormatted.push(`${tCase} (RM ${el.jumlah})`);
-                        }
-                    });
-                }
-                document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.length > 0 ? senaraiElaunFormatted.join(", ") : "Tiada";
-            } else {
-                document.getElementById('l2_bayaran_lain').innerText = "Tiada";
-            }
-        }
-                            
-        const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
-        if (tbodyPengaduLain) {
-            const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || inputsData['jenisPengaduDropdown'] || '';
-            const isKumpulan = dropdownPengadu.includes('Berkumpulan') || (kes && kes.jenisAduan === 'Berkumpulan') || (inputsData['aduan'] === 'Berkumpulan');
-            let dataKumpulan = [];
-            
-            if (isKumpulan) {
-                if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan && kes.dataBorang.pengaduBerkumpulan.length > 0) {
-                    dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
-                } else {
-                    let bilP = parseInt(document.getElementById('bilPengadu')?.value || inputsData['bilPengadu']) || 1;
-                    for (let i = 2; i <= bilP; i++) {
-                        let namaT = document.getElementById('namaPengaduTambahan'+i)?.value || inputsData['namaPengaduTambahan'+i] || '';
-                        let kpT = document.getElementById('kpPengaduTambahan'+i)?.value || inputsData['kpPengaduTambahan'+i] || '';
-                        let wT = document.getElementById('warganegaraPengaduTambahan'+i)?.value || inputsData['warganegaraPengaduTambahan'+i] || 'MALAYSIA';
-                        if (namaT) dataKumpulan.push({ index: i, nama: namaT, kp: kpT, warganegara: wT });
-                    }
+
+                if(document.getElementById('l2_jantina')) {
+                    let jantinaVal = "";
+                    let jantinaRad = document.querySelector('input[name="jantinaPengadu"]:checked');
+                    if (jantinaRad) jantinaVal = jantinaRad.value;
+                    else if (inputsData['jantinaPengadu']) jantinaVal = inputsData['jantinaPengadu'];
+                    let elJ = document.getElementById('l2_jantina');
+                    elJ.innerText = jantinaVal ? jantinaVal.toUpperCase() : '';
+                    elJ.style.fontWeight = 'normal';
                 }
                 
-                let barisHtml = '';
-                if (dataKumpulan.length > 0) {
-                    dataKumpulan.forEach((pengadu, idx) => {
-                        barisHtml += `
-                            <tr>
-                                <td style="text-align: center; padding: 4px;">(${idx + 1})</td>
-                                <td style="padding: 4px;">${(pengadu.nama || '').toUpperCase()}</td>
-                                <td style="padding: 4px;">${(pengadu.kp || '').toUpperCase()}</td>
-                                <td style="padding: 4px;">${(pengadu.warganegara || 'MALAYSIA').toUpperCase()}</td>
-                            </tr>
-                        `;
-                    });
-                } else {
-                    barisHtml = `
-                        <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
-                        <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
-                        <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
-                    `;
+                if(document.getElementById('l2_umur')) {
+                    const jP = document.getElementById('jenisDaftarPengadu')?.value || inputsData['jenisDaftarPengadu'];
+                    let valUmur = "";
+                    if (jP === 'Pasport') {
+                        let uPasport = document.getElementById('umurPasportPengadu')?.value || inputsData['umurPasportPengadu'] || "";
+                        valUmur = uPasport ? uPasport + " TAHUN" : "";
+                    } else {
+                        let noKpVal = document.getElementById('noPendPengadu')?.value || inputsData['noPendPengadu'] || "";
+                        let kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad({ value: noKpVal }) : "";
+                        valUmur = kiraUmur ? kiraUmur + " TAHUN" : "";
+                    }
+                    let elUmur = document.getElementById('l2_umur');
+                    elUmur.innerText = valUmur;
+                    elUmur.style.fontWeight = 'normal';
                 }
-                tbodyPengaduLain.innerHTML = barisHtml;
-            } else {
-                tbodyPengaduLain.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 8px; font-style: italic; font-weight: bold;">-Tiada-</td></tr>`;
-            }
-        }
+
+                if(document.getElementById('l2_bangsa')) {
+                    let elB = document.getElementById('l2_bangsa');
+                    elB.innerText = getVal('bangsaPengadu');
+                    elB.style.fontWeight = 'normal';
+                }
+                if(document.getElementById('l2_kp')) document.getElementById('l2_kp').innerText = getVal('noPendPengadu');
+
+                let telHp = [getVal('telPengadu'), getVal('hpPengadu')].filter(Boolean).join(' / ');
+                if(document.getElementById('l2_tel')) document.getElementById('l2_tel').innerText = telHp || getVal('telPengadu');
+                if(document.getElementById('l2_emel')) document.getElementById('l2_emel').innerText = document.getElementById('emelPengadu') ? document.getElementById('emelPengadu').value : (inputsData['emelPengadu'] || '');
+                if(document.getElementById('l2_kategori')) document.getElementById('l2_kategori').innerText = getVal('kategoriPekerjaan') || '';
+                if(document.getElementById('l2_pasport')) document.getElementById('l2_pasport').innerText = getVal('noPasportPengadu') || '';
+                if(document.getElementById('l2_luput_pas')) document.getElementById('l2_luput_pas').innerText = getVal('tarikhLuputPas') || getVal('tarikhLuputPasPengadu') || '';
+                if(document.getElementById('l2_warganegara')) document.getElementById('l2_warganegara').innerText = getVal('warganegaraPengadu') || '';
+                if(document.getElementById('l2_jawatan')) document.getElementById('l2_jawatan').innerText = getVal('jawatanPengadu');
+                if(document.getElementById('l2_gaji')) document.getElementById('l2_gaji').innerText = getVal('gajiPokokPengadu') ? 'RM ' + getVal('gajiPokokPengadu') : '';
+
+                if(document.getElementById('l2_tempoh')) {
+                    let jenisTempohRad = document.querySelector('input[name="jenisTempoh"]:checked');
+                    let jenisTempohVal = jenisTempohRad ? jenisTempohRad.value : (inputsData['jenisTempoh'] || 'Pasti');
+                    
+                    if (jenisTempohVal === 'Tidak Pasti') {
+                        let teksTdKPasti = document.getElementById('teksTempohTidakPasti') ? document.getElementById('teksTempohTidakPasti').value.trim() : (inputsData['teksTempohTidakPasti'] || '');
+                        let formattedTempoh = teksTdKPasti ? teksTdKPasti.charAt(0).toUpperCase() + teksTdKPasti.slice(1) : '-';
+                        document.getElementById('l2_tempoh').innerText = formattedTempoh;
+                    } else {
+                        let tMulaVal = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : (inputsData['tarikhMulaKerja'] || '');
+                        if (tMulaVal) {
+                            let dMula = new Date(tMulaVal);
+                            let dSemasa = new Date();
+                            let tahunDiff = dSemasa.getFullYear() - dMula.getFullYear();
+                            let bulanDiff = dSemasa.getMonth() - dMula.getMonth();
+                            let hariDiff = dSemasa.getDate() - dMula.getDate();
+                            if (hariDiff < 0) bulanDiff--;
+                            if (bulanDiff < 0) { tahunDiff--; bulanDiff += 12; }
                             
-        let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
-        if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
-        
-        if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
-        
-        let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
-        if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
+                            let teksTempohHasil = [];
+                            if (tahunDiff > 0) teksTempohHasil.push(tahunDiff + " tahun");
+                            if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " bulan");
+                            if (teksTempohHasil.length === 0) teksTempohHasil.push("Kurang sebulan");
+                            
+                            document.getElementById('l2_tempoh').innerText = teksTempohHasil.join(" dan ").charAt(0).toUpperCase() + teksTempohHasil.join(" dan ").slice(1);
+                        } else {
+                            document.getElementById('l2_tempoh').innerText = '-';
+                        }
+                    }
+                }
 
-        if(document.getElementById('l2_alamatKerja')) {
-            let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true || inputs['alamatBerbeza'] === "true";
-            if(isAlamatBerbeza) {
-                let alamatKerja = [getVal('namaTempatKerja'), getVal('alamatKerja1'), getVal('alamatKerja2'), getVal('alamatKerja3'), getVal('poskodKerja'), getVal('bandarKerja'), getVal('negeriKerja')].filter(Boolean).join(', ');
-                document.getElementById('l2_alamatKerja').innerText = alamatKerja;
-            } else {
-                document.getElementById('l2_alamatKerja').innerText = alamatDef;
+                if (document.getElementById('l2_bayaran_lain')) {
+                    let adaElaunRad = document.querySelector('input[name="adaElaun"]:checked');
+                    let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : (inputsData['adaElaun'] === 'Ya');
+                    if (isAdaElaun) {
+                        let senaraiElaunFormatted = [];
+                        if (kes && kes.dataBorang && kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
+                            kes.dataBorang.elaun.forEach(el => {
+                                if (el.jenis && el.jumlah) {
+                                    let tCase = el.jenis.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                                    senaraiElaunFormatted.push(`${tCase} (RM ${el.jumlah})`);
+                                }
+                            });
+                        }
+                        document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.length > 0 ? senaraiElaunFormatted.join(", ") : "Tiada";
+                    } else {
+                        document.getElementById('l2_bayaran_lain').innerText = "Tiada";
+                    }
+                }
+
+                const tbodyPengaduLain = document.getElementById('l2_bodyPengaduLain');
+                if (tbodyPengaduLain) {
+                    const dropdownPengadu = document.getElementById('jenisPengaduDropdown')?.value || inputsData['jenisPengaduDropdown'] || '';
+                    const isKumpulan = dropdownPengadu.includes('Berkumpulan') || (kes && kes.jenisAduan === 'Berkumpulan') || (inputsData['aduan'] === 'Berkumpulan');
+                    let dataKumpulan = [];
+                    if (isKumpulan) {
+                        if (kes && kes.dataBorang && kes.dataBorang.pengaduBerkumpulan && kes.dataBorang.pengaduBerkumpulan.length > 0) {
+                            dataKumpulan = kes.dataBorang.pengaduBerkumpulan;
+                        } else {
+                            let bilP = parseInt(document.getElementById('bilPengadu')?.value || inputsData['bilPengadu']) || 1;
+                            for (let i = 2; i <= bilP; i++) {
+                                let namaT = document.getElementById('namaPengaduTambahan'+i)?.value || inputsData['namaPengaduTambahan'+i] || '';
+                                let kpT = document.getElementById('kpPengaduTambahan'+i)?.value || inputsData['kpPengaduTambahan'+i] || '';
+                                let wT = document.getElementById('warganegaraPengaduTambahan'+i)?.value || inputsData['warganegaraPengaduTambahan'+i] || 'MALAYSIA';
+                                if (namaT) dataKumpulan.push({ index: i, nama: namaT, kp: kpT, warganegara: wT });
+                            }
+                        }
+                        let barisHtml = '';
+                        if (dataKumpulan.length > 0) {
+                            dataKumpulan.forEach((pengadu, idx) => {
+                                barisHtml += `
+                                    <tr>
+                                        <td style="text-align: center; padding: 4px;">(${idx + 1})</td>
+                                        <td style="padding: 4px;">${(pengadu.nama || '').toUpperCase()}</td>
+                                        <td style="padding: 4px;">${(pengadu.kp || '').toUpperCase()}</td>
+                                        <td style="padding: 4px;">${(pengadu.warganegara || 'MALAYSIA').toUpperCase()}</td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            barisHtml = `
+                                <tr><td style="text-align: center; padding: 4px;">(1)</td><td></td><td></td><td></td></tr>
+                                <tr><td style="text-align: center; padding: 4px;">(2)</td><td></td><td></td><td></td></tr>
+                                <tr><td style="text-align: center; padding: 4px;">(3)</td><td></td><td></td><td></td></tr>
+                            `;
+                        }
+                        tbodyPengaduLain.innerHTML = barisHtml;
+                    } else {
+                        tbodyPengaduLain.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 8px; font-style: italic; font-weight: bold;">-Tiada-</td></tr>`;
+                    }
+                }
+
+                let alamatPengadu = [getVal('alamatPengadu1'), getVal('alamatPengadu2'), getVal('alamatPengadu3'), getVal('poskodPengadu'), getVal('bandarPengadu'), getVal('negeriPengadu')].filter(Boolean).join(', ');
+                if(document.getElementById('l2_alamat')) document.getElementById('l2_alamat').innerText = alamatPengadu;
+
+                if(document.getElementById('l2_majikan')) document.getElementById('l2_majikan').innerText = getVal('namaDefendan');
+                let alamatDef = [getVal('alamatDefendan1'), getVal('alamatDefendan2'), getVal('alamatDefendan3'), getVal('poskodDefendan'), getVal('bandarDefendan'), getVal('negeriDefendan')].filter(Boolean).join(', ');
+                if(document.getElementById('l2_alamatMajikan')) document.getElementById('l2_alamatMajikan').innerText = alamatDef;
+
+                if(document.getElementById('l2_alamatKerja')) {
+                    let isAlamatBerbeza = document.getElementById('alamatBerbeza')?.checked || inputsData['alamatBerbeza'] === true || inputs['alamatBerbeza'] === "true";
+                    if(isAlamatBerbeza) {
+                        let alamatKerja = [getVal('namaTempatKerja'), getVal('alamatKerja1'), getVal('alamatKerja2'), getVal('alamatKerja3'), getVal('poskodKerja'), getVal('bandarKerja'), getVal('negeriKerja')].filter(Boolean).join(', ');
+                        document.getElementById('l2_alamatKerja').innerText = alamatKerja;
+                    } else {
+                        document.getElementById('l2_alamatKerja').innerText = alamatDef;
+                    }
+                }
+
+                if(document.getElementById('l2_pengurus')) {
+                    document.getElementById('l2_pengurus').innerText = getVal('namaPengurusDefendan') || getVal('namaPemilikDefendan') || '';
+                }
+
+                if(document.getElementById('l2_telMajikan')) {
+                    let telDef1 = getVal('telDefendan');
+                    let telDefHp = getVal('telHpDefendan') || getVal('hpDefendan') || '';
+                    let gabungTelDef = [telDef1, telDefHp].filter(Boolean).join(' / ');
+                    document.getElementById('l2_telMajikan').innerText = gabungTelDef || telDef1;
+                }
+
+                if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : (inputsData['emelDefendan'] || '');
+                
+                if(document.getElementById('l2_sektor')) {
+                    let sektor = getVal('sektorDefendan');
+                    let jenisNiaga = getVal('jenisPerniagaan');
+                    document.getElementById('l2_sektor').innerText = [sektor, jenisNiaga].filter(Boolean).join(' - ');
+                }
+
+                // Aduan
+                if(document.getElementById('l2_aduan')) {
+                    let teksKenyataan = document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value.trim() : (inputsData['kenyataanAwal'] || '');
+                    let aduanPenuh = teksKenyataan;
+                    let namaMajikan = getVal('namaDefendan') || 'Majikan';
+                    if (namaMajikan.includes('<BR>')) namaMajikan = namaMajikan.split('<BR>')[0];
+                    aduanPenuh += `\n\nBerikut adalah aduan terhadap ${namaMajikan}:-\n`;
+                    let targetTuntutan = (kes && kes.dataBorang && kes.dataBorang.tuntutanBiasa) ? kes.dataBorang.tuntutanBiasa : (typeof memoriTuntutan !== 'undefined' ? memoriTuntutan : []);
+                    if (targetTuntutan.length > 0) {
+                        targetTuntutan.forEach((tuntutan, index) => {
+                            let keteranganTambahan = tuntutan.keterangan ? ` - ${tuntutan.keterangan}` : '';
+                            aduanPenuh += `${index + 1}. ${tuntutan.jenis}${keteranganTambahan}\n`;
+                        });
+                    } else {
+                        aduanPenuh += "- Tiada maklumat tuntutan direkodkan -\n";
+                    }
+                    document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
+                }
+
+                let tarikhSemasa = (kes && kes.tarikh) ? kes.tarikh : new Date().toLocaleDateString('ms-MY');
+                let dNow = new Date();
+                let jamNum = dNow.getHours();
+                let minitStr = String(dNow.getMinutes()).padStart(2, '0');
+                let sesiWaktu = "Pagi";
+                if (jamNum >= 4 && jamNum < 12) { sesiWaktu = "Pagi"; }
+                else if (jamNum >= 12 && jamNum < 15) { sesiWaktu = "Tengahari"; }
+                else if (jamNum >= 15 && jamNum < 19) { sesiWaktu = "Petang"; }
+                else { sesiWaktu = "Malam"; }
+                let jam12 = jamNum % 12 || 12;
+                let masaSemasa = `${jam12}:${minitStr} ${sesiWaktu}`;
+
+                if(document.getElementById('l2_tarikhPengakuan')) document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
+                if(document.getElementById('l2_masaPengakuan')) document.getElementById('l2_masaPengakuan').innerText = masaSemasa;
+                if(document.getElementById('l2_tarikhPejabat')) document.getElementById('l2_tarikhPejabat').innerText = tarikhSemasa;
+                if(document.getElementById('l2_masaPejabat')) document.getElementById('l2_masaPejabat').innerText = masaSemasa;
+
+                let namaPengaduBersih = getVal('namaPengadu');
+                if (!namaPengaduBersih && kes && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
+                const elTandatanganP = document.getElementById('l2_namaTandatanganPengadu');
+                if (elTandatanganP) {
+                    elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
+                }
+
+                // ULASAN PEGAWAI BERTUGAS (DIKEMASKINI DENGAN PENYELAMAT KUAT)
+                const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
+                if (elUlasanPejabat) {
+                    let ulasanText = "";
+                    const inputUlasanScreen = document.getElementById('ulasanPegawai');
+                    
+                    if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
+                        ulasanText = inputUlasanScreen.value.trim();
+                    } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+                        ulasanText = String(inputsData['ulasanPegawai']).trim();
+                    } else if (kes && kes.ulasanPegawai) {
+                        ulasanText = kes.ulasanPegawai;
+                    } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai) {
+                        ulasanText = kes.dataBorang.ulasanPegawai;
+                    } else if (kes && kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ulasanPegawai']) {
+                        ulasanText = kes.dataBorang.inputs['ulasanPegawai'];
+                    } else {
+                        // Cuba fallback amik teks mentah jika wujud sebarang textarea ulasan
+                        const sebarangTextarea = document.querySelector('textarea#ulasanPegawai');
+                        if (sebarangTextarea && sebarangTextarea.value.trim() !== "") {
+                            ulasanText = sebarangTextarea.value.trim();
+                        }
+                    }
+                    
+                    elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
+                }
+
+                const elNamaPegawai = document.getElementById('l2_namaPegawai');
+                if (elNamaPegawai) {
+                    const profilSidebar = document.getElementById('namaProfilEdit');
+                    let namaPegawaiSidebar = profilSidebar ? profilSidebar.innerText.replace(/\n/g, ' ') : "MOHAMAD HAFIZ BIN ABU BAKAR";
+                    elNamaPegawai.innerText = namaPegawaiSidebar.toUpperCase();
+                }
+                
+            } catch (err) {
+                console.log("Ralat mengekstrak data Lampiran 2:", err);
             }
         }
-
-        if(document.getElementById('l2_pengurus')) {
-            document.getElementById('l2_pengurus').innerText = getVal('namaPengurusDefendan') || getVal('namaPemilikDefendan') || '';
-        }
-
-        if(document.getElementById('l2_telMajikan')) {
-            let telDef1 = getVal('telDefendan');
-            let telDefHp = getVal('telHpDefendan') || getVal('hpDefendan') || '';
-            let gabungTelDef = [telDef1, telDefHp].filter(Boolean).join(' / ');
-            document.getElementById('l2_telMajikan').innerText = gabungTelDef || telDef1;
-        }
-        if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : (inputsData['emelDefendan'] || '');
-        
-        if(document.getElementById('l2_sektor')) {
-            let sektor = getVal('sektorDefendan');
-            let jenisNiaga = getVal('jenisPerniagaan');
-            document.getElementById('l2_sektor').innerText = [sektor, jenisNiaga].filter(Boolean).join(' - ');
-        }
-        
-        // Aduan (Ulasan Pegawai dibuang dari paparan ini)
-        if(document.getElementById('l2_aduan')) {
-            let teksKenyataan = document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value.trim() : (inputsData['kenyataanAwal'] || '');
-            let aduanPenuh = teksKenyataan;
-            let namaMajikan = getVal('namaDefendan') || 'Majikan';
-            if (namaMajikan.includes('<BR>')) namaMajikan = namaMajikan.split('<BR>')[0];
-            aduanPenuh += `\n\nBerikut adalah aduan terhadap ${namaMajikan}:-\n`;
-            let targetTuntutan = (kes && kes.dataBorang && kes.dataBorang.tuntutanBiasa) ? kes.dataBorang.tuntutanBiasa : (typeof memoriTuntutan !== 'undefined' ? memoriTuntutan : []);
-            if (targetTuntutan.length > 0) {
-                targetTuntutan.forEach((tuntutan, index) => {
-                    let keteranganTambahan = tuntutan.keterangan ? ` - ${tuntutan.keterangan}` : '';
-                    aduanPenuh += `${index + 1}. ${tuntutan.jenis}${keteranganTambahan}\n`;
-                });
-            } else {
-                aduanPenuh += "- Tiada maklumat tuntutan direkodkan -\n";
-            }
-            document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
-        }
-        
-        let tarikhSemasa = (kes && kes.tarikh) ? kes.tarikh : new Date().toLocaleDateString('ms-MY');
-        
-        // Logik Masa Penuh (Pagi / Tengahari / Petang / Malam)
-        let dNow = new Date();
-        let jamNum = dNow.getHours();
-        let minitStr = String(dNow.getMinutes()).padStart(2, '0');
-        let sesiWaktu = "Pagi";
-        
-        if (jamNum >= 4 && jamNum < 12) {
-            sesiWaktu = "Pagi";
-        } else if (jamNum >= 12 && jamNum < 15) {
-            sesiWaktu = "Tengahari";
-        } else if (jamNum >= 15 && jamNum < 19) {
-            sesiWaktu = "Petang";
-        } else {
-            sesiWaktu = "Malam";
-        }
-        
-        let jam12 = jamNum % 12 || 12;
-        let masaSemasa = `${jam12}:${minitStr} ${sesiWaktu}`;
-
-        if(document.getElementById('l2_tarikhPengakuan')) document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
-        if(document.getElementById('l2_masaPengakuan')) document.getElementById('l2_masaPengakuan').innerText = masaSemasa;
-        if(document.getElementById('l2_tarikhPejabat')) document.getElementById('l2_tarikhPejabat').innerText = tarikhSemasa;
-        if(document.getElementById('l2_masaPejabat')) document.getElementById('l2_masaPejabat').innerText = masaSemasa;
-        let namaPengaduBersih = getVal('namaPengadu');
-        if (!namaPengaduBersih && kes && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
-        
-        const elTandatanganP = document.getElementById('l2_namaTandatanganPengadu');
-        if (elTandatanganP) {
-            elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
-        }
-
-        const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
-        if (elUlasanPejabat) {
-            let ulasanText = "";
-            
-            // 1. Cuba ambil terus daripada kotak teks skrin utama semasa
-            const inputUlasanScreen = document.getElementById('ulasanPegawai');
-            if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
-                ulasanText = inputUlasanScreen.value.trim();
-            } 
-            // 2. Semak dalam data objek kes semasa (inputsData)
-            else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
-                ulasanText = String(inputsData['ulasanPegawai']).trim();
-            } 
-            // 3. Semak punca lain dalam struktur kes lama
-            else if (kes && kes.ulasanPegawai) {
-                ulasanText = kes.ulasanPegawai;
-            } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai) {
-                ulasanText = kes.dataBorang.ulasanPegawai;
-            } else if (kes && kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ulasanPegawai']) {
-                ulasanText = kes.dataBorang.inputs['ulasanPegawai'];
-            } 
-            // 4. JIKA KES LAMA (TIADA REKOD LANGSUNG): Ambil teks fallback atau biarkan kosong/isi manual
-            else {
-                ulasanText = ""; 
-            }
-            
-            elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
-        }
-
-        const elNamaPegawai = document.getElementById('l2_namaPegawai');
-        if (elNamaPegawai) {
-            const profilSidebar = document.getElementById('namaProfilEdit');
-            let namaPegawaiSidebar = profilSidebar ? profilSidebar.innerText.replace(/\n/g, ' ') : "MOHAMAD HAFIZ BIN ABU BAKAR";
-            elNamaPegawai.innerText = namaPegawaiSidebar.toUpperCase();
-        }
-        
-    } catch (err) {
-        console.log("Ralat mengekstrak data Lampiran 2:", err);
-    }
-}
-
 // Ekstrak data automatik apabila tertikus masuk kotak Lampiran 2
 document.getElementById('lampiran2BorangAduan').addEventListener('mouseenter', populasikanLampiran2);
 </script>
