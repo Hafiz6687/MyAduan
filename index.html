@@ -16458,13 +16458,24 @@ window.selesaiPemfailanLuarPreview = function() {
 };
      // --- PEMBAIKAN KEBAL: PAKSA BUTANG SEMAK & CETAK BERFUNGSI ---
 document.addEventListener('click', function(event) {
-    // Cari jika elemen yang ditekan adalah butang semak & cetak atau mengandungi teks cetak/preview
     const target = event.target.closest('#btnBukaPreviewTop') || event.target.closest('button');
-    if (target && (target.innerText.includes('Semak & Cetak') || target.id === 'btnBukaPreviewTop')) {
+    if (target && (target.innerText.includes('Semak & Cetak') || target.id === 'btnBukaPreviewTop' || target.innerText.includes('Preview'))) {
         event.preventDefault();
+        
+        // 1. Simpan semula nilai semasa dari input skrin ke dalam memori kes aktif
+        if (typeof memoriSenaraiKes !== 'undefined' && typeof indexKesSemasa !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
+            let kesAktif = memoriSenaraiKes[indexKesSemasa];
+            if (document.getElementById('kenyataanAwal')) kesAktif.kenyataanAwal = document.getElementById('kenyataanAwal').value;
+            if (document.getElementById('kronologiKes')) kesAktif.kronologiKes = document.getElementById('kronologiKes').value;
+            if (document.getElementById('ulasanPegawai')) kesAktif.ulasanPegawai = document.getElementById('ulasanPegawai').value;
+        }
+
+        // 2. Jalankan fungsi populasi Lampiran 2 supaya ia sedut data kemaskini
         if (typeof populasikanLampiran2 === 'function') {
             populasikanLampiran2();
         }
+        
+        // 3. Paparkan modal preview
         const modal = document.getElementById('modalPreview');
         if (modal) {
             modal.style.display = 'flex';
