@@ -1785,11 +1785,17 @@ function populasikanLampiran2() {
         if (elUlasanPejabat) {
             let ulasanText = "";
             const inputUlasanScreen = document.getElementById('ulasanPegawai');
-            if (inputUlasanScreen) ulasanText = inputUlasanScreen.value.trim();
-            else if (inputsData['ulasanPegawai']) ulasanText = inputsData['ulasanPegawai'];
+            if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
+                ulasanText = inputUlasanScreen.value.trim();
+            } else if (inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+                ulasanText = String(inputsData['ulasanPegawai']).trim();
+            } else if (kes && kes.ulasanPegawai) {
+                ulasanText = kes.ulasanPegawai;
+            } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai) {
+                ulasanText = kes.dataBorang.ulasanPegawai;
+            }
             elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
         }
-
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
             const profilSidebar = document.getElementById('namaProfilEdit');
