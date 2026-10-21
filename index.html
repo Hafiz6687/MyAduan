@@ -1778,20 +1778,26 @@ function populasikanLampiran2() {
         if (elUlasanPejabat) {
             let ulasanText = "";
             
-            // 1. Cuba cari terus dari elemen skrin utama (cuba pelbagai selector)
-            const inputUlasanScreen = document.getElementById('ulasanPegawai') || document.querySelector('textarea[name="ulasanPegawai"]');
+            // 1. Cuba ambil terus daripada kotak teks skrin utama semasa
+            const inputUlasanScreen = document.getElementById('ulasanPegawai');
             if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
                 ulasanText = inputUlasanScreen.value.trim();
             } 
-            // 2. Jika kosong, baru semak dari inputsData / memori kes
+            // 2. Semak dalam data objek kes semasa (inputsData)
             else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
                 ulasanText = String(inputsData['ulasanPegawai']).trim();
-            } else if (kes && kes.ulasanPegawai) {
+            } 
+            // 3. Semak punca lain dalam struktur kes lama
+            else if (kes && kes.ulasanPegawai) {
                 ulasanText = kes.ulasanPegawai;
             } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai) {
                 ulasanText = kes.dataBorang.ulasanPegawai;
             } else if (kes && kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ulasanPegawai']) {
                 ulasanText = kes.dataBorang.inputs['ulasanPegawai'];
+            } 
+            // 4. JIKA KES LAMA (TIADA REKOD LANGSUNG): Ambil teks fallback atau biarkan kosong/isi manual
+            else {
+                ulasanText = ""; 
             }
             
             elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
