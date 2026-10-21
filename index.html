@@ -1490,12 +1490,12 @@ body {
                                         <div>Masa:</div><div style="border-bottom: 1px dotted #000; flex-grow: 1;" id="l2_masaPengakuan"></div>
                                     </div>
                                 </div>
-                                <!-- Card 2 (Kanan - Susunan Betul: Garisan atas, Tandatangan & Nama di bawah) -->
-                                <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 4px;">
-                                    <div style="border-bottom: 1px dotted #000; min-height: 45px; width: 100%;"></div>
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px;">
+                                <!-- Card 2 (Kanan - Tandatangan & Nama Rapat, Unbold) -->
+                                <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;">
+                                    <div style="border-bottom: 1px dotted #000; min-height: 40px; width: 100%;"></div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 2px;">
                                         <span>Tandatangan:</span>
-                                        <span style="font-weight: bold; text-transform: uppercase; text-align: right;" id="l2_namaTandatanganPengadu"></span>
+                                        <span style="font-weight: normal; text-transform: uppercase; text-align: right;" id="l2_namaTandatanganPengadu"></span>
                                     </div>
                                 </div>
                             </div>
@@ -1520,7 +1520,7 @@ body {
                                 <!-- Card 2 (Kanan) -->
                                 <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
                                     <div style="border-bottom: 1px dotted #000; min-height: 40px;"></div>
-                                    <div style="text-align: center;">Nama Pegawai: <span id="l2_namaPegawai" style="font-weight: bold; text-transform: uppercase;"></span></div>
+                                    <div style="text-align: center;">Nama Pegawai: <span id="l2_namaPegawai" style="font-weight: normal; text-transform: uppercase;"></span></div>
                                 </div>
                             </div>
                         </div>
@@ -1738,13 +1738,30 @@ function populasikanLampiran2() {
         }
         
         let tarikhSemasa = (kes && kes.tarikh) ? kes.tarikh : new Date().toLocaleDateString('ms-MY');
-        let masaSemasa = new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
+        
+        // Logik Masa Penuh (Pagi / Tengahari / Petang / Malam)
+        let dNow = new Date();
+        let jamNum = dNow.getHours();
+        let minitStr = String(dNow.getMinutes()).padStart(2, '0');
+        let sesiWaktu = "Pagi";
+        
+        if (jamNum >= 4 && jamNum < 12) {
+            sesiWaktu = "Pagi";
+        } else if (jamNum >= 12 && jamNum < 15) {
+            sesiWaktu = "Tengahari";
+        } else if (jamNum >= 15 && jamNum < 19) {
+            sesiWaktu = "Petang";
+        } else {
+            sesiWaktu = "Malam";
+        }
+        
+        let jam12 = jamNum % 12 || 12;
+        let masaSemasa = `${jam12}:${minitStr} ${sesiWaktu}`;
 
         if(document.getElementById('l2_tarikhPengakuan')) document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
         if(document.getElementById('l2_masaPengakuan')) document.getElementById('l2_masaPengakuan').innerText = masaSemasa;
         if(document.getElementById('l2_tarikhPejabat')) document.getElementById('l2_tarikhPejabat').innerText = tarikhSemasa;
         if(document.getElementById('l2_masaPejabat')) document.getElementById('l2_masaPejabat').innerText = masaSemasa;
-
         let namaPengaduBersih = getVal('namaPengadu');
         if (!namaPengaduBersih && kes && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
         
