@@ -1759,23 +1759,23 @@ function populasikanLampiran2() {
                     elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
                 }
 
-                // ULASAN PEGAWAI BERTUGAS (EXTRACT DARI BORANG UTAMA TAB 2)
+                // ULASAN PEGAWAI BERTUGAS (DI KEMASKINI DARI TAB 2)
+                // ULASAN PEGAWAI BERTUGAS (PASTI BERJAYA)
                 const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
                 if (elUlasanPejabat) {
                     let ulasanText = "";
-                    const inputUlasanScreen = document.getElementById('ulasanPegawai');
+                    const inputTab2 = document.getElementById('ulasanPegawaiTab2');
                     
-                    if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
-                        ulasanText = inputUlasanScreen.value.trim();
-                    } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
-                        ulasanText = String(inputsData['ulasanPegawai']).trim();
+                    if (inputTab2 && inputTab2.value.trim() !== "") {
+                        ulasanText = inputTab2.value.trim();
+                    } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
+                        ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
                     } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
                         ulasanText = String(kes.ulasanPegawai).trim();
                     }
                     
-                    elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
+                    elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
                 }
-
                 const elNamaPegawai = document.getElementById('l2_namaPegawai');
                 if (elNamaPegawai) {
                     const profilSidebar = document.getElementById('namaProfilEdit');
@@ -1989,7 +1989,7 @@ Portal rasmi : jtksm.mohr.gov.my
     <div class="card-body">
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
             <label style="text-align: left; margin-bottom: 8px;">Catatan / Ulasan Rasmi Pejabat <span>*</span></label>
-            <textarea id="ulasanPegawai" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
         </div>
     </div>
 </div>
@@ -3373,7 +3373,7 @@ Portal rasmi : jtksm.mohr.gov.my
                             *Masukkan ulasan rasmi pegawai di ruangan ini.
                         </p>
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <textarea id="ulasanPegawai" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this); if(typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) { memoriSenaraiKes[indexKesSemasa].ulasanPegawai = this.value; }"></textarea>
+                            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this); if(typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) { memoriSenaraiKes[indexKesSemasa].ulasanPegawai = this.value; }"></textarea>
                         </div>
                     </div>
                 </div>
