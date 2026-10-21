@@ -1615,7 +1615,7 @@ function populasikanLampiran2() {
                     if (bulanDiff > 0) teksTempohHasil.push(bulanDiff + " bulan");
                     if (teksTempohHasil.length === 0) teksTempohHasil.push("Kurang sebulan");
                     
-                    document.getElementById('l2_tempoh').innerText = teksTempohHasil.join("dan ").charAt(0).toUpperCase() + teksTempohHasil.join("dan ").slice(1);
+                    document.getElementById('l2_tempoh').innerText = teksTempohHasil.join(" dan ").charAt(0).toUpperCase() + teksTempohHasil.join(" dan ").slice(1);
                 } else {
                     document.getElementById('l2_tempoh').innerText = '-';
                 }
@@ -1708,7 +1708,12 @@ function populasikanLampiran2() {
             document.getElementById('l2_pengurus').innerText = getVal('namaPengurusDefendan') || getVal('namaPemilikDefendan') || '';
         }
 
-        if(document.getElementById('l2_telMajikan')) document.getElementById('l2_telMajikan').innerText = getVal('telDefendan');
+        if(document.getElementById('l2_telMajikan')) {
+            let telDef1 = getVal('telDefendan');
+            let telDefHp = getVal('telHpDefendan') || getVal('hpDefendan') || '';
+            let gabungTelDef = [telDef1, telDefHp].filter(Boolean).join(' / ');
+            document.getElementById('l2_telMajikan').innerText = gabungTelDef || telDef1;
+        }
         if(document.getElementById('l2_emelMajikan')) document.getElementById('l2_emelMajikan').innerText = document.getElementById('emelDefendan') ? document.getElementById('emelDefendan').value : (inputsData['emelDefendan'] || '');
         
         if(document.getElementById('l2_sektor')) {
@@ -1782,7 +1787,7 @@ function populasikanLampiran2() {
             const inputUlasanScreen = document.getElementById('ulasanPegawai');
             if (inputUlasanScreen) ulasanText = inputUlasanScreen.value.trim();
             else if (inputsData['ulasanPegawai']) ulasanText = inputsData['ulasanPegawai'];
-            elUlasanPejabat.innerText = ulasanText || "- Tiada ulasan direkodkan -";
+            elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
         }
 
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
