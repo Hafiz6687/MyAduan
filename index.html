@@ -1759,13 +1759,23 @@ function populasikanLampiran2() {
             document.getElementById('l2_sektor').innerText = [sektor, jenisNiaga].filter(Boolean).join(' - ');
         }
         
-        // BAHAGIAN III: ADUAN
+        // BAHAGIAN III: ADUAN (Kenyataan Awal + Kronologi Kes + Senarai Tuntutan)
         if(document.getElementById('l2_aduan')) {
-            let aduanPenuh = (document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value : '') + '\n\n' + (document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value : '');
-            aduanPenuh = aduanPenuh.trim();
+            let teksKenyataan = document.getElementById('kenyataanAwal') ? document.getElementById('kenyataanAwal').value.trim() : '';
+            let teksKronologi = document.getElementById('kronologiKes') ? document.getElementById('kronologiKes').value.trim() : '';
             
-            // --- TAMBAHAN: Ekstrak Nama Majikan & Jadual Tuntutan ---
+            // Gabungkan kenyataan awal dan kronologi
+            let aduanPenuh = teksKenyataan;
+            if (teksKronologi) {
+                aduanPenuh += (aduanPenuh ? '\n\n' : '') + teksKronologi;
+            }
+            
+            // --- Ekstrak Nama Majikan & Jadual Tuntutan di bawahnya ---
             let namaMajikan = document.getElementById('namaDefendan') ? document.getElementById('namaDefendan').value : 'Majikan';
+            if (namaMajikan.includes('<br>')) {
+                namaMajikan = namaMajikan.split('<br>')[0]; // Bersihkan tag HTML jika ada
+            }
+            
             aduanPenuh += `\n\nBerikut adalah aduan terhadap ${namaMajikan}:-\n`;
             
             if (typeof memoriTuntutan !== 'undefined' && memoriTuntutan.length > 0) {
@@ -1776,7 +1786,6 @@ function populasikanLampiran2() {
             } else {
                 aduanPenuh += "- Tiada maklumat tuntutan direkodkan -\n";
             }
-            // --------------------------------------------------------
             
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
