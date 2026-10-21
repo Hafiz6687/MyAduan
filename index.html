@@ -1864,7 +1864,7 @@ function populasikanLampiran2() {
             }
         });
 
-        // Nama Pegawai di Bahagian Bawah Kanan (Extract dari Sidebar)
+// Nama Pegawai di Bahagian Bawah Kanan (Extract dari Sidebar)
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
             const profilSidebar = document.getElementById('namaProfilEdit');
@@ -1877,24 +1877,9 @@ function populasikanLampiran2() {
     }
 }
 
-                    // FUNGSI INI AKAN MERAMPAS KUASA DARI SCRIPT.JS
-                    function gantiFungsiBukaPreviewAsal() {
-                        window.bukaPreview = function() {
-                            document.getElementById('modalPreview').style.display = 'flex';
-                            populasikanLampiran2();
-                        };
-                    }
-                    
-                    // Laksanakan rampasan kuasa serta merta
-                    gantiFungsiBukaPreviewAsal();
-                    
-                    // Ulang rampasan kuasa selepas sistem siap dimuatkan sepenuhnya
-                    window.addEventListener('load', gantiFungsiBukaPreviewAsal);
-                    setTimeout(gantiFungsiBukaPreviewAsal, 1000);
-
-                    // Ekstrak data automatik apabila tertikus masuk kotak
-                    document.getElementById('lampiran2BorangAduan').addEventListener('mouseenter', populasikanLampiran2);
-                </script>
+// Ekstrak data automatik apabila tertikus masuk kotak Lampiran 2
+document.getElementById('lampiran2BorangAduan').addEventListener('mouseenter', populasikanLampiran2);
+</script>
             </div>
         </div>
 
@@ -8430,23 +8415,31 @@ if (memoriTuntutan.length === 0) { htmlJadualTuntutan = `<tr><td colspan="3" cla
             window.print(); 
         }
 
-        function bukaPreview() {
-            modCetakSemasa = 'Borang Utama';
-            
-            const htmlDokumen = janaHTMLCetak();
-            document.getElementById('previewContent').innerHTML = htmlDokumen;
-            document.getElementById('printArea').innerHTML = htmlDokumen;
-            
-            isAkuanPrinted = false;
-            isKenyataanPrinted = false;
-            
-    document.getElementById('menuCetakAkuan').style.display = 'flex';
-    document.getElementById('menuCetakKenyataan').style.display = 'flex';
+function bukaPreview() {
+    modCetakSemasa = 'Borang Utama';
+    
+    // 1. Jana HTML cetakan Borang Utama (Akuan, Lampiran 1 & Kenyataan)
+    const htmlDokumen = janaHTMLCetak();
+    document.getElementById('previewContent').innerHTML = htmlDokumen;
+    document.getElementById('printArea').innerHTML = htmlDokumen;
+    
+    // 2. Kemaskini & populasikan Lampiran 2 (Borang Aduan) secara automatik
+    if (typeof populasikanLampiran2 === 'function') {
+        populasikanLampiran2();
+    }
+    
+    isAkuanPrinted = false;
+    isKenyataanPrinted = false;
+    
+    // 3. Paparkan butang-butang cetakan yang berkaitan
+    if(document.getElementById('menuCetakAkuan')) document.getElementById('menuCetakAkuan').style.display = 'flex';
+    if(document.getElementById('menuCetakKenyataan')) document.getElementById('menuCetakKenyataan').style.display = 'flex';
+    if(document.getElementById('menuCetakBorang')) document.getElementById('menuCetakBorang').style.display = 'flex';
     if(document.getElementById('menuCetakG1')) document.getElementById('menuCetakG1').style.display = 'none'; 
-    document.getElementById('menuDaftar').style.display = 'none';
-    document.getElementById('menuSelesai').style.display = 'none';
+    if(document.getElementById('menuDaftar')) document.getElementById('menuDaftar').style.display = 'none';
+    if(document.getElementById('menuSelesai')) document.getElementById('menuSelesai').style.display = 'none';
 
-    // TUTUP KEBOCORAN BUTANG DINAMIK DARI NOTIS/MOU/SAMAN
+    // 4. Tutup kebocoran butang dinamik dari Notis/MOU/Saman
     if(document.getElementById('menuCetakNotisPengadu')) document.getElementById('menuCetakNotisPengadu').style.display = 'none';
     if(document.getElementById('menuCetakNotisDefendan')) document.getElementById('menuCetakNotisDefendan').style.display = 'none';
     if(document.getElementById('menuCetakNotisLainPengadu')) document.getElementById('menuCetakNotisLainPengadu').style.display = 'none';
@@ -8454,26 +8447,33 @@ if (memoriTuntutan.length === 0) { htmlJadualTuntutan = `<tr><td colspan="3" cla
     if(document.getElementById('menuCetakMouPengadu')) document.getElementById('menuCetakMouPengadu').style.display = 'none';
     if(document.getElementById('menuCetakMouDefendan')) document.getElementById('menuCetakMouDefendan').style.display = 'none';
 
-// RESET BUTANG KEMASKINI KEPADA FUNGSI ASAL BORANG
+    // 5. Reset tindakan butang Kemaskini
     const btnKemaskini = document.getElementById('menuKemaskini');
-    btnKemaskini.style.display = 'flex';
-    btnKemaskini.onclick = function(e) {
-        if(e) e.preventDefault();
-        kemaskiniDariPreview();
-    };
+    if (btnKemaskini) {
+        btnKemaskini.style.display = 'flex';
+        btnKemaskini.onclick = function(e) {
+            if(e) e.preventDefault();
+            kemaskiniDariPreview();
+        };
+    }
 
-    // RESET BUTANG BATAL KEPADA FUNGSI ASAL BORANG
+    // 6. Reset tindakan butang Batal
     const btnBatal = document.getElementById('menuBatal');
-    btnBatal.style.display = 'flex';
-    btnBatal.onclick = function(e) {
-        if(e) e.preventDefault();
-        document.getElementById('modalPreview').style.display = 'none';
-        batalPemfailan();
-    };
+    if (btnBatal) {
+        btnBatal.style.display = 'flex';
+        btnBatal.onclick = function(e) {
+            if(e) e.preventDefault();
+            document.getElementById('modalPreview').style.display = 'none';
+            batalPemfailan();
+        };
+    }
 
-// Sembunyikan suis tandatangan
-    tunjukSuisTandatangan(false);
+    // 7. Sembunyikan suis tandatangan digital untuk mod ini
+    if (typeof tunjukSuisTandatangan === 'function') {
+        tunjukSuisTandatangan(false);
+    }
 
+    // 8. Tampilkan modal preview dan bersihkan kelas penapis cetakan
     document.getElementById('modalPreview').style.display = 'flex';
     document.body.classList.remove('print-only-akuan', 'print-only-kenyataan');
 }
