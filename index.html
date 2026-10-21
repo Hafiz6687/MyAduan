@@ -6850,23 +6850,19 @@ function kawalPaparanTab3(tabId) {
     const ruanganNoKes = document.getElementById('ruanganNoKes');
     const btnPreviewTop = document.getElementById('btnBukaPreviewTop');
     
-    if (tabId === 'tab3') {
-        if (ruanganNoKes) ruanganNoKes.style.display = 'flex';
-        if (btnPreviewTop) {
-            btnPreviewTop.style.display = 'block';
-            
-            // --- LOGIK BARU: Tukar Butang Preview Ikut Flow ---
-            if (window.paparanSemasa === 'urus') {
-                btnPreviewTop.innerHTML = '📄 Preview Pengurusan Kes';
-                btnPreviewTop.setAttribute('onclick', 'bukaPreviewUrus()');
-            } else {
-                btnPreviewTop.innerHTML = '📄 Semak & Cetak';
-                btnPreviewTop.setAttribute('onclick', 'bukaPreview()');
-            }
+    // Sentiasa paparkan butang semak & cetak tanpa mengira tab
+    if (ruanganNoKes) ruanganNoKes.style.display = 'flex';
+    if (btnPreviewTop) {
+        btnPreviewTop.style.display = 'block';
+        
+        // --- LOGIK BARU: Tukar Butang Preview Ikut Flow ---
+        if (window.paparanSemasa === 'urus') {
+            btnPreviewTop.innerHTML = '📄 Preview Pengurusan Kes';
+            btnPreviewTop.setAttribute('onclick', 'bukaPreviewUrus()');
+        } else {
+            btnPreviewTop.innerHTML = '📄 Semak & Cetak';
+            btnPreviewTop.setAttribute('onclick', 'bukaPreview()');
         }
-    } else {
-        if (ruanganNoKes) ruanganNoKes.style.display = 'none';
-        if (btnPreviewTop) btnPreviewTop.style.display = 'none';
     }
 }
 
