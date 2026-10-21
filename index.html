@@ -1759,7 +1759,7 @@ function populasikanLampiran2() {
                     elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
                 }
 
-                // ULASAN PEGAWAI BERTUGAS (BACA TERUS DARI TEKS ULASAN MANUAL)
+                // ULASAN PEGAWAI BERTUGAS (EXTRACT DARI BORANG UTAMA TAB 2)
                 const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
                 if (elUlasanPejabat) {
                     let ulasanText = "";
@@ -1767,10 +1767,10 @@ function populasikanLampiran2() {
                     
                     if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
                         ulasanText = inputUlasanScreen.value.trim();
-                    } else if (kes && kes.ulasanPegawai) {
-                        ulasanText = kes.ulasanPegawai;
-                    } else if (inputsData && inputsData['ulasanPegawai']) {
-                        ulasanText = inputsData['ulasanPegawai'];
+                    } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+                        ulasanText = String(inputsData['ulasanPegawai']).trim();
+                    } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
+                        ulasanText = String(kes.ulasanPegawai).trim();
                     }
                     
                     elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
