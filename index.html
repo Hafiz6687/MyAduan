@@ -1760,6 +1760,7 @@ function populasikanLampiran2() {
                 }
 
                 // ULASAN PEGAWAI BERTUGAS (DIKEMASKINI DENGAN PENYELAMAT KUAT)
+                // ULASAN PEGAWAI BERTUGAS (BACA TERUS DARI ELEMEN SKRIN)
                 const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
                 if (elUlasanPejabat) {
                     let ulasanText = "";
@@ -1767,20 +1768,10 @@ function populasikanLampiran2() {
                     
                     if (inputUlasanScreen && inputUlasanScreen.value.trim() !== "") {
                         ulasanText = inputUlasanScreen.value.trim();
-                    } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
-                        ulasanText = String(inputsData['ulasanPegawai']).trim();
                     } else if (kes && kes.ulasanPegawai) {
                         ulasanText = kes.ulasanPegawai;
-                    } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai) {
-                        ulasanText = kes.dataBorang.ulasanPegawai;
-                    } else if (kes && kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ulasanPegawai']) {
-                        ulasanText = kes.dataBorang.inputs['ulasanPegawai'];
-                    } else {
-                        // Cuba fallback amik teks mentah jika wujud sebarang textarea ulasan
-                        const sebarangTextarea = document.querySelector('textarea#ulasanPegawai');
-                        if (sebarangTextarea && sebarangTextarea.value.trim() !== "") {
-                            ulasanText = sebarangTextarea.value.trim();
-                        }
+                    } else if (inputsData && inputsData['ulasanPegawai']) {
+                        ulasanText = inputsData['ulasanPegawai'];
                     }
                     
                     elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
@@ -3383,7 +3374,7 @@ Portal rasmi : jtksm.mohr.gov.my
                             *Masukkan ulasan rasmi pegawai di ruangan ini.
                         </p>
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <textarea id="ulasanPegawai" rows="4" class="auto-expand" placeholder="Taipkan ulasan pegawai bertugas di sini..." style="padding: 15px; background-color: #ffffff; border: 1px solid var(--border-color); resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+                            <textarea id="ulasanPegawai" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this); if(typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) { memoriSenaraiKes[indexKesSemasa].ulasanPegawai = this.value; }"></textarea>
                         </div>
                     </div>
                 </div>
