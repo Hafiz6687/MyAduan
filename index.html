@@ -1790,43 +1790,83 @@ function populasikanLampiran2() {
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
         
-        // PENGAKUAN (Tarikh, Masa & Nama Pengadu untuk Tandatangan)
+        // --- 1. BAHAGIAN PENGAKUAN ---
+        let tarikhSemasa = kes.tarikh || new Date().toLocaleDateString('ms-MY');
+        let masaSemasa = new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
+
+        // Tarikh dan Masa Pengakuan
+        document.querySelectorAll('#lampiran2BorangAduan div').forEach(el => {});
+        const pengakuanTarikhElements = document.querySelectorAll('#lampiran2BorangAduan div');
+        
+        // Isi tarikh pengakuan (pada bahagian atas)
         if(document.getElementById('l2_tarikhPengakuan')) {
-            let tarikhKes = kes.tarikh || new Date().toLocaleDateString('ms-MY');
-            document.getElementById('l2_tarikhPengakuan찧') ? '' : null; // kekalkan keselamatan DOM
-            document.getElementById('l2_tarikhPengakuan').innerText = tarikhKes;
+            document.getElementById('l2_tarikhPengakuan').innerText = tarikhSemasa;
         }
 
-        // Jika anda mempunyai elemen khusus untuk masa pengakuan atau tandatangan di Lampiran 2:
-        const elTandatangan = document.getElementById('l2_tandatanganPengadu');
-        if (elTandatangan) {
-            elTandatangan.innerText = kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '') : '';
+        // Cari elemen div kosong di sebelah "Masa:" yang pertama untuk isi masa pengakuan
+        // (Berdasarkan struktur HTML anda, masa pengakuan berada di bawah tarikh pengakuan)
+        const kontenaPengakuanMasa = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2) > div');
+        if (kontenaPengakuanMasa && !kontenaPengakuanMasa.id) {
+            kontenaPengakuanMasa.innerText = masaSemasa;
         }
 
-        // UNTUK KEGUNAAN PEJABAT TENAGA KERJA (Tarikh, Masa & Nama Pegawai)
+        // Tandatangan Pengadu (Extract Nama Pengadu di bawah ruang tandatangan)
+        let namaPengadu Bersih = document.getElementById('namaPengadu') ? document.getElementById('namaPengadu').value : '';
+        if (!namaPengaduBersih && kes.namaPengadu) namaPengaduBersih = kes.namaPengadu.replace(/<br>.*$/g, '');
+        
+        // Sisipkan nama pengadu di ruang tandatangan jika belum wujud
+        const ruangTandatangan = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2) > div:first-child');
+        // Jika kotak tandatangan kosong, letakkan nama pengadu di atas label "Tandatangan:"
+        const parentTandatanganKanan = document.querySelector('#lampiran2BorangAduan div > div > div:nth-child(2) > div:nth-child(2)');
+        if (parentTandatanganKanan) {
+            let divNamaTandatangan = parentTandatanganKanan.querySelector('.nama-tandatangan-pengadu');
+            if (!divNamaTandatangan) {
+                divNamaTandatangan = document.createElement('div');
+                divNamaTandatangan.className = 'nama-tandatangan-pengadu';
+                divNamaTandatangan.style.textAlign = 'center';
+                divNamaTandatangan.style.fontWeight = 'bold';
+                divNamaTandatangan.style.marginBottom = '4px';
+                parentTandatanganKanan.insertBefore(divNamaTandatangan, parentTandatanganKanan.firstChild);
+            }
+            divNamaTandatangan.innerText = namaPengaduBersih.toUpperCase();
+        }
+
+        // --- 2. BAHAGIAN PEJABAT TENAGA KERJA (ULASAN & TARIKH/MASA/PEGAWAI) ---
         const elTarikhPejabat = document.getElementById('l2_tarikhPejabat');
         if (elTarikhPejabat) {
-            elTarikhPejabat.innerText = kes.tarikh || new Date().toLocaleDateString('ms-MY');
+            elTarikhPejabat.innerText = tarikhSemasa;
+        } else {
+            // Cari elemen tarikh di bahagian bawah pejabat secara manual jika id tidak dijumpai
+            const semuaBarisTarikhPejabat = document.querySelectorAll('#lampiran2BorangAduan div');
         }
 
-        // --- TAMBAHAN: Ekstrak Ulasan Pegawai Bertugas ---
+        // Ekstrak Ulasan Pegawai dari kotak input utama 'ulasanPegawai'
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
-            // Cuba tarik dari input ulasan semasa di skrin, atau dari memori kes
             let ulasanText = "";
-            const inputUlasanScreen = document.getElementById('ulasanPegawai') || document.getElementById('catatanPegawai') || document.getElementById('ulasanBertugas');
+            const inputUlasanScreen = document.getElementById('ulasanPegawai');
             if (inputUlasanScreen) {
                 ulasanText = inputUlasanScreen.value.trim();
             } else if (kes.dataBorang && kes.dataBorang.inputs) {
-                ulasanText = kes.dataBorang.inputs['ulasanPegawai'] || kes.dataBorang.inputs['catatanPegawai'] || "";
+                ulasanText = kes.dataBorang.inputs['ulasanPegawai'] || "";
             }
             elUlasanPejabat.innerText = ulasanText || "- Tiada ulasan direkodkan -";
         }
-        // ------------------------------------------------
 
+        // Tarikh dan Masa di Bahagian Bawah Pejabat
+        // Mengisi tarikh dan masa pada blok bawah ruang pejabat
+        const blokBawahPejabat = document.querySelectorAll('#lampiran2BorangAduan div');
+        // Kita sasarkan elemen masa di bahagian bawah sekali
+        const semuaDivBawah = document.querySelectorAll('#lampiran2BorangAduan div');
+        semuaDivBawah.forEach(div => {
+            if (div.innerText && div.innerText.trim() === "Masa:" && div.nextElementSibling && div.nextElementSibling.innerText === "") {
+                div.nextElementSibling.innerText = masaSemasa;
+            }
+        });
+
+        // Nama Pegawai di Bahagian Bawah Kanan (Extract dari Sidebar)
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
-            // Sedut nama pegawai bertugas dari profil sidebar dan buang elemen <br> jika ada
             const profilSidebar = document.getElementById('namaProfilEdit');
             let namaPegawaiSidebar = profilSidebar ? profilSidebar.innerText.replace(/\n/g, ' ') : "MOHAMAD HAFIZ BIN ABU BAKAR";
             elNamaPegawai.innerText = namaPegawaiSidebar.toUpperCase();
@@ -2048,6 +2088,16 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
+            <!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
+<div class="card full-width" id="kad_ulasan_pegawai_bertugas">
+    <div class="card-header">Ulasan Pegawai Bertugas</div>
+    <div class="card-body">
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+            <label style="text-align: left; margin-bottom: 8px;">Catatan / Ulasan Rasmi Pejabat <span>*</span></label>
+            <textarea id="ulasanPegawai" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        </div>
+    </div>
+</div>
 <!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan -->
             <div class="card full-width" id="kad_kehadiran_perwakilan">
                 <div class="card-header">
