@@ -1793,6 +1793,13 @@ function populasikanLampiran2() {
                 ulasanText = kes.ulasanPegawai;
             } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai) {
                 ulasanText = kes.dataBorang.ulasanPegawai;
+            } else if (kes && kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ulasanPegawai']) {
+                ulasanText = kes.dataBorang.inputs['ulasanPegawai'];
+            } else {
+                const fallbackUlasan = document.querySelector('textarea[name="ulasanPegawai"]') || document.querySelector('#ulasanPegawai');
+                if (fallbackUlasan && fallbackUlasan.value.trim() !== "") {
+                    ulasanText = fallbackUlasan.value.trim();
+                }
             }
             elUlasanPejabat.innerText = ulasanText ? ulasanText : "- Tiada ulasan direkodkan -";
         }
