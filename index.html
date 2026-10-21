@@ -1809,6 +1809,21 @@ function populasikanLampiran2() {
             elTarikhPejabat.innerText = kes.tarikh || new Date().toLocaleDateString('ms-MY');
         }
 
+        // --- TAMBAHAN: Ekstrak Ulasan Pegawai Bertugas ---
+        const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
+        if (elUlasanPejabat) {
+            // Cuba tarik dari input ulasan semasa di skrin, atau dari memori kes
+            let ulasanText = "";
+            const inputUlasanScreen = document.getElementById('ulasanPegawai') || document.getElementById('catatanPegawai') || document.getElementById('ulasanBertugas');
+            if (inputUlasanScreen) {
+                ulasanText = inputUlasanScreen.value.trim();
+            } else if (kes.dataBorang && kes.dataBorang.inputs) {
+                ulasanText = kes.dataBorang.inputs['ulasanPegawai'] || kes.dataBorang.inputs['catatanPegawai'] || "";
+            }
+            elUlasanPejabat.innerText = ulasanText || "- Tiada ulasan direkodkan -";
+        }
+        // ------------------------------------------------
+
         const elNamaPegawai = document.getElementById('l2_namaPegawai');
         if (elNamaPegawai) {
             // Sedut nama pegawai bertugas dari profil sidebar dan buang elemen <br> jika ada
