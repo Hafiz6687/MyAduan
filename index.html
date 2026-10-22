@@ -3791,7 +3791,25 @@ function bukaMaklumatKes(index) {
     document.getElementById('mk_tarikh_daftar').innerText = kes.tarikh;
     document.getElementById('mk_tarikh_sah').innerText = kes.tarikh; 
     document.getElementById('mk_tarikh_tugas').innerText = kes.tarikh; 
-    
+
+    // --- SUNTIK KOD PEMULIHAN NILAI DI SINI ---
+    const savedDisahkan = (kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['disahkanOlehCustom']) 
+        || localStorage.getItem('eLC_disahkanOleh') 
+        || 'Mohd Faizal bin Mohammad';
+
+    if (document.getElementById('mk_sah_oleh_edit')) {
+        document.getElementById('mk_sah_oleh_edit').innerText = savedDisahkan;
+    }
+
+    const savedKetua = (kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['ketuaPejabatCustom']) 
+        || localStorage.getItem('eLC_ketuaPejabat') 
+        || 'Pengarah Tenaga Kerja Kluang';
+
+    if (document.getElementById('mk_ketua_pejabat')) {
+        document.getElementById('mk_ketua_pejabat').innerText = savedKetua;
+    }
+    // ------------------------------------------
+
     let dataSistem = {};
     if (kes.dataBorang && kes.dataBorang.inputs) {
         dataSistem = kes.dataBorang.inputs;
@@ -3800,7 +3818,7 @@ function bukaMaklumatKes(index) {
             if (el.id) dataSistem[el.id] = el.value;
         });
     }
-
+ 
     // --- TAMBAHKAN KOD INI DI SINI ---
     // Pulihkan nilai "Disahkan oleh" ke dalam kotak input berikutan perubahan elemen
     let elSahOlehInput = document.getElementById('mk_sah_oleh');
@@ -16521,18 +16539,6 @@ function simpanKetuaPejabat(el) {
         if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
     }
 }
-
-// Muat turun semula nilai tersimpan apabila paparan maklumat kes dibuka
-document.addEventListener("DOMContentLoaded", function() {
-    const savedDisahkan = localStorage.getItem('eLC_disahkanOleh');
-    if (savedDisahkan && document.getElementById('mk_sah_oleh_edit')) {
-        document.getElementById('mk_sah_oleh_edit').innerText = savedDisahkan;
-    }
-    const savedKetua = localStorage.getItem('eLC_ketuaPejabat');
-    if (savedKetua && document.getElementById('mk_ketua_pejabat')) {
-        document.getElementById('mk_ketua_pejabat').innerText = savedKetua;
-    }
-});
 
 </script>
 
