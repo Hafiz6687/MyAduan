@@ -3796,15 +3796,17 @@ function bukaMaklumatKes(index) {
         });
     }
 
+    // --- PEMULIHAN NILAI DISAHKAN OLEH & JAWATAN ---
     let elSahOlehInput = document.getElementById('mk_sah_oleh');
     if (elSahOlehInput) {
-        elSahOlehInput.innerText = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Mohd Faizal bin Mohammad';
+        elSahOlehInput.innerText = kes.disahkanOleh || dataSistem['disahkanOleh'] || 'Mohd Faizal bin Mohammad';
     }
 
     let elJawatanInput = document.getElementById('mk_jawatan_pengesah');
     if (elJawatanInput) {
-        elJawatanInput.innerText = dataSistem['jawatanPengesah'] || kes.jawatanPengesah || 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
+        elJawatanInput.innerText = kes.jawatanPengesah || dataSistem['jawatanPengesah'] || 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
     }
+    // ----------------------------------------------
 
     const p_nama = kes.namaPengadu.replace(/<br>.*$/g, '');
     const d_nama = kes.namaDefendan;
@@ -7850,16 +7852,18 @@ function kumpulDataBorang() {
         }
     });
 
+    // Tangkap terus dari contenteditable (Maklumat Kes Terperinci)
     let elSahOleh = document.getElementById('mk_sah_oleh');
-    formData['disahkanOleh'] = elSahOleh ? elSahOleh.innerText.trim() : 'Mohd Faizal bin Mohammad';
+    let valSahOleh = elSahOleh ? elSahOleh.innerText.trim() : 'Mohd Faizal bin Mohammad';
+    formData['disahkanOleh'] = valSahOleh;
 
     let elJawatan = document.getElementById('mk_jawatan_pengesah');
-    formData['jawatanPengesah'] = elJawatan ? elJawatan.innerText.trim() : 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
+    let valJawatan = elJawatan ? elJawatan.innerText.trim() : 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
+    formData['jawatanPengesah'] = valJawatan;
     
     // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
-    
     formData['ulasanPegawaiKhusus'] = ulasanKhususText;
 
     let pengaduBerkumpulanData = [];
@@ -7888,7 +7892,8 @@ function kumpulDataBorang() {
 
     return {
         inputs: formData,
-        disahkanOleh: formData['disahkanOleh'], // Boleh sertakan di sini juga untuk rujukan pantas
+        disahkanOleh: valSahOleh,
+        jawatanPengesah: valJawatan,
         ulasanPegawaiKhusus: ulasanKhususText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
