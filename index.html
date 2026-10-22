@@ -6353,25 +6353,58 @@ bekasProfil.addEventListener('wheel', function(e) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    const base64Data = e.target.result;
-                    document.getElementById('ikonKamera').style.display = 'none';
-                    const img = document.getElementById('gambarProfil');
-                    img.style.display = 'block';
-                    img.src = base64Data;
-                    img.style.cursor = 'grab';
+                    var imgElement = new Image();
+                    imgElement.src = e.target.result;
+                    imgElement.onload = function() {
+                        var canvas = document.createElement('canvas');
+                        var MAX_WIDTH = 200;
+                        var MAX_HEIGHT = 200;
+                        var width = imgElement.width;
+                        var height = imgElement.height;
 
-                    img.onload = function() {
-                        if (this.naturalHeight > this.naturalWidth) { this.style.width = '100%'; this.style.height = 'auto'; } 
-                        else { this.style.width = 'auto'; this.style.height = '100%'; }
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        var ctx = canvas.getContext('2d');
+                        ctx.drawImage(imgElement, 0, 0, width, height);
+
+                        var compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+
+                        const img = document.getElementById('gambarProfil');
+                        const kamera = document.getElementById('ikonKamera');
+                        if (kamera) kamera.style.display = 'none';
+                        
+                        img.src = compressedBase64;
+                        img.style.display = 'block';
+                        img.style.cursor = 'grab';
+
+                        if (img.naturalHeight > img.naturalWidth) { 
+                            img.style.width = '100%'; img.style.height = 'auto'; 
+                        } else { 
+                            img.style.width = 'auto'; img.style.height = '100%'; 
+                        }
+
                         currentScale = 1.2; currentPosX = 0; currentPosY = 0;
                         if (typeof updateTransform === 'function') updateTransform();
+
                         try {
-                            localStorage.setItem('eLC_gambarProfil', base64Data);
+                            localStorage.setItem('eLC_gambarProfil', compressedBase64);
                             localStorage.setItem('eLC_gambarScale', currentScale.toString());
                             localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
                             if (typeof simpanProfilKeAwan === 'function') simpanProfilKeAwan();
                         } catch (err) { 
-                            console.warn("Gambar gagal disimpan ke localStorage.");
+                            console.error("Gagal simpan gambar:", err);
                         }
                     };
                 };
@@ -6379,7 +6412,7 @@ bekasProfil.addEventListener('wheel', function(e) {
             }
         }
 
-        // AUTO-PAPARKAN GAMBAR PROFIL SETIAP KALI HALAMAN DIBUKA
+        // AUTO-PAPARKAN GAMBAR SETIAP KALI HALAMAN DIBUKA
         window.addEventListener("DOMContentLoaded", function() {
             const savedImage = localStorage.getItem('eLC_gambarProfil');
             const img = document.getElementById('gambarProfil');
