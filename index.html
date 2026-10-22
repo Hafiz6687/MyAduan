@@ -1560,8 +1560,14 @@ function populasikanLampiran2() {
                 let uPasport = document.getElementById('umurPasportPengadu')?.value || inputsData['umurPasportPengadu'] || "";
                 valUmur = uPasport ? uPasport + " TAHUN" : "";
             } else {
-                let noKpVal = document.getElementById('noPendPengadu')?.value || inputsData['noPendPengadu'] || "";
-                let kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad({ value: noKpVal }) : "";
+                let noKpEl = document.getElementById('noPendPengadu');
+                let kiraUmur = "";
+                if (noKpEl && typeof kiraUmurDariMyKad === 'function') {
+                    kiraUmur = kiraUmurDariMyKad(noKpEl);
+                } else if (inputsData['noPendPengadu']) {
+                    let tempInput = { value: inputsData['noPendPengadu'] };
+                    kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad(tempInput) : "";
+                }
                 valUmur = kiraUmur ? kiraUmur + " TAHUN" : "";
             }
             let elUmur = document.getElementById('l2_umur');
@@ -7783,12 +7789,7 @@ function kumpulDataBorang() {
         }
     });
 
-    // Tangkap ulasan pegawai bertugas & ulasan pegawai khusus
-    let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
-    let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
-    formData['ulasanPegawaiTab2'] = ulasanText;
-    formData['ulasanPegawai'] = ulasanText;
-
+    // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
     formData['ulasanPegawaiKhusus'] = ulasanKhususText;
@@ -7814,12 +7815,13 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if (jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
-    });
+        if (jenis || jumlah) {
+            senaraiElaunDinamik.push({ jenis, jumlah });
+        }
+    }); // <-- Penutup .forEach() sudah lengkap di sini
 
     return {
         inputs: formData,
-        ulasanPegawai: ulasanText,
         ulasanPegawaiKhusus: ulasanKhususText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
@@ -7827,7 +7829,7 @@ function kumpulDataBorang() {
         tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua)),
         tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan))
     };
-}
+} // <-- Penutup fungsi kumpulDataBorang() sudah lengkap di sini
        
 function daftarKesSistem() {
     let noKesAsal = document.getElementById('noKes').value;
