@@ -7816,7 +7816,7 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDilinamik.push({jenis, jumlah});
+        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah}); // <-- DIBETULKAN DI SINI (senaraiElaunDinamik)
     });
 
     return {
