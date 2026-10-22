@@ -7855,15 +7855,16 @@ function kumpulDataBorang() {
         }
     });
 
-    // --- TAMBAHKAN DI SINI ---
-    // Tangkap nilai "Disahkan oleh" daripada paparan maklumat terperinci kes
     let elSahOleh = document.getElementById('mk_sah_oleh');
     formData['disahkanOleh'] = elSahOleh ? elSahOleh.value.trim() : 'Sistem (Auto)';
-    // -------------------------
+
+    let elJawatan = document.getElementById('mk_jawatan_pengesah');
+    formData['jawatanPengesah'] = elJawatan ? elJawatan.value.trim() : '';
 
     // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
+    
     formData['ulasanPegawaiKhusus'] = ulasanKhususText;
 
     let pengaduBerkumpulanData = [];
