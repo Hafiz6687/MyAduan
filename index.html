@@ -6369,14 +6369,10 @@ bekasProfil.addEventListener('wheel', function(e) {
                             localStorage.setItem('eLC_gambarProfil', base64Data);
                             localStorage.setItem('eLC_gambarScale', currentScale.toString());
                             localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
-                            
-                            // Hantar terus ke pelayan awan supaya kekal merentas peranti
-                            if (typeof simpanProfilKeAwan === 'function') {
-                                simpanProfilKeAwan();
-                            }
+                            if (typeof simpanProfilKeAwan === 'function') simpanProfilKeAwan();
                         } catch (err) { 
                             console.warn("Gambar terlalu besar.");
-                            alert("⚠️ AMARAN: Saiz gambar terlalu besar. Sila gunakan saiz di bawah 1MB.");
+                            alert("⚠️ AMARAN: Saiz gambar terlalu besar. Sila gunakan gambar bersaiz di bawah 1MB.");
                         }
                     };
                 };
@@ -6384,19 +6380,17 @@ bekasProfil.addEventListener('wheel', function(e) {
             }
         }
 
-        // TARIK TERUS DARI AWAN ATAU LOCALSTORAGE BILA-BILA MASA HALAMAN DIBUKA
+        // AUTO-PAPARKAN GAMBAR SECARA PAKSA SETIAP KALI BUKA HALAMAN
         window.addEventListener("DOMContentLoaded", function() {
-            // 1. Cuba semak sama ada fungsi tarik dari awan wujud (jika sistem anda ada fungsi muat turun awan)
             if (typeof muatTurunProfilDariAwan === 'function') {
                 muatTurunProfilDariAwan();
             }
             
-            // 2. Sandaran lokal (Localstorage) agar sentiasa wujud serta-merta tanpa tunggu internet
             const savedImage = localStorage.getItem('eLC_gambarProfil');
             const img = document.getElementById('gambarProfil');
             const kamera = document.getElementById('ikonKamera');
             
-            if (savedImage && img && img.style.display !== 'block') {
+            if (savedImage && img) {
                 img.src = savedImage;
                 img.style.display = 'block';
                 if (kamera) kamera.style.display = 'none';
