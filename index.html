@@ -3818,11 +3818,15 @@ function bukaMaklumatKes(index) {
     let lbl_p_id = p_isMyKad ? 'No. MyKad' : 'No. Pasport';
     const d_isMyKad = regexMyKad.test(d_id);
 
+    // Cari bahagian ini di dalam fungsi bukaMaklumatKes:
     let kenyataanPenuh = "-";
     if (kes.dataBorang && kes.dataBorang.inputs) {
         const kenyataanAwal = kes.dataBorang.inputs['kenyataanAwal'] || "";
-        const kronologiKes = kes.dataBorang.inputs['kronologiKes'] || "";
-        if (kenyataanAwal || kronologiKes) { kenyataanPenuh = (kenyataanAwal + "\n\n" + kronologiKes).trim(); }
+        
+    // PEMBAIKAN: Buang semakan 'kronologiKes' dan kekalkan kenyataan awal sahaja
+    if (kenyataanAwal) { 
+        kenyataanPenuh = kenyataanAwal.trim(); 
+        }
     }
     document.getElementById('mk_kenyataan_pengadu').innerText = kenyataanPenuh || "-";
 
@@ -7572,15 +7576,6 @@ function resetBorangPendaftaran() {
             let today = new Date();
             tAkhir.value = today.toISOString().split('T')[0];
         }
-        // -------------------------------------------------------------
-        
-        // --- 2. KOSONGKAN KRONOLOGI SUPAYA PLACEHOLDER KELUAR ---
-        const kronologi = document.getElementById('kronologiKes');
-        if (kronologi) {
-            kronologi.value = '';
-            setTimeout(() => { autoResize(kronologi); }, 50);
-        }
-        // ------------------------------------------------------------
         
         const selects = bekasBorang.querySelectorAll('select');
         selects.forEach(select => select.selectedIndex = 0);
@@ -7790,7 +7785,7 @@ function kumpulDataBorang() {
         }
     });
 
-    // --- PEMBAIKAN: Tangkap ulasan pegawai bertugas ---
+    // Tangkap ulasan pegawai bertugas
     let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
     let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
     formData['ulasanPegawaiTab2'] = ulasanText;
@@ -7817,12 +7812,12 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
+        if (jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
     });
 
     return {
         inputs: formData,
-        ulasanPegawai: ulasanText, // Simpan pada paras utama dataBorang
+        ulasanPegawai: ulasanText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
@@ -8265,8 +8260,7 @@ function bukaKesDidaftar(index) {
             const teksSeksyenPenuh = teksSeksyen !== '-' ? teksSeksyen + " Akta Kerja 1955" : '-';
 
             const kenyataanAwalText = document.getElementById('kenyataanAwal')?.value.replace(/\n/g, '<br>') || '-';
-            const kronologiKesText = document.getElementById('kronologiKes')?.value.replace(/\n/g, '<br>') || '-';
-            
+           
             let teksTuntutanOleh = "";
             if (isMajikan) { teksTuntutanOleh = "Oleh itu, saya mewakili pihak majikan menuntut sebagaimana berikut:"; } 
             else if (aduanBerkumpulan) { teksTuntutanOleh = "Oleh itu, kami menuntut sebagaimana berikut:"; } 
@@ -8346,7 +8340,7 @@ if (memoriTuntutan.length === 0) { htmlJadualTuntutan = `<tr><td colspan="3" cla
                             <div>Tarikh Lahir: <span>${m3DOB}</span></div><div style="text-align: right;">Warganegara: <span>${m3Warga}</span></div>
                         </div>
                         <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.5;"><div style="white-space: nowrap;">Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain</div><div style="white-space: nowrap;">(Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:</div></div>
-                        <div style="margin-bottom: 20px; text-align: justify; line-height: 1.5;">${kenyataanAwalText}<br><br>${kronologiKesText}</div>
+                        <div style="margin-bottom: 20px; text-align: justify; line-height: 1.5;">${kenyataanAwalText}</div>
                         <div style="margin-bottom: 10px;">${teksTuntutanOleh}</div>
                         <table class="print-tbl-tuntutan" style="margin-top: 0; margin-bottom: 0;"><thead><tr><th class="num-col" style="width: 5%;">Bil</th><th style="width: 70%;">Jenis & Keterangan Tuntutan</th><th style="width: 25%;">Jumlah (RM)</th></tr></thead><tbody>${htmlJadualTuntutan}</tbody></table>
                         ${teksBorangG1}
