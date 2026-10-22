@@ -1760,22 +1760,31 @@ function populasikanLampiran2() {
         }
 
         // =========================================================================
-        // ULASAN PEGAWAI BERTUGAS (PEMBAIKAN EXTRACTION)
+        // ULASAN PEGAWAI BERTUGAS (EXTRACTION FIX)
         // =========================================================================
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
             let ulasanText = "";
             const inputTab2 = document.getElementById('ulasanPegawaiTab2');
             
+            // 1. Semak input semasa pada borang (Real-time)
             if (inputTab2 && inputTab2.value.trim() !== "") {
                 ulasanText = inputTab2.value.trim();
-            } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
+            } 
+            // 2. Semak rekod utama kes
+            else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
                 ulasanText = String(kes.ulasanPegawai).trim();
-            } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai && String(kes.dataBorang.ulasanPegawai).trim() !== "") {
+            } 
+            // 3. Semak rekod di dalam dataBorang
+            else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai && String(kes.dataBorang.ulasanPegawai).trim() !== "") {
                 ulasanText = String(kes.dataBorang.ulasanPegawai).trim();
-            } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
+            } 
+            // 4. Semak rekod inputs.ulasanPegawaiTab2
+            else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
                 ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
-            } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+            } 
+            // 5. Semak rekod inputs.ulasanPegawai
+            else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
                 ulasanText = String(inputsData['ulasanPegawai']).trim();
             }
             
@@ -7785,7 +7794,7 @@ function kumpulDataBorang() {
         }
     });
 
-    // Tangkap ulasan pegawai bertugas
+    // --- FIX: Ambil ulasan dari textarea Tab 2 ---
     let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
     let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
     formData['ulasanPegawaiTab2'] = ulasanText;
@@ -7817,7 +7826,7 @@ function kumpulDataBorang() {
 
     return {
         inputs: formData,
-        ulasanPegawai: ulasanText,
+        ulasanPegawai: ulasanText, // FIX: Simpan pada aras utama dataBorang
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
@@ -7866,7 +7875,7 @@ function daftarKesSistem() {
         namaDefendan: namaDefendanFinal, 
         jenisAduan: jenisAduan, 
         tarikh: tarikhHariIni,
-        ulasanPegawai: dataPenuh.ulasanPegawai, // PEMBAIKAN: Simpan terus di sini
+        ulasanPegawai: dataPenuh.ulasanPegawai, // FIX: Simpan ulasan pada aras rekod utama
         dataBorang: dataPenuh,
         sumberFlow: window.paparanSemasa || 'daftar',
         sejarahTindakan: sejarahLama 
