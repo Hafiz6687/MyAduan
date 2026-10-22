@@ -1759,16 +1759,22 @@ function populasikanLampiran2() {
             elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
         }
 
+        // KODING BAHARU PENGGANTI:
         // =========================================================================
-        // ULASAN PEGAWAI BERTUGAS (FIXED AGGRESSIVE EXTRACTION)
+        // ULASAN PEGAWAI BERTUGAS (FIXED ROBUST EXTRACTION)
         // =========================================================================
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
             let ulasanText = "";
             const inputTab2 = document.getElementById('ulasanPegawaiTab2');
+            const viewUlasanInput = document.getElementById('ulasanPegawaiTab2'); // Paparan maklumat kes
             
             if (inputTab2 && inputTab2.value.trim() !== "") {
                 ulasanText = inputTab2.value.trim();
+            } else if (viewUlasanInput && viewUlasanInput.value.trim() !== "") {
+                ulasanText = viewUlasanInput.value.trim();
+            } else if (kes && kes.dataBorang && kes.dataBorang.inputs && String(kes.dataBorang.inputs['ulasanPegawaiTab2'] || '').trim() !== "") {
+                ulasanText = String(kes.dataBorang.inputs['ulasanPegawaiTab2']).trim();
             } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
                 ulasanText = String(kes.ulasanPegawai).trim();
             } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
