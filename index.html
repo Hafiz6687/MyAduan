@@ -4085,22 +4085,21 @@ function simpanJawatanPengesah(el) {
             kadSebutanKes.style.display = 'block';
         }
     }
-    
-    if (typeof renderKadPemantauan === 'function') {
-        renderKadPemantauan(kes);
+   
+if (typeof renderKadPemantauan === 'function') {
+        renderKadPemantauan (kes) ;
     }
     
-    window.scrollTo(0, 0);
+    window . scrollTo (0 , 0 ) ;
 }
 
-function tindakanSebutan() {
-    const elTarikh = document.getElementById('mk_tarikh_sebutan');
-    const elMasa = document.getElementById('mk_masa_sebutan');
-    if (elTarikh && elMasa && elTarikh.value && elMasa.value) {
-        bukaPreviewNotisGenerik('sebutan');
+function tindakanSebutan () {
+    const elTarikh = document . getElementById ('mk_tarikh_sebutan' ) ;
+    const elMasa = document . getElementById ('mk_masa_sebutan' ) ;
+    if (elTarikh && elMasa && elTarikh . value && elMasa . value ) {
+        bukaPreviewNotisGenerik ('sebutan' ) ;
     }
 }
-
 // FUNGSI BAHARU: Menjana dan Memaparkan Akuan Penarikan Balik Kes
 function bukaPreviewTarikBalik() {
     const kes = memoriSenaraiKes[indexKesSemasa];
