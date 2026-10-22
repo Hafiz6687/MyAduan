@@ -1959,11 +1959,11 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
-                        <!-- KAD 3: DISAHKAN OLEH & TARIKH PENGESAHAN -->
+                        <!-- KAD 3: DISAHKAN OLEH (Boleh Diedit Langsung) & TARIKH PENGESAHAN -->
                         <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
                             <div>
                                 <div class="info-label" style="margin-bottom: 2px;">Disahkan oleh</div>
-                                <div class="info-value" style="margin-bottom: 0; font-weight: 600;">Mohd Faizal bin Mohammad</div>
+                                <div class="info-value" id="mk_sah_oleh" contenteditable="true" spellcheck="false" style="margin-bottom: 0; font-weight: 600; outline: none; padding: 4px; border-radius: 4px; transition: all 0.2s;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanDisahkanOleh(this);" title="Klik untuk edit">Mohd Faizal bin Mohammad</div>
                             </div>
                             <div>
                                 <div class="info-label" style="margin-bottom: 2px;">Tarikh Pengesahan</div>
@@ -1971,11 +1971,11 @@ Portal rasmi : jtksm.mohr.gov.my
                             </div>
                         </div>
 
-                        <!-- KAD 4: JAWATAN -->
+                        <!-- KAD 4: JAWATAN (Boleh Diedit Langsung) -->
                         <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
                             <div>
                                 <div class="info-label" style="margin-bottom: 2px;">Jawatan</div>
-                                <div class="info-value" style="margin-bottom: 0; font-weight: 600;">Ketua Pejabat Pengarah Tenaga Kerja Kluang</div>
+                                <div class="info-value" id="mk_jawatan_pengesah" contenteditable="true" spellcheck="false" style="margin-bottom: 0; font-weight: 600; outline: none; padding: 4px; border-radius: 4px; transition: all 0.2s;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanJawatanPengesah(this);" title="Klik untuk edit">Ketua Pejabat Pengarah Tenaga Kerja Kluang</div>
                             </div>
                             <div>
                                 <!-- Ruang kosong penyeimbang grid bawah -->
@@ -3798,12 +3798,12 @@ function bukaMaklumatKes(index) {
 
     let elSahOlehInput = document.getElementById('mk_sah_oleh');
     if (elSahOlehInput) {
-        elSahOlehInput.value = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Sistem (Auto)';
+        elSahOlehInput.innerText = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Mohd Faizal bin Mohammad';
     }
 
     let elJawatanInput = document.getElementById('mk_jawatan_pengesah');
     if (elJawatanInput) {
-        elJawatanInput.value = dataSistem['jawatanPengesah'] || kes.jawatanPengesah || '';
+        elJawatanInput.innerText = dataSistem['jawatanPengesah'] || kes.jawatanPengesah || 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
     }
 
     const p_nama = kes.namaPengadu.replace(/<br>.*$/g, '');
@@ -4105,28 +4105,26 @@ function bukaMaklumatKes(index) {
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
 
-// Fungsi simpan automatik untuk "Disahkan oleh"
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
-        memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
+        memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.innerText.trim();
         if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
             memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
         }
-        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['disahkanOleh'] = el.value;
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['disahkanOleh'] = el.innerText.trim();
         if (typeof simpanSenaraiKeLokal === 'function') {
             simpanSenaraiKeLokal();
         }
     }
 }
 
-// Fungsi simpan automatik untuk "Jawatan" (Pengesah)
 function simpanJawatanPengesah(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
-        memoriSenaraiKes[indexKesSemasa].jawatanPengesah = el.value;
+        memoriSenaraiKes[indexKesSemasa].jawatanPengesah = el.innerText.trim();
         if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
             memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
         }
-        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['jawatanPengesah'] = el.value;
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['jawatanPengesah'] = el.innerText.trim();
         if (typeof simpanSenaraiKeLokal === 'function') {
             simpanSenaraiKeLokal();
         }
@@ -7853,10 +7851,10 @@ function kumpulDataBorang() {
     });
 
     let elSahOleh = document.getElementById('mk_sah_oleh');
-    formData['disahkanOleh'] = elSahOleh ? elSahOleh.value.trim() : 'Sistem (Auto)';
+    formData['disahkanOleh'] = elSahOleh ? elSahOleh.innerText.trim() : 'Mohd Faizal bin Mohammad';
 
     let elJawatan = document.getElementById('mk_jawatan_pengesah');
-    formData['jawatanPengesah'] = elJawatan ? elJawatan.value.trim() : '';
+    formData['jawatanPengesah'] = elJawatan ? elJawatan.innerText.trim() : 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
 
     // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
