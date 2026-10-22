@@ -1498,13 +1498,22 @@ body {
                             </div>
                         </div>
 
-<!-- ULASAN PEGAWAI BERTUGAS -->
+                        <!-- ULASAN PEGAWAI BERTUGAS -->
 <div style="page-break-inside: avoid; break-inside: avoid;">
-    <div style="font-weight: bold; font-size: 10pt; border: 1px solid #000; padding: 8px 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box; background: #e2e8f0;">UNTUK KEGUNAAN PEJABAT TENAGA KERJA - ULASAN PEGAWAI BERTUGAS</div>
+    <div style="font-weight: bold; font-size: 10pt; border: 1px solid #000; padding: 8px 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box; background: #e2e8f0;">
+        UNTUK KEGUNAAN PEJABAT TENAGA KERJA - ULASAN PEGAWAI BERTUGAS
+    </div>
     
-    <!-- Ruangan Ekstrak Ulasan Pegawai Baharu sahaja -->
-    <div style="min-height: 40px; margin-bottom: 15px; font-size: 10pt; white-space: pre-wrap; font-weight: 500;" id="l2_ulasanPegawaiKhusus"></div>
+    <!-- 1. Teks Ulasan Pegawai Bertugas -->
+    <div style="min-height: 40px; margin-bottom: 10px; font-size: 10pt; white-space: pre-wrap;" id="l2_ulasanPegawai"></div>
 
+    <!-- 2. Garisan bertitik melintang -->
+    <div style="border-bottom: 1px dotted #000; margin-bottom: 10px;"></div>
+
+    <!-- 3. BAHARU: Ruangan Ekstrak Ulasan Pegawai -->
+    <div style="min-height: 30px; margin-bottom: 15px; font-size: 10pt; white-space: pre-wrap; font-weight: 500;" id="l2_ulasanPegawaiKhusus"></div>
+
+    <!-- 4. Maklumat Tarikh, Masa, dan Nama Pegawai -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; font-size: 10pt; margin-bottom: 20px;">
         <!-- Card 1 (Kiri) -->
         <div style="display: flex; flex-direction: column; gap: 20px; justify-content: flex-end;">
@@ -1522,6 +1531,9 @@ body {
         </div>
     </div>
 </div>
+                    </div>
+                </div>
+
                 <!-- Skrip Automatik Ekstrak Data & Penindih Fungsi Asal -->
                 <script>
 
@@ -1560,14 +1572,8 @@ function populasikanLampiran2() {
                 let uPasport = document.getElementById('umurPasportPengadu')?.value || inputsData['umurPasportPengadu'] || "";
                 valUmur = uPasport ? uPasport + " TAHUN" : "";
             } else {
-                let noKpEl = document.getElementById('noPendPengadu');
-                let kiraUmur = "";
-                if (noKpEl && typeof kiraUmurDariMyKad === 'function') {
-                    kiraUmur = kiraUmurDariMyKad(noKpEl);
-                } else if (inputsData['noPendPengadu']) {
-                    let tempInput = { value: inputsData['noPendPengadu'] };
-                    kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad(tempInput) : "";
-                }
+                let noKpVal = document.getElementById('noPendPengadu')?.value || inputsData['noPendPengadu'] || "";
+                let kiraUmur = typeof kiraUmurDariMyKad === 'function' ? kiraUmurDariMyKad({ value: noKpVal }) : "";
                 valUmur = kiraUmur ? kiraUmur + " TAHUN" : "";
             }
             let elUmur = document.getElementById('l2_umur');
@@ -1761,6 +1767,33 @@ function populasikanLampiran2() {
         const elTandatanganP = document.getElementById('l2_namaTandatanganPengadu');
         if (elTandatanganP) {
             elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
+        }
+
+        // =========================================================================
+        // ULASAN PEGAWAI BERTUGAS (EXTRACTION FIX)
+        // =========================================================================
+        const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
+        if (elUlasanPejabat) {
+            let ulasanText = "";
+            const inputTab2 = document.getElementById('ulasanPegawaiTab2');
+            
+            if (inputTab2 && inputTab2.value.trim() !== "") {
+                ulasanText = inputTab2.value.trim();
+            } 
+            else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
+                ulasanText = String(kes.ulasanPegawai).trim();
+            } 
+            else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai && String(kes.dataBorang.ulasanPegawai).trim() !== "") {
+                ulasanText = String(kes.dataBorang.ulasanPegawai).trim();
+            } 
+            else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
+                ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
+            } 
+            else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
+                ulasanText = String(inputsData['ulasanPegawai']).trim();
+            }
+            
+            elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
         }
 
         // =========================================================================
@@ -1992,7 +2025,16 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-            
+            <!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
+<div class="card full-width" id="kad_ulasan_pegawai_bertugas">
+    <div class="card-header">Ulasan Pegawai Bertugas</div>
+    <div class="card-body">
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+            <label style="text-align: left; margin-bottom: 8px;">Catatan / Ulasan Rasmi Pejabat <span>*</span></label>
+            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        </div>
+    </div>
+</div>
 <!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan -->
             <div class="card full-width" id="kad_kehadiran_perwakilan">
                 <div class="card-header">
@@ -7789,7 +7831,12 @@ function kumpulDataBorang() {
         }
     });
 
-    // Tangkap ulasan pegawai khusus
+    // Tangkap ulasan pegawai bertugas & ulasan pegawai khusus
+    let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
+    let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
+    formData['ulasanPegawaiTab2'] = ulasanText;
+    formData['ulasanPegawai'] = ulasanText;
+
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
     formData['ulasanPegawaiKhusus'] = ulasanKhususText;
@@ -7815,13 +7862,12 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if (jenis || jumlah) {
-            senaraiElaunDinamik.push({ jenis, jumlah });
-        }
-    }); // <-- Penutup .forEach() sudah lengkap di sini
+        if (jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
+    });
 
     return {
         inputs: formData,
+        ulasanPegawai: ulasanText,
         ulasanPegawaiKhusus: ulasanKhususText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
@@ -7829,7 +7875,7 @@ function kumpulDataBorang() {
         tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua)),
         tuntutanTambahan: JSON.parse(JSON.stringify(memoriTuntutanTambahan))
     };
-} // <-- Penutup fungsi kumpulDataBorang() sudah lengkap di sini
+}
        
 function daftarKesSistem() {
     let noKesAsal = document.getElementById('noKes').value;
