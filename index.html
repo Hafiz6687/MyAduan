@@ -7880,6 +7880,8 @@ function daftarKesSistem() {
         dataPenuh.inputs['ulasanPegawaiTab2'] = teksUlasanAktif;
     }
 
+    let ulasanTerbaru = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
+
     const rekodRasmi = { 
         noKes: noKesDenganTagDaftar, 
         namaPengadu: namaPengaduFinal, 
@@ -7887,7 +7889,7 @@ function daftarKesSistem() {
         jenisAduan: jenisAduan, 
         tarikh: tarikhHariIni,
         dataBorang: dataPenuh,
-        ulasanPegawai: teksUlasanAktif, // Simpan terus pada peringkat akar rekod
+        ulasanPegawai: ulasanTerbaru, // <-- Disimpan pada rekod utama
         sumberFlow: window.paparanSemasa || 'daftar',
         sejarahTindakan: sejarahLama 
     };
@@ -8010,6 +8012,7 @@ function hapusKesDidaftar(index) {
         renderSenaraiTugas(); 
     } 
 }
+
 function bukaKesDidaftar(index) {
     isSelesaiDaftar = false;
     isEditMode = true; 
@@ -8117,11 +8120,14 @@ function bukaKesDidaftar(index) {
                 if (elByName) elByName.checked = true;
             }
         }
-        
-        // --- PEMULIHAN SEMULA ULASAN PEGAWAI YANG TEPAT ---
+
+        // --- PEMULIHAN SEMULA ULASAN PEGAWAI SECARA MENYELURUH ---
         let elUlasanInput = document.getElementById('ulasanPegawaiTab2');
         let elUlasanPaparan = document.getElementById('ulasanPegawaiPaparan');
-        let teksUlasanPenuh = kes.ulasanPegawai || formData['ulasanPegawaiTab2'] || kes.dataBorang?.inputs?.ulasanPegawaiTab2 || "";
+        let teksUlasanPenuh = kes.ulasanPegawai || 
+                              formData['ulasanPegawaiTab2'] || 
+                              kes.dataBorang?.inputs?.ulasanPegawaiTab2 || 
+                              kes.dataBorang?.inputs?.ulasanPegawai || "";
         
         if (elUlasanInput) elUlasanInput.value = teksUlasanPenuh;
         if (elUlasanPaparan) elUlasanPaparan.value = teksUlasanPenuh;
@@ -8183,9 +8189,9 @@ function bukaKesDidaftar(index) {
     kawalJenisAduanTuntutan(); 
 }
 
-        function toTitleCase(str) { if (!str || str === '-') return '-'; return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); }
+function toTitleCase(str) { if (!str || str === '-') return '-'; return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); }
 
-        function janaHTMLCetak() {
+function janaHTMLCetak() {
             const noKes = document.getElementById('noKes')?.value || '-';
             const isMajikan = document.getElementById('majikan')?.checked;
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
