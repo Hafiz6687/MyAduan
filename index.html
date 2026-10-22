@@ -6371,8 +6371,7 @@ bekasProfil.addEventListener('wheel', function(e) {
                             localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
                             if (typeof simpanProfilKeAwan === 'function') simpanProfilKeAwan();
                         } catch (err) { 
-                            console.warn("Gambar terlalu besar.");
-                            alert("⚠️ AMARAN: Saiz gambar terlalu besar. Sila gunakan gambar bersaiz di bawah 1MB.");
+                            console.warn("Gambar gagal disimpan ke localStorage.");
                         }
                     };
                 };
@@ -6380,12 +6379,8 @@ bekasProfil.addEventListener('wheel', function(e) {
             }
         }
 
-        // AUTO-PAPARKAN GAMBAR SECARA PAKSA SETIAP KALI BUKA HALAMAN
+        // AUTO-PAPARKAN GAMBAR PROFIL SETIAP KALI HALAMAN DIBUKA
         window.addEventListener("DOMContentLoaded", function() {
-            if (typeof muatTurunProfilDariAwan === 'function') {
-                muatTurunProfilDariAwan();
-            }
-            
             const savedImage = localStorage.getItem('eLC_gambarProfil');
             const img = document.getElementById('gambarProfil');
             const kamera = document.getElementById('ikonKamera');
