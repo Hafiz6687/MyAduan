@@ -1928,24 +1928,64 @@ Portal rasmi : jtksm.mohr.gov.my
                 </button>
             </div>
 
-            <!-- BAHAGIAN 1: Maklumat Kes (2 Grid) -->
+            <!-- BAHAGIAN 1: Maklumat Kes (4 Grid) -->
+            <!-- KOD BARU GANTIAN -->
             <div class="card full-width">
                 <div class="card-header" id="mk_header_kes">Maklumat Kes</div>
                 <div class="card-body">
-                    <div class="grid-2">
-                        <div>
-                            <div class="info-label">Didaftarkan oleh</div><div class="info-value" id="mk_daftar_oleh">Mohamad Hafiz bin Abu Bakar</div>
-                            <div class="info-label">Disahkan oleh</div>
-                            <div class="info-value">
-                            <input type="text" id="mk_sah_oleh" value="Sistem (Auto)" style="font-weight: 500; font-size: 0.95em; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; background-color: #f8fafc; width: 100%; box-sizing: border-box;" oninput="simpanDisahkan Oleh(this)">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                        
+                        <!-- KAD 1 -->
+                        <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Didaftarkan oleh</div>
+                                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 0; font-weight: 600;">Mohamad Hafiz bin Abu Bakar</div>
                             </div>
-                            <div class="info-label">Pegawai Pendengar</div><div class="info-value" id="mk_pegawai">Mohamad Hafiz bin Abu Bakar</div>
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Pegawai Aduan</div>
+                                <div class="info-value" id="mk_pegawai" style="margin-bottom: 0; font-weight: 600;">Mohamad Hafiz bin Abu Bakar</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="info-label">Tarikh Pendaftaran</div><div class="info-value" id="mk_tarikh_daftar">-</div>
-                            <div class="info-label">Tarikh Pengesahan</div><div class="info-value" id="mk_tarikh_sah">-</div>
-                            <div class="info-label">Tarikh Ditugaskan</div><div class="info-value" id="mk_tarikh_tugas">-</div>
+
+                        <!-- KAD 2 -->
+                        <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Tarikh Pendaftaran</div>
+                                <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0; font-weight: 600;">-</div>
+                            </div>
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Tarikh Ditugaskan</div>
+                                <div class="info-value" id="mk_tarikh_tugas" style="margin-bottom: 0; font-weight: 600;">-</div>
+                            </div>
                         </div>
+
+                        <!-- KAD 3 -->
+                        <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Disahkan oleh</div>
+                                <div class="info-value" style="margin-bottom: 0;">
+                                    <input type="text" id="mk_sah_oleh" value="Sistem (Auto)" style="font-weight: 500; font-size: 0.95em; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; background-color: #ffffff; width: 100%; box-sizing: border-box;" oninput="simpanDisahkanOleh(this)">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Jawatan</div>
+                                <div class="info-value" style="margin-bottom: 0;">
+                                    <input type="text" id="mk_jawatan_pengesah" placeholder="Masukkan Jawatan" style="font-weight: 500; font-size: 0.95em; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; background-color: #ffffff; width: 100%; box-sizing: border-box;" oninput="simpanJawatanPengesah(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KAD 4 -->
+                        <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+                            <div>
+                                <div class="info-label" style="margin-bottom: 2px;">Tarikh Pengesahan</div>
+                                <div class="info-value" id="mk_tarikh_sah" style="margin-bottom: 0; font-weight: 600;">-</div>
+                            </div>
+                            <div>
+                                <!-- Ruang kosong penyeimbang grid baris ke-2 kad ke-4 -->
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -3761,11 +3801,16 @@ function bukaMaklumatKes(index) {
         });
     }
 
-    // --- TAMBAHKAN KOD INI DI SINI ---
-    // Pulihkan nilai "Disahkan oleh" ke dalam kotak input berikutan perubahan elemen
+    // --- PULIH KEMBALI NILAI DI SINI ---
     let elSahOlehInput = document.getElementById('mk_sah_oleh');
     if (elSahOlehInput) {
         elSahOlehInput.value = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Sistem (Auto)';
+    }
+
+    // ⬇️ TAMBAHKAN KOD JAWATAN DI SINI ⬇️
+    let elJawatanInput = document.getElementById('mk_jawatan_pengesah');
+    if (elJawatanInput) {
+        elJawatanInput.value = dataSistem['jawatanPengesah'] || kes.jawatanPengesah || '';
     }
     // ---------------------------------
 
@@ -4075,6 +4120,19 @@ function simpanDisahkanOleh(el) {
             memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
         }
         memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['disahkanOleh'] = el.value;
+        if (typeof simpanSenaraiKeLokal === 'function') {
+            simpanSenaraiKeLokal();
+        }
+    }
+}
+
+    function simpanJawatanPengesah(el) {
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        memoriSenaraiKes[indexKesSemasa].jawatanPengesah = el.value;
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
+            memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        }
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['jawatanPengesah'] = el.value;
         if (typeof simpanSenaraiKeLokal === 'function') {
             simpanSenaraiKeLokal();
         }
