@@ -3859,14 +3859,11 @@ function bukaMaklumatKes(index) {
     let lbl_p_id = p_isMyKad ? 'No. MyKad' : 'No. Pasport';
     const d_isMyKad = regexMyKad.test(d_id);
 
-    // Cari bahagian ini di dalam fungsi bukaMaklumatKes:
     let kenyataanPenuh = "-";
     if (kes.dataBorang && kes.dataBorang.inputs) {
         const kenyataanAwal = kes.dataBorang.inputs['kenyataanAwal'] || "";
-        
-    // PEMBAIKAN: Buang semakan 'kronologiKes' dan kekalkan kenyataan awal sahaja
-    if (kenyataanAwal) { 
-        kenyataanPenuh = kenyataanAwal.trim(); 
+        if (kenyataanAwal) { 
+            kenyataanPenuh = kenyataanAwal.trim(); 
         }
     }
     document.getElementById('mk_kenyataan_pengadu').innerText = kenyataanPenuh || "-";
@@ -3942,7 +3939,6 @@ function bukaMaklumatKes(index) {
     if (kes.dataBorang) {
         if (isBerkumpulan) {
             if (kes.dataBorang.tuntutanKetua && kes.dataBorang.tuntutanKetua.length > 0) {
-                let namaKetua = kes.dataBorang.inputs && kes.dataBorang.inputs['namaPengadu'] ? kes.dataBorang.inputs['namaPengadu'].toUpperCase() : kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '').toUpperCase() : "KETUA PENGADU";
                 let indexBil = 1; let htmlKetuaRows = '';
                 kes.dataBorang.tuntutanKetua.forEach(t => {
                     htmlKetuaRows += `<tr class="tuntutan-item-ketua" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td></tr>`;
@@ -3955,21 +3951,7 @@ function bukaMaklumatKes(index) {
                 for (let key in kes.dataBorang.tuntutanTambahan) {
                     const senaraiTambahan = kes.dataBorang.tuntutanTambahan[key];
                     if (senaraiTambahan && senaraiTambahan.length > 0) {
-                        let namaPengaduTambahan = ""; let namaDitemui = null;
-                        if (kes.dataBorang && kes.dataBorang.inputs) {
-                            namaDitemui = kes.dataBorang.inputs['namaPengadu' + key] || kes.dataBorang.inputs['namaPengaduTambahan' + key] || kes.dataBorang.inputs['namaTambahan' + key] || kes.dataBorang.inputs['nama_pengadu_' + key];
-                        }
-                        if (!namaDitemui && kes.dataBorang && kes.dataBorang.inputs) {
-                            for (let prop in kes.dataBorang.inputs) { if (prop.toLowerCase().includes('nama') && prop.includes(key)) { namaDitemui = kes.dataBorang.inputs[prop]; break; } }
-                        }
-                        if (!namaDitemui && kes.pengaduTambahan && Array.isArray(kes.pengaduTambahan)) {
-                            let ptIndex = parseInt(key) - 2; if (kes.pengaduTambahan[ptIndex] && kes.pengaduTambahan[ptIndex].nama) { namaDitemui = kes.pengaduTambahan[ptIndex].nama; }
-                        }
-                        if (!namaDitemui) {
-                            let inputEl = document.getElementById('namaPengaduTambahan' + key) || document.getElementById('namaPengadu' + key); if (inputEl) namaDitemui = inputEl.value;
-                        }
-                        if (namaDitemui && typeof namaDitemui === 'string' && namaDitemui.trim() !== "") { namaPengaduTambahan = namaDitemui.trim().toUpperCase(); } else { namaPengaduTambahan = "PENGADU " + key; }
-
+                        let namaPengaduTambahan = "PENGADU " + key;
                         let indexBil = 1; let htmlPengaduRows = '';
                         senaraiTambahan.forEach(t => {
                             htmlPengaduRows += `<tr class="tuntutan-item-pengadu-${key}" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td></tr>`;
@@ -3993,119 +3975,25 @@ function bukaMaklumatKes(index) {
             tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td></tr>`;
         });
     }
+
     const listKad = ['sebutan', 'sebutan_tangguh', 'sebutan_semula', 'bicara', 'bicara_tangguh', 'bicara_sambung', 'keputusan'];
     listKad.forEach(idPrefix => {
         const elT = document.getElementById(`mk_tarikh_${idPrefix}`);
         const elM = document.getElementById(`mk_masa_${idPrefix}`);
         if (elT) elT.value = '';
         if (elM) elM.value = '';
-        
-        if (idPrefix === 'sebutan' && typeof semakButangSebutan === 'function') semakButangSebutan();
-        else if (typeof semakButangNotis === 'function') semakButangNotis(idPrefix);
-        
         const kad = document.getElementById(`kad_${idPrefix}`);
         if (kad) kad.style.display = 'none';
     });
     
-    if (document.getElementById('mk_tarikh_saman')) document.getElementById('mk_tarikh_saman').value = '';
-    if (document.getElementById('mk_masa_saman')) document.getElementById('mk_masa_saman').value = '';
-    if (typeof semakButangSaman === 'function') semakButangSaman();
-    if (document.getElementById('kad_saman_hadir')) document.getElementById('kad_saman_hadir').style.display = 'none';
-
-    if (document.getElementById('mk_tarikh_mou')) document.getElementById('mk_tarikh_mou').value = '';
-    if (document.getElementById('mk_masa_mou')) document.getElementById('mk_masa_mou').value = '';
-    if (document.getElementById('mk_tempat_mou')) document.getElementById('mk_tempat_mou').value = 'Pejabat Tenaga Kerja Kluang, Jalan Pejabat Kerajaan, 86000 Kluang, Johor Darul Takzim';
-    if (document.getElementById('mk_jumlah_mou')) document.getElementById('mk_jumlah_mou').value = '';
-    if (document.getElementById('mk_kaedah_mou')) document.getElementById('mk_kaedah_mou').value = '';
-    if (typeof semakButangMou === 'function') semakButangMou();
-    if (document.getElementById('kad_mou')) document.getElementById('kad_mou').style.display = 'none';
-    
-    if (document.getElementById('mk_tarikh_saman_memo')) document.getElementById('mk_tarikh_saman_memo').value = '';
-    if (document.getElementById('mk_pejabat_memo')) document.getElementById('mk_pejabat_memo').value = '';
-    if (document.getElementById('mk_alamat1_memo')) document.getElementById('mk_alamat1_memo').value = '';
-    if (document.getElementById('mk_alamat2_memo')) document.getElementById('mk_alamat2_memo').value = '';
-    if (document.getElementById('mk_alamat3_memo')) document.getElementById('mk_alamat3_memo').value = '';
-    if (document.getElementById('mk_poskod_memo')) document.getElementById('mk_poskod_memo').value = '';
-    
-    if (document.getElementById('mk_bandar_memo')) {
-        document.getElementById('mk_bandar_memo').value = ''; document.getElementById('mk_bandar_memo').placeholder = 'Lengkapkan Poskod'; document.getElementById('mk_bandar_memo').setAttribute('readonly', true);
-    }
-    if (document.getElementById('mk_negeri_memo')) {
-        document.getElementById('mk_negeri_memo').value = ''; document.getElementById('mk_negeri_memo').placeholder = 'Lengkapkan Poskod'; document.getElementById('mk_negeri_memo').setAttribute('readonly', true);
-    }
-    
-    if (typeof semakButangSamanMemo === 'function') semakButangSamanMemo();
-    
-    if (document.getElementById('kad_saman_memo')) document.getElementById('kad_saman_memo').style.display = 'none';
-    if (document.getElementById('tempatHadirBerbeza_memo')) {
-        document.getElementById('tempatHadirBerbeza_memo').checked = false;
-        if (typeof toggleTempatHadirMemo === 'function') toggleTempatHadirMemo();
-    }
-    
-    const isDraf = kes.noKes.includes('DRAF');
-
-    const kadSejarah = document.getElementById('kad_sejarah_tindakan');
-    const menuTindakanUrus = document.getElementById('menu_tindakan_urus');
-    
-    if (kadSejarah) {
-        if (!isDraf) {
-            kadSejarah.style.display = 'flex';
-            if (!kes.sejarahTindakan) kes.sejarahTindakan = [];
-            if (kes.dataBorang && !kes.dataBorang.tuntutanBiasa) kes.dataBorang.tuntutanBiasa = [];
-            try { renderJadualSejarah(indexKesSemasa); } catch(e) { console.error("Ralat pada sejarah tindakan:", e); }
-        } else {
-            kadSejarah.style.display = 'none';
-        }
-    }
-
-    if (menuTindakanUrus) {
-        if (!isDraf) {
-            menuTindakanUrus.style.display = 'flex';
-        } else {
-            menuTindakanUrus.style.display = 'none';
-        }
-    }
-    
-    const btnKemaskiniPendaftaran = document.getElementById('btnEditRekodKes');
-    if (btnKemaskiniPendaftaran) {
-        btnKemaskiniPendaftaran.style.display = 'flex';
-        btnKemaskiniPendaftaran.innerHTML = '<span style="font-size: 1.2em; line-height: 1;">✏️</span> Kemaskini';
-    }
-
-    document.getElementById('btnEditRekodKes').onclick = function() {
-        bukaKesDidaftar(indexKesSemasa);
-    };
-
-    const kadKenyataanView = document.getElementById('kad_kenyataan_pengadu_view');
-    const kandunganKenyataan = document.getElementById('kandunganKenyataanPengaduView');
-    const labelKenyataan = document.getElementById('labelTogolKenyataanView');
-    
-    if (kadKenyataanView) {
-        if (kes.sumberFlow === 'urus') {
-            kadKenyataanView.style.display = 'none';
-        } else {
-            kadKenyataanView.style.display = 'flex';
-            if (kandunganKenyataan && labelKenyataan) {
-                kandunganKenyataan.style.display = 'none';
-                labelKenyataan.innerHTML = '▼ Buka';
-                labelKenyataan.style.backgroundColor = '#f1f5f9';
-                labelKenyataan.style.color = 'var(--text-muted)';
-            }
-        }
-    }
-
-    if (typeof tunjukSuisTandatangan === 'function') {
-        tunjukSuisTandatangan(false);
-    }
-
     document.getElementById('viewSenaraiTugas').style.display = 'none';
     document.getElementById('viewPendaftaranKes').style.display = 'none';
     document.getElementById('viewMaklumatKes').style.display = 'block';
-
     document.getElementById('tajukHalamanAtas').innerHTML = 'Maklumat Kes Terperinci';
     document.getElementById('butangCetakHeader').style.display = 'none'; 
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
+}
 
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
@@ -7835,7 +7723,6 @@ function kumpulDataBorang() {
     const inputs = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
     inputs.forEach(el => {
         if (!el.id && !el.name) return; 
-
         if (el.type === 'radio') {
             if (el.checked) formData[el.name] = el.value;
         } else if (el.type === 'checkbox') {
@@ -7852,7 +7739,6 @@ function kumpulDataBorang() {
         }
     });
 
-    // Tangkap terus dari contenteditable (Maklumat Kes Terperinci)
     let elSahOleh = document.getElementById('mk_sah_oleh');
     let valSahOleh = elSahOleh ? elSahOleh.innerText.trim() : 'Mohd Faizal bin Mohammad';
     formData['disahkanOleh'] = valSahOleh;
@@ -7861,7 +7747,6 @@ function kumpulDataBorang() {
     let valJawatan = elJawatan ? elJawatan.innerText.trim() : 'Ketua Pejabat Pengarah Tenaga Kerja Kluang';
     formData['jawatanPengesah'] = valJawatan;
     
-    // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
     formData['ulasanPegawaiKhusus'] = ulasanKhususText;
@@ -7872,7 +7757,6 @@ function kumpulDataBorang() {
         let nInput = document.getElementById(`namaPengaduTambahan${i}`);
         let kInput = document.getElementById(`kpPengaduTambahan${i}`);
         let wInput = document.getElementById(`warganegaraPengaduTambahan${i}`);
-        
         if (nInput || kInput || wInput) {
             pengaduBerkumpulanData.push({
                 index: i,
