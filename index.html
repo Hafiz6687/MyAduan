@@ -1935,7 +1935,10 @@ Portal rasmi : jtksm.mohr.gov.my
                     <div class="grid-2">
                         <div>
                             <div class="info-label">Didaftarkan oleh</div><div class="info-value" id="mk_daftar_oleh">Mohamad Hafiz bin Abu Bakar</div>
-                            <div class="info-label">Disahkan oleh</div><div class="info-value" id="mk_sah_oleh">Sistem (Auto)</div>
+                            <div class="info-label">Disahkan oleh</div>
+                            <div class="info-value">
+                            <input type="text" id="mk_sah_oleh" value="Sistem (Auto)" style="font-weight: 500; font-size: 0.95em; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; background-color: #f8fafc; width: 100%; box-sizing: border-box;" oninput="simpanDisahkan Oleh(this)">
+                            </div>
                             <div class="info-label">Pegawai Pendengar</div><div class="info-value" id="mk_pegawai">Mohamad Hafiz bin Abu Bakar</div>
                         </div>
                         <div>
@@ -3758,6 +3761,14 @@ function bukaMaklumatKes(index) {
         });
     }
 
+    // --- TAMBAHKAN KOD INI DI SINI ---
+    // Pulihkan nilai "Disahkan oleh" ke dalam kotak input berikutan perubahan elemen
+    let elSahOlehInput = document.getElementById('mk_sah_oleh');
+    if (elSahOlehInput) {
+        elSahOlehInput.value = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Sistem (Auto)';
+    }
+    // ---------------------------------
+
     const p_nama = kes.namaPengadu.replace(/<br>.*$/g, '');
     const d_nama = kes.namaDefendan;
 
@@ -4057,6 +4068,19 @@ function bukaMaklumatKes(index) {
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
 
+function simpanDisahkanOleh(el) {
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
+            memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        }
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['disahkanOleh'] = el.value;
+        if (typeof simpanSenaraiKeLokal === 'function') {
+            simpanSenaraiKeLokal();
+        }
+    }
+}
+    
     function kawalCheckboxPenerimaNotis() {
         const kes = memoriSenaraiKes[indexKesSemasa];
         if (!kes) return;
@@ -4127,7 +4151,7 @@ function bukaMaklumatKes(index) {
     }
     
     window.scrollTo(0, 0);
-} // <--- Ini adalah penutup fungsi bukaMaklumatKes(index)
+} 
 
 function tindakanSebutan() {
     const elTarikh = document.getElementById('mk_tarikh_sebutan');
@@ -7776,6 +7800,12 @@ function kumpulDataBorang() {
         }
     });
 
+    // --- TAMBAHKAN DI SINI ---
+    // Tangkap nilai "Disahkan oleh" daripada paparan maklumat terperinci kes
+    let elSahOleh = document.getElementById('mk_sah_oleh');
+    formData['disahkanOleh'] = elSahOleh ? elSahOleh.value.trim() : 'Sistem (Auto)';
+    // -------------------------
+
     // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
@@ -7807,6 +7837,7 @@ function kumpulDataBorang() {
 
     return {
         inputs: formData,
+        disahkanOleh: formData['disahkanOleh'], // Boleh sertakan di sini juga untuk rujukan pantas
         ulasanPegawaiKhusus: ulasanKhususText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
