@@ -3393,7 +3393,18 @@ Portal rasmi : jtksm.mohr.gov.my
                         </div>
                     </div>
                 </div>
-
+                <!-- KAD BAHARU: ULASAN PEGAWAI -->
+                <div class="card full-width" id="kad_ulasan_pegawai_tambahan">
+                    <div class="card-header">Ulasan Pegawai</div>
+                    <div class="card-body">
+                        <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 0; margin-bottom: 15px; font-style: italic;">
+                            *Masukkan ulasan rasmi tambahan atau catatan khusus pegawai di ruangan ini.
+                        </p>
+                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                            <textarea id="ulasanPegawaiKhusus" rows="4" class="auto-expand" placeholder="Taipkan ulasan pegawai di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this);"></textarea>
+                        </div>
+                    </div>
+                </div>
                 <div class="card full-width">
                     <div class="card-header">Maklumat Tambahan</div>
                     <div class="card-body">
@@ -7794,11 +7805,15 @@ function kumpulDataBorang() {
         }
     });
 
-    // --- FIX: Ambil ulasan dari textarea Tab 2 ---
+    // Tangkap ulasan pegawai bertugas & ulasan pegawai khusus
     let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
     let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
     formData['ulasanPegawaiTab2'] = ulasanText;
     formData['ulasanPegawai'] = ulasanText;
+
+    let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
+    let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
+    formData['ulasanPegawaiKhusus'] = ulasanKhususText;
 
     let pengaduBerkumpulanData = [];
     let bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
@@ -7826,7 +7841,8 @@ function kumpulDataBorang() {
 
     return {
         inputs: formData,
-        ulasanPegawai: ulasanText, // FIX: Simpan pada aras utama dataBorang
+        ulasanPegawai: ulasanText,
+        ulasanPegawaiKhusus: ulasanKhususText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
