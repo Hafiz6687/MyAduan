@@ -1498,17 +1498,11 @@ body {
                             </div>
                         </div>
 
-                        <!-- ULASAN PEGAWAI BERTUGAS -->
+<!-- ULASAN PEGAWAI BERTUGAS -->
 <div style="page-break-inside: avoid; break-inside: avoid;">
     <div style="font-weight: bold; font-size: 10pt; border: 1px solid #000; padding: 8px 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box; background: #e2e8f0;">
         UNTUK KEGUNAAN PEJABAT TENAGA KERJA - ULASAN PEGAWAI BERTUGAS
     </div>
-    
-    <!-- 1. Teks Ulasan Pegawai Bertugas -->
-    <div style="min-height: 40px; margin-bottom: 10px; font-size: 10pt; white-space: pre-wrap;" id="l2_ulasanPegawai"></div>
-
-    <!-- 2. Garisan bertitik melintang -->
-    <div style="border-bottom: 1px dotted #000; margin-bottom: 10px;"></div>
 
     <!-- 3. BAHARU: Ruangan Ekstrak Ulasan Pegawai -->
     <div style="min-height: 30px; margin-bottom: 15px; font-size: 10pt; white-space: pre-wrap; font-weight: 500;" id="l2_ulasanPegawaiKhusus"></div>
@@ -1770,33 +1764,6 @@ function populasikanLampiran2() {
         }
 
         // =========================================================================
-        // ULASAN PEGAWAI BERTUGAS (EXTRACTION FIX)
-        // =========================================================================
-        const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
-        if (elUlasanPejabat) {
-            let ulasanText = "";
-            const inputTab2 = document.getElementById('ulasanPegawaiTab2');
-            
-            if (inputTab2 && inputTab2.value.trim() !== "") {
-                ulasanText = inputTab2.value.trim();
-            } 
-            else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
-                ulasanText = String(kes.ulasanPegawai).trim();
-            } 
-            else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai && String(kes.dataBorang.ulasanPegawai).trim() !== "") {
-                ulasanText = String(kes.dataBorang.ulasanPegawai).trim();
-            } 
-            else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
-                ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
-            } 
-            else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
-                ulasanText = String(inputsData['ulasanPegawai']).trim();
-            }
-            
-            elUlasanPejabat.innerText = (ulasanText && ulasanText !== "") ? ulasanText : "- Tiada ulasan direkodkan -";
-        }
-
-        // =========================================================================
         // ULASAN PEGAWAI KHUSUS (DI BAWAH GARISAN BERTITIK MELINTANG)
         // =========================================================================
         const elUlasanKhusus = document.getElementById('l2_ulasanPegawaiKhusus');
@@ -2025,16 +1992,7 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-            <!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
-<div class="card full-width" id="kad_ulasan_pegawai_bertugas">
-    <div class="card-header">Ulasan Pegawai Bertugas</div>
-    <div class="card-body">
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-            <label style="text-align: left; margin-bottom: 8px;">Catatan / Ulasan Rasmi Pejabat <span>*</span></label>
-            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
-        </div>
-    </div>
-</div>
+
 <!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan -->
             <div class="card full-width" id="kad_kehadiran_perwakilan">
                 <div class="card-header">
@@ -3403,19 +3361,6 @@ Portal rasmi : jtksm.mohr.gov.my
                         
                         <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
                             <button class="btn-cancel btn-terapung" id="btnEditKenyataan" style="padding: 8px 20px;" onclick="aktifkanEditKenyataan()">✏️ Edit Kenyataan</button>
-                        </div>
-                    </div>
-                </div>
-
-               <!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS -->
-                <div class="card full-width">
-                    <div class="card-header">Ulasan Pegawai Bertugas</div>
-                    <div class="card-body">
-                        <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 0; margin-bottom: 15px; font-style: italic;">
-                            *Masukkan ulasan rasmi pegawai di ruangan ini.
-                        </p>
-                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this); if(typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) { memoriSenaraiKes[indexKesSemasa].ulasanPegawai = this.value; }"></textarea>
                         </div>
                     </div>
                 </div>
@@ -7831,12 +7776,7 @@ function kumpulDataBorang() {
         }
     });
 
-    // Tangkap ulasan pegawai bertugas & ulasan pegawai khusus
-    let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
-    let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
-    formData['ulasanPegawaiTab2'] = ulasanText;
-    formData['ulasanPegawai'] = ulasanText;
-
+    // Tangkap ulasan pegawai khusus
     let elUlasanKhusus = document.getElementById('ulasanPegawaiKhusus');
     let ulasanKhususText = elUlasanKhusus ? elUlasanKhusus.value.trim() : '';
     formData['ulasanPegawaiKhusus'] = ulasanKhususText;
@@ -7867,7 +7807,6 @@ function kumpulDataBorang() {
 
     return {
         inputs: formData,
-        ulasanPegawai: ulasanText,
         ulasanPegawaiKhusus: ulasanKhususText,
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
@@ -8148,19 +8087,6 @@ function bukaKesDidaftar(index) {
                 if (elByName) elByName.checked = true;
             }
         }
-        
-        // --- TAMBAHAN PEMULIHAN ULASAN PEGAWAI DALAM BUKA KES ---
-        let elUlasanTarget = document.getElementById('ulasanPegawaiTab2');
-        if (elUlasanTarget) {
-            if (formData['ulasanPegawaiTab2']) {
-                elUlasanTarget.value = formData['ulasanPegawaiTab2'];
-            } else if (kes.ulasanPegawai) {
-                elUlasanTarget.value = kes.ulasanPegawai;
-            } else {
-                elUlasanTarget.value = "";
-            }
-        }
-        // --------------------------------------------------------
 
         const bekasElaun = document.getElementById('senaraiElaun');
         if (bekasElaun) bekasElaun.innerHTML = ''; 
