@@ -1759,22 +1759,16 @@ function populasikanLampiran2() {
             elTandatanganP.innerText = namaPengaduBersih.toUpperCase();
         }
 
-        // KODING BAHARU PENGGANTI:
         // =========================================================================
-        // ULASAN PEGAWAI BERTUGAS (FIXED ROBUST EXTRACTION)
+        // ULASAN PEGAWAI BERTUGAS (FIXED AGGRESSIVE EXTRACTION)
         // =========================================================================
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
             let ulasanText = "";
             const inputTab2 = document.getElementById('ulasanPegawaiTab2');
-            const viewUlasanInput = document.getElementById('ulasanPegawaiTab2'); // Paparan maklumat kes
             
             if (inputTab2 && inputTab2.value.trim() !== "") {
                 ulasanText = inputTab2.value.trim();
-            } else if (viewUlasanInput && viewUlasanInput.value.trim() !== "") {
-                ulasanText = viewUlasanInput.value.trim();
-            } else if (kes && kes.dataBorang && kes.dataBorang.inputs && String(kes.dataBorang.inputs['ulasanPegawaiTab2'] || '').trim() !== "") {
-                ulasanText = String(kes.dataBorang.inputs['ulasanPegawaiTab2']).trim();
             } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
                 ulasanText = String(kes.ulasanPegawai).trim();
             } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
@@ -1994,13 +1988,13 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-<!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
+            <!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
 <div class="card full-width" id="kad_ulasan_pegawai_bertugas">
     <div class="card-header">Ulasan Pegawai Bertugas</div>
     <div class="card-body">
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
             <label style="text-align: left; margin-bottom: 8px;">Catatan / Ulasan Rasmi Pejabat <span>*</span></label>
-            <textarea id="ulasanPegawaiPaparan" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this); if(typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) { memoriSenaraiKes[indexKesSemasa].ulasanPegawai = this.value; }"></textarea>
+            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
         </div>
     </div>
 </div>
@@ -7822,7 +7816,7 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah}); // <-- DIBETULKAN DI SINI (senaraiElaunDinamik)
+        if(jenis || jumlah) senaraiElaunDilinamik.push({jenis, jumlah});
     });
 
     return {
@@ -7869,19 +7863,6 @@ function daftarKesSistem() {
         sejarahLama = memoriSenaraiKes[indexKesSemasa].sejarahTindakan;
     }
 
-    let ulasanTerbaru = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
-
-    // KODING BAHARU PENGGANTI:
-    // Tangkap ulasan secara langsung daripada elemen input yang sahih
-    let teksUlasanAktif = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
-    
-    // Pastikan ia kekal wujud di dalam data borang utama
-    if (dataPenuh && dataPenuh.inputs) {
-        dataPenuh.inputs['ulasanPegawaiTab2'] = teksUlasanAktif;
-    }
-
-    let ulasanTerbaru = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
-
     const rekodRasmi = { 
         noKes: noKesDenganTagDaftar, 
         namaPengadu: namaPengaduFinal, 
@@ -7889,7 +7870,6 @@ function daftarKesSistem() {
         jenisAduan: jenisAduan, 
         tarikh: tarikhHariIni,
         dataBorang: dataPenuh,
-        ulasanPegawai: ulasanTerbaru, // <-- Disimpan pada rekod utama
         sumberFlow: window.paparanSemasa || 'daftar',
         sejarahTindakan: sejarahLama 
     };
@@ -8012,7 +7992,6 @@ function hapusKesDidaftar(index) {
         renderSenaraiTugas(); 
     } 
 }
-
 function bukaKesDidaftar(index) {
     isSelesaiDaftar = false;
     isEditMode = true; 
@@ -8120,17 +8099,18 @@ function bukaKesDidaftar(index) {
                 if (elByName) elByName.checked = true;
             }
         }
-
-        // --- PEMULIHAN SEMULA ULASAN PEGAWAI SECARA MENYELURUH ---
-        let elUlasanInput = document.getElementById('ulasanPegawaiTab2');
-        let elUlasanPaparan = document.getElementById('ulasanPegawaiPaparan');
-        let teksUlasanPenuh = kes.ulasanPegawai || 
-                              formData['ulasanPegawaiTab2'] || 
-                              kes.dataBorang?.inputs?.ulasanPegawaiTab2 || 
-                              kes.dataBorang?.inputs?.ulasanPegawai || "";
         
-        if (elUlasanInput) elUlasanInput.value = teksUlasanPenuh;
-        if (elUlasanPaparan) elUlasanPaparan.value = teksUlasanPenuh;
+        // --- TAMBAHAN PEMULIHAN ULASAN PEGAWAI DALAM BUKA KES ---
+        let elUlasanTarget = document.getElementById('ulasanPegawaiTab2');
+        if (elUlasanTarget) {
+            if (formData['ulasanPegawaiTab2']) {
+                elUlasanTarget.value = formData['ulasanPegawaiTab2'];
+            } else if (kes.ulasanPegawai) {
+                elUlasanTarget.value = kes.ulasanPegawai;
+            } else {
+                elUlasanTarget.value = "";
+            }
+        }
         // --------------------------------------------------------
 
         const bekasElaun = document.getElementById('senaraiElaun');
@@ -8189,9 +8169,9 @@ function bukaKesDidaftar(index) {
     kawalJenisAduanTuntutan(); 
 }
 
-function toTitleCase(str) { if (!str || str === '-') return '-'; return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); }
+        function toTitleCase(str) { if (!str || str === '-') return '-'; return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); }
 
-function janaHTMLCetak() {
+        function janaHTMLCetak() {
             const noKes = document.getElementById('noKes')?.value || '-';
             const isMajikan = document.getElementById('majikan')?.checked;
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
