@@ -3569,81 +3569,90 @@ Portal rasmi : jtksm.mohr.gov.my
 // FUNGSI AWAN UNTUK GAMBAR DAN NAMA PROFIL (FIRESTORE)
 // =========================================================================
 
+// KOD BARU: Memuat turun dan menyimpan profil secara terus dari Firebase Firestore
 async function muatkanProfilDariAwan() {
     try {
-        const docSnap = await window.getDocs(window.collection(window.db, "data_pengguna"));
-        
-        let dataProfil = null;
-        docSnap.forEach((docItem) => {
-            if (docItem.id === "profil_hafiz_abubakar") {
-                dataProfil = docItem.data();
+        if (!window.db || !window.doc || !window.getDoc) {
+            // Tunggu 500ms jika SDK Firebase belum habis di-load
+            setTimeout(muatkanProfilDariAwan, 500);
+            return;
+        }
+
+        const docRef = window.doc(window.db, "data_pengguna", "profil_hafiz_abubakar");
+        const docSnap = await window.getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const dataProfil = docSnap.data();
+
+            // 1. Muatkan Nama Profil
+            if (dataProfil.nama) {
+                document.getElementById('namaProfilEdit').innerHTML = dataProfil.nama;
+                localStorage.setItem('eLC_namaProfil', dataProfil.nama);
             }
-        });
 
-        // Tetapkan nilai lalai dari local storage jika ada
-        let namaDisimpan = localStorage.getItem('eLC_namaProfil');
-        let gambarDisimpan = localStorage.getItem('eLC_gambarProfil');
-        let posDisimpan = localStorage.getItem('eLC_gambarPos');
-        let scaleDisimpan = localStorage.getItem('eLC_gambarScale');
+            // 2. Muatkan Skala dan Posisi
+            if (dataProfil.scale && typeof currentScale !== 'undefined') {
+                currentScale = parseFloat(dataProfil.scale);
+                localStorage.setItem('eLC_gambarScale', dataProfil.scale);
+            }
 
-        // Gantikan dengan data awan jika wujud
-        if (dataProfil) {
-            if (dataProfil.nama) { namaDisimpan = dataProfil.nama; localStorage.setItem('eLC_namaProfil', dataProfil.nama); }
-            if (dataProfil.gambar) { gambarDisimpan = dataProfil.gambar; localStorage.setItem('eLC_gambarProfil', dataProfil.gambar); }
-            if (dataProfil.pos) { posDisimpan = dataProfil.pos; localStorage.setItem('eLC_gambarPos', dataProfil.pos); }
-            if (dataProfil.scale) { scaleDisimpan = dataProfil.scale; localStorage.setItem('eLC_gambarScale', dataProfil.scale); }
-        }
+            // 3. Muatkan Gambar Profil dari Firebase
+            if (dataProfil.gambar) {
+                localStorage.setItem('eLC_gambarProfil', dataProfil.gambar);
+                if (dataProfil.pos) localStorage.setItem('eLC_gambarPos', JSON.stringify(dataProfil.pos));
 
-        // --- Logik Paparan Profil Asal ---
-        if (namaDisimpan) {
-            document.getElementById('namaProfilEdit').innerHTML = namaDisimpan;
-        }
-        
-        if (scaleDisimpan && typeof currentScale !== 'undefined') {
-            currentScale = parseFloat(scaleDisimpan);
-        }
+                document.getElementById('ikonKamera').style.display = 'none';
+                const img = document.getElementById('gambarProfil');
+                img.style.display = 'block';
+                img.src = dataProfil.gambar;
+                img.style.cursor = 'grab';
 
-        if (gambarDisimpan) {
-            document.getElementById('ikonKamera').style.display = 'none';
-            const img = document.getElementById('gambarProfil');
-            img.style.display = 'block';
-            img.src = gambarDisimpan;
-            img.style.cursor = 'grab';
+                img.onload = function() {
+                    if (this.naturalHeight > this.naturalWidth) {
+                        this.style.width = '100%';
+                        this.style.height = 'auto';
+                    } else {
+                        this.style.width = 'auto';
+                        this.style.height = '100%';
+                    }
 
-            img.onload = function() {
-                if (this.naturalHeight > this.naturalWidth) {
-                    this.style.width = '100%';
-                    this.style.height = 'auto';
-                } else {
-                    this.style.width = 'auto';
-                    this.style.height = '100%';
-                }
-
-                if (posDisimpan && typeof currentPosX !== 'undefined' && typeof currentPosY !== 'undefined') {
-                    const pos = JSON.parse(posDisimpan);
-                    currentPosX = pos.x;
-                    currentPosY = pos.y;
-                }
-                if (typeof updateTransform === 'function') updateTransform();
-            };
+                    if (dataProfil.pos && typeof currentPosX !== 'undefined' && typeof currentPosY !== 'undefined') {
+                        currentPosX = dataProfil.pos.x || 0;
+                        currentPosY = dataProfil.pos.y || 0;
+                    }
+                    if (typeof updateTransform === 'function') updateTransform();
+                };
+            }
         }
     } catch (error) {
-        console.error("Gagal memuat turun profil dari awan:", error);
+        console.error("Gagal memuat turun profil dari awan Firebase:", error);
     }
 }
 
-async function simpanProfilKeAwan() {
+async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
     try {
+        if (!window.db || !window.doc || !window.setDoc) return;
+
         const docRef = window.doc(window.db, "data_pengguna", "profil_hafiz_abubakar");
+        
+        // Dapatkan nilai semasa jika tidak dihantar
+        const namaSimpan = namaText || document.getElementById('namaProfilEdit').innerHTML || localStorage.getItem('eLC_namaProfil') || "";
+        const gambarSimpan = gambarBase64 || localStorage.getItem('eLC_gambarProfil') || "";
+        const posSimpan = posObj || (localStorage.getItem('eLC_gambarPos') ? JSON.parse(localStorage.getItem('eLC_gambarPos')) : {x: 0, y: 0});
+        const scaleSimpan = scaleVal || localStorage.getItem('eLC_gambarScale') || "1.2";
+
         await window.setDoc(docRef, {
-            nama: localStorage.getItem('eLC_namaProfil') || "",
-            gambar: localStorage.getItem('eLC_gambarProfil') || "",
-            pos: localStorage.getItem('eLC_gambarPos') || "",
-            scale: localStorage.getItem('eLC_gambarScale') || "",
+            nama: namaSimpan,
+            gambar: gambarSimpan,
+            pos: posSimpan,
+            scale: scaleSimpan,
             kemaskiniTerakhir: new Date().toISOString()
-        });
+        }, { merge: true });
+
+        console.log("Berjaya! Gambar profil dan tetapan disimpan ke Firebase.");
     } catch (error) {
-        console.error("Ralat menyimpan profil ke awan:", error);
+        console.error("Ralat menyimpan profil ke Firebase:", error);
+        alert("Ralat menyimpan gambar ke awan. Sila pastikan saiz gambar tidak terlalu besar.");
     }
 }
 // --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
@@ -6410,39 +6419,76 @@ bekasProfil.addEventListener('wheel', function(e) {
             imgProfile.addEventListener('dblclick', function() { inputProfil.click(); });
         }
 
-        function muatNaikGambarProfil(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    const base64Data = e.target.result;
-                    document.getElementById('ikonKamera').style.display = 'none';
-                    const img = document.getElementById('gambarProfil');
-                    img.style.display = 'block';
-                    img.src = base64Data;
-                    img.style.cursor = 'grab';
+// DELETE / GANTI KOD ASAL INI:
+// KOD BARU: Muat naik, mampatkan gambar secara automatik, dan terus hantar ke Firebase
+function muatNaikGambarProfil(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
 
-                    img.onload = function() {
-                        if (this.naturalHeight > this.naturalWidth) { this.style.width = '100%'; this.style.height = 'auto'; } 
-                        else { this.style.width = 'auto'; this.style.height = '100%'; }
-                        currentScale = 1.2; currentPosX = 0; currentPosY = 0;
-                        updateTransform();
-                        try {
-                            localStorage.setItem('eLC_gambarProfil', base64Data);
-                            localStorage.setItem('eLC_gambarScale', currentScale.toString());
-                            localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
-                            
-                            // MASUKKAN PENCETUS AWAN DI SINI
-                            simpanProfilKeAwan();
-                            
-                        } catch (err) { 
-                            console.warn("Gambar terlalu besar.");
-                            alert("⚠️ AMARAN: Saiz gambar terlalu besar. Sistem hanya boleh memaparkannya sementara, tetapi ia akan HILANG apabila halaman di-refresh. Sila gunakan gambar yang bersaiz lebih kecil (bawah 1MB).");
-                        }
-                    };
-                };
-                   reader.readAsDataURL(input.files[0]);
-            }
-        }
+        reader.onload = function (e) {
+            const imgTemp = new Image();
+            imgTemp.src = e.target.result;
+
+            imgTemp.onload = function() {
+                // Mampatkan saiz gambar (Max 300x300px) supaya pantas dimuatkan dari Firebase
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
+                let width = imgTemp.width;
+                let height = imgTemp.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(imgTemp, 0, 0, width, height);
+
+                // Tukar kepada data Base64 berkualiti optimum (0.85)
+                const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+                // Paparkan pada elemen UI
+                document.getElementById('ikonKamera').style.display = 'none';
+                const img = document.getElementById('gambarProfil');
+                img.style.display = 'block';
+                img.src = optimizedBase64;
+                img.style.cursor = 'grab';
+
+                if (img.naturalHeight > img.naturalWidth) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                } else {
+                    img.style.width = 'auto';
+                    img.style.height = '100%';
+                }
+
+                currentScale = 1.2; 
+                currentPosX = 0; 
+                currentPosY = 0;
+                if (typeof updateTransform === 'function') updateTransform();
+
+                // Simpan ke LocalStorage dan terus HANTAR KE FIREBASE
+                localStorage.setItem('eLC_gambarProfil', optimizedBase64);
+                localStorage.setItem('eLC_gambarScale', "1.2");
+                localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
+
+                simpanProfilKeAwan(optimizedBase64, {x: 0, y: 0}, "1.2", null);
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+}
 
         function bukaMaklumatPerkhidmatanDalaman() {
             const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
@@ -16428,8 +16474,10 @@ window.selesaiPemfailanLuarPreview = function() {
 <!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+// Dan tambah baris ini di bawah window.setDoc = setDoc;
+window.getDoc = getDoc;
   // 1. Konfigurasi Firebase anda yang sebenar
   const firebaseConfig = {
     apiKey: "AIzaSyCEJL04DfA_N7GFhWHa8czWRzqGtV6jMu4",
