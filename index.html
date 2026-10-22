@@ -1929,27 +1929,58 @@ Portal rasmi : jtksm.mohr.gov.my
             </div>
 
             <!-- BAHAGIAN 1: Maklumat Kes (2 Grid) -->
-            <div class="card full-width">
-                <div class="card-header" id="mk_header_kes">Maklumat Kes</div>
-                <div class="card-body">
-                    <div class="grid-2">
-                        <div>
-                            <div class="info-label">Didaftarkan oleh</div><div class="info-value" id="mk_daftar_oleh">Mohamad Hafiz bin Abu Bakar</div>
-                            <div class="info-label">Disahkan oleh</div>
-                            <div class="info-value">
-                            <input type="text" id="mk_sah_oleh" value="Sistem (Auto)" style="font-weight: 500; font-size: 0.95em; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; background-color: #f8fafc; width: 100%; box-sizing: border-box;" oninput="simpanDisahkan Oleh(this)">
-                            </div>
-                            <div class="info-label">Pegawai Pendengar</div><div class="info-value" id="mk_pegawai">Mohamad Hafiz bin Abu Bakar</div>
-                        </div>
-                        <div>
-                            <div class="info-label">Tarikh Pendaftaran</div><div class="info-value" id="mk_tarikh_daftar">-</div>
-                            <div class="info-label">Tarikh Pengesahan</div><div class="info-value" id="mk_tarikh_sah">-</div>
-                            <div class="info-label">Tarikh Ditugaskan</div><div class="info-value" id="mk_tarikh_tugas">-</div>
-                        </div>
-                    </div>
-                </div>
+            <!-- KODING BARU PENGGANTI -->
+<div class="card full-width">
+    <div class="card-header" id="mk_header_kes">Maklumat Kes</div>
+    <div class="card-body">
+        <style>
+            .grid-kes-4 {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            @media (max-width: 1024px) {
+                .grid-kes-4 { grid-template-columns: repeat(2, 1fr); }
+            }
+            @media (max-width: 600px) {
+                .grid-kes-4 { grid-template-columns: 1fr; }
+            }
+        </style>
+        <div class="grid-kes-4">
+            <!-- Card 1 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Didaftarkan oleh</div>
+                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-label">Tarikh Pendaftaran</div>
+                <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0;">-</div>
             </div>
 
+            <!-- Card 2 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Pegawai Penyiasat</div>
+                <div class="info-value" id="mk_pegawai" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-label">Tarikh Siasatan</div>
+                <div class="info-value" id="mk_tarikh_tugas" style="margin-bottom: 0;">-</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Disahkan oleh</div>
+                <div class="info-value" id="mk_sah_oleh_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaDisahkanOleh(this);" title="Klik untuk edit nama pengesah">Mohd Faizal bin Mohammad</div>
+                <div class="info-label">Tarikh Pengesahan</div>
+                <div class="info-value" id="mk_tarikh_sah" style="margin-bottom: 0;">-</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Jawatan</div>
+                <div class="info-value" style="margin-bottom: 16px;">Pegawai Pendengar</div>
+                <div class="info-label">Ketua Pejabat</div>
+                <div class="info-value" id="mk_ketua_pejabat" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanKetuaPejabat(this);" title="Klik untuk edit ketua pejabat">Pengarah Tenaga Kerja Kluang</div>
+            </div>
+        </div>
+    </div>
+</div>
             <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
             <div class="card full-width">
                 <div class="card-header" id="mk_header_pengadu">Maklumat Pengadu</div>
@@ -16468,6 +16499,40 @@ window.selesaiPemfailanLuarPreview = function() {
         if (typeof tukarView === 'function') tukarView('senarai');
     }
 };
+
+// Fungsi sokongan penyimpanan untuk Disahkan Oleh
+function simpanNamaDisahkanOleh(el) {
+    const teksBaru = el.innerText.trim();
+    localStorage.setItem('eLC_disahkanOleh', teksBaru);
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['disahkanOlehCustom'] = teksBaru;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
+
+// Fungsi sokongan penyimpanan untuk Ketua Pejabat
+function simpanKetuaPejabat(el) {
+    const teksBaru = el.innerText.trim();
+    localStorage.setItem('eLC_ketuaPejabat', teksBaru);
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['ketuaPejabatCustom'] = teksBaru;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
+
+// Muat turun semula nilai tersimpan apabila paparan maklumat kes dibuka
+document.addEventListener("DOMContentLoaded", function() {
+    const savedDisahkan = localStorage.getItem('eLC_disahkanOleh');
+    if (savedDisahkan && document.getElementById('mk_sah_oleh_edit')) {
+        document.getElementById('mk_sah_oleh_edit').innerText = savedDisahkan;
+    }
+    const savedKetua = localStorage.getItem('eLC_ketuaPejabat');
+    if (savedKetua && document.getElementById('mk_ketua_pejabat')) {
+        document.getElementById('mk_ketua_pejabat').innerText = savedKetua;
+    }
+});
 
 </script>
 
