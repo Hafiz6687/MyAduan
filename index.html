@@ -3802,14 +3802,14 @@ function bukaMaklumatKes(index) {
     }
 
     let elSahOlehInput = document.getElementById('mk_sah_oleh');
-if (elSahOlehInput) {
-    elSahOlehInput.value = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Sistem (Auto)';
-}
+    if (elSahOlehInput) {
+        elSahOlehInput.value = dataSistem['disahkanOleh'] || kes.disahkanOleh || 'Sistem (Auto)';
+    }
 
-let elJawatanInput = document.getElementById('mk_jawatan_pengesah');
-if (elJawatanInput) {
-    elJawatanInput.value = dataSistem['jawatanPengesah'] || kes.jawatanPengesah || '';
-}
+    let elJawatanInput = document.getElementById('mk_jawatan_pengesah');
+    if (elJawatanInput) {
+        elJawatanInput.value = dataSistem['jawatanPengesah'] || kes.jawatanPengesah || '';
+    }
 
     const p_nama = kes.namaPengadu.replace(/<br>.*$/g, '');
     const d_nama = kes.namaDefendan;
@@ -4110,6 +4110,7 @@ if (elJawatanInput) {
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
 
+// Fungsi simpan automatik untuk "Disahkan oleh"
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
         memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
@@ -4123,7 +4124,8 @@ function simpanDisahkanOleh(el) {
     }
 }
 
-    function simpanJawatanPengesah(el) {
+// Fungsi simpan automatik untuk "Jawatan" (Pengesah)
+function simpanJawatanPengesah(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
         memoriSenaraiKes[indexKesSemasa].jawatanPengesah = el.value;
         if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
