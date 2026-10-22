@@ -1994,13 +1994,13 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-            <!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
+<!-- KAD BAHARU: ULASAN PEGAWAI BERTUGAS (DI BORANG UTAMA) -->
 <div class="card full-width" id="kad_ulasan_pegawai_bertugas">
     <div class="card-header">Ulasan Pegawai Bertugas</div>
     <div class="card-body">
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
             <label style="text-align: left; margin-bottom: 8px;">Catatan / Ulasan Rasmi Pejabat <span>*</span></label>
-            <textarea id="ulasanPegawaiTab2" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+            <textarea id="ulasanPegawaiPaparan" rows="4" class="auto-expand" placeholder="Taipkan ulasan atau arahan pegawai bertugas di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this); if(typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) { memoriSenaraiKes[indexKesSemasa].ulasanPegawai = this.value; }"></textarea>
         </div>
     </div>
 </div>
@@ -7869,6 +7869,8 @@ function daftarKesSistem() {
         sejarahLama = memoriSenaraiKes[indexKesSemasa].sejarahTindakan;
     }
 
+    let ulasanTerbaru = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
+
     const rekodRasmi = { 
         noKes: noKesDenganTagDaftar, 
         namaPengadu: namaPengaduFinal, 
@@ -7876,6 +7878,7 @@ function daftarKesSistem() {
         jenisAduan: jenisAduan, 
         tarikh: tarikhHariIni,
         dataBorang: dataPenuh,
+        ulasanPegawai: ulasanTerbaru, // <-- Disimpan pada rekod utama
         sumberFlow: window.paparanSemasa || 'daftar',
         sejarahTindakan: sejarahLama 
     };
@@ -8106,17 +8109,13 @@ function bukaKesDidaftar(index) {
             }
         }
         
-        // --- TAMBAHAN PEMULIHAN ULASAN PEGAWAI DALAM BUKA KES ---
-        let elUlasanTarget = document.getElementById('ulasanPegawaiTab2');
-        if (elUlasanTarget) {
-            if (formData['ulasanPegawaiTab2']) {
-                elUlasanTarget.value = formData['ulasanPegawaiTab2'];
-            } else if (kes.ulasanPegawai) {
-                elUlasanTarget.value = kes.ulasanPegawai;
-            } else {
-                elUlasanTarget.value = "";
-            }
-        }
+        // --- PEMULIHAN SEMULA ULASAN PEGAWAI YANG TEPAT ---
+        let elUlasanInput = document.getElementById('ulasanPegawaiTab2');
+        let elUlasanPaparan = document.getElementById('ulasanPegawaiPaparan');
+        let teksUlasanPenuh = kes.ulasanPegawai || formData['ulasanPegawaiTab2'] || kes.dataBorang?.inputs?.ulasanPegawaiTab2 || "";
+        
+        if (elUlasanInput) elUlasanInput.value = teksUlasanPenuh;
+        if (elUlasanPaparan) elUlasanPaparan.value = teksUlasanPenuh;
         // --------------------------------------------------------
 
         const bekasElaun = document.getElementById('senaraiElaun');
