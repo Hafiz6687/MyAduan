@@ -7871,6 +7871,15 @@ function daftarKesSistem() {
 
     let ulasanTerbaru = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
 
+    // KODING BAHARU PENGGANTI:
+    // Tangkap ulasan secara langsung daripada elemen input yang sahih
+    let teksUlasanAktif = document.getElementById('ulasanPegawaiTab2')?.value || document.getElementById('ulasanPegawaiPaparan')?.value || "";
+    
+    // Pastikan ia kekal wujud di dalam data borang utama
+    if (dataPenuh && dataPenuh.inputs) {
+        dataPenuh.inputs['ulasanPegawaiTab2'] = teksUlasanAktif;
+    }
+
     const rekodRasmi = { 
         noKes: noKesDenganTagDaftar, 
         namaPengadu: namaPengaduFinal, 
@@ -7878,7 +7887,7 @@ function daftarKesSistem() {
         jenisAduan: jenisAduan, 
         tarikh: tarikhHariIni,
         dataBorang: dataPenuh,
-        ulasanPegawai: ulasanTerbaru, // <-- Disimpan pada rekod utama
+        ulasanPegawai: teksUlasanAktif, // Simpan terus pada peringkat akar rekod
         sumberFlow: window.paparanSemasa || 'daftar',
         sejarahTindakan: sejarahLama 
     };
