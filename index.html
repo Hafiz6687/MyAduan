@@ -1760,7 +1760,7 @@ function populasikanLampiran2() {
         }
 
         // =========================================================================
-        // ULASAN PEGAWAI BERTUGAS (FIXED AGGRESSIVE EXTRACTION)
+        // ULASAN PEGAWAI BERTUGAS (PEMBAIKAN EXTRACTION)
         // =========================================================================
         const elUlasanPejabat = document.getElementById('l2_ulasanPegawai');
         if (elUlasanPejabat) {
@@ -1771,6 +1771,8 @@ function populasikanLampiran2() {
                 ulasanText = inputTab2.value.trim();
             } else if (kes && kes.ulasanPegawai && String(kes.ulasanPegawai).trim() !== "") {
                 ulasanText = String(kes.ulasanPegawai).trim();
+            } else if (kes && kes.dataBorang && kes.dataBorang.ulasanPegawai && String(kes.dataBorang.ulasanPegawai).trim() !== "") {
+                ulasanText = String(kes.dataBorang.ulasanPegawai).trim();
             } else if (inputsData && inputsData['ulasanPegawaiTab2'] && String(inputsData['ulasanPegawaiTab2']).trim() !== "") {
                 ulasanText = String(inputsData['ulasanPegawaiTab2']).trim();
             } else if (inputsData && inputsData['ulasanPegawai'] && String(inputsData['ulasanPegawai']).trim() !== "") {
@@ -7788,12 +7790,11 @@ function kumpulDataBorang() {
         }
     });
 
-    // --- PASTI NILAI ULASAN PEGAWAI DI-CAPTURE ---
+    // --- PEMBAIKAN: Tangkap ulasan pegawai bertugas ---
     let elUlasanTab2 = document.getElementById('ulasanPegawaiTab2');
-    if (elUlasanTab2) {
-        formData['ulasanPegawaiTab2'] = elUlasanTab2.value;
-    }
-    // ---------------------------------------------
+    let ulasanText = elUlasanTab2 ? elUlasanTab2.value.trim() : '';
+    formData['ulasanPegawaiTab2'] = ulasanText;
+    formData['ulasanPegawai'] = ulasanText;
 
     let pengaduBerkumpulanData = [];
     let bilP = parseInt(document.getElementById('bilPengadu')?.value) || 1;
@@ -7816,11 +7817,12 @@ function kumpulDataBorang() {
     document.querySelectorAll('#senaraiElaun > div').forEach(div => {
         let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
         let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
-        if(jenis || jumlah) senaraiElaunDilinamik.push({jenis, jumlah});
+        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
     });
 
     return {
         inputs: formData,
+        ulasanPegawai: ulasanText, // Simpan pada paras utama dataBorang
         elaun: senaraiElaunDinamik,
         pengaduBerkumpulan: pengaduBerkumpulanData,
         tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
@@ -7869,6 +7871,7 @@ function daftarKesSistem() {
         namaDefendan: namaDefendanFinal, 
         jenisAduan: jenisAduan, 
         tarikh: tarikhHariIni,
+        ulasanPegawai: dataPenuh.ulasanPegawai, // PEMBAIKAN: Simpan terus di sini
         dataBorang: dataPenuh,
         sumberFlow: window.paparanSemasa || 'daftar',
         sejarahTindakan: sejarahLama 
