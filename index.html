@@ -4130,11 +4130,30 @@ function bukaMaklumatKes(index) {
     if (btnKemaskiniPendaftaran) {
         btnKemaskiniPendaftaran.style.display = 'flex';
         btnKemaskiniPendaftaran.innerHTML = '<span style="font-size: 1.2em; line-height: 1;">✏️</span> Kemaskini';
+        
+        // Tetapkan fungsi klik yang sahih untuk membuka mod kemaskini borang
+        btnKemaskiniPendaftaran.onclick = function() {
+            if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) {
+                // 1. Panggil semula fungsi buka kes supaya data dimasukkan ke dalam input borang
+                bukaKesDidaftar(indexKesSemasa);
+                
+                // 2. Buka paparan borang pendaftaran
+                tukarView('daftar', true);
+                
+                // 3. Nyah-kunci (unlock) input borang supaya boleh diedit
+                if (typeof setStatusBorang === 'function') {
+                    setStatusBorang(false);
+                }
+                
+                // 4. Pergi ke tab pertama (Pengadu & Majikan)
+                if (typeof pergiKeTabBorang === 'function') {
+                    pergiKeTabBorang('tab1');
+                }
+            } else {
+                alert("Ralat: Tiada rujukan kes dipilih untuk dikemaskini.");
+            }
+        };
     }
-
-    document.getElementById('btnEditRekodKes').onclick = function() {
-        bukaKesDidaftar(indexKesSemasa);
-    };
 
     const kadKenyataanView = document.getElementById('kad_kenyataan_pengadu_view');
     const kandunganKenyataan = document.getElementById('kandunganKenyataanPengaduView');
