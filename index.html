@@ -528,21 +528,38 @@ body {
     <div id="printArea" style="display: none;"></div>
 
     <div class="modal-overlay" id="modalTuntutan">
-        <div class="modal-box">
-            <div class="modal-title" id="tajukModal">Tambah Tuntutan</div>
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-title" id="tajukModal">Kemaskini Tuntutan & Siasatan</div>
             <input type="hidden" id="indexTuntutanEdit" value="-1">
-            <input type="hidden" id="jenisJadualTuntutan" value="biasa"> <!-- PENANDA JENIS JADUAL -->
+            <input type="hidden" id="jenisJadualTuntutan" value="biasa">
+            
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">Jenis Aduan <span>*</span></label>
+                <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
                 <select id="jenisTuntutan" onchange="semakJenisTuntutanLain()"><option value="">-Sila Pilih-</option></select>
                 <input type="text" id="jenisTuntutanLain" placeholder="Sila nyatakan jenis aduan lain" style="display: none; margin-top: 8px; width: 100%;" oninput="hurufBesarAyatPertama(this)">
             </div>
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-    <label style="text-align: left;">Keterangan Aduan <span>*</span></label>
-    <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
-</div>
             
-                        <div class="modal-actions">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+                <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
+                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
+            </div>
+
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+                <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna senarai bertingkat/multilevel cth: 1., 1.1, a) b))</span></label>
+                <textarea id="hasilSiasatanTuntutan" rows="5" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen mendapati...&#10;   1.1 Gaji bulan Januari tidak dibayar...&#10;2. Penjelasan majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit;" oninput="autoResize(this)"></textarea>
+            </div>
+
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+                <label style="text-align: left;">4. Status Aduan <span>*</span></label>
+                <select id="statusAduanTuntutan" style="width: 100%; box-sizing: border-box;">
+                    <option value="">-Sila Pilih Status-</option>
+                    <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
+                    <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                </select>
+            </div>
+            
+            <div class="modal-actions">
                 <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
                 <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
             </div>
@@ -6971,61 +6988,66 @@ function bukaTab(tabId, elemenTab) {
             if(val === 'Lain-lain') { jenisTuntutanLain.style.display = 'block'; } else { jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = ''; }
         }
 
-function simpanTuntutan() {
-    let jenis = document.getElementById('jenisTuntutan').value;
-    let jenisLain = document.getElementById('jenisTuntutanLain').value.trim();
-    let keterangan = document.getElementById('keteranganTuntutan').value.trim();
+function bukaModalTuntutan(jenis, index = -1) {
+    document.getElementById('indexTuntutanEdit').value = index;
+    document.getElementById('jenisJadualTuntutan').value = jenis;
     
-    // Gantikan bacaan elemen dengan nilai statik "0.00" supaya array sistem tak rosak
-    let jumlah = "0.00"; 
-    
-    const index = parseInt(document.getElementById('indexTuntutanEdit').value);
-    const jenisJadual = document.getElementById('jenisJadualTuntutan').value; 
-
-    if (jenis === 'Lain-lain') { 
-        if (jenisLain === "") { 
-            alert("Sila nyatakan jenis aduan lain."); 
-            return; 
-        } 
-        jenis = jenisLain; 
-    }
-    
-    // Validasi jumlah telah dibuang di sini
-    if (jenis === "" || keterangan === "") { 
-        alert("Sila lengkapkan Jenis dan Keterangan aduan."); 
-        return; 
-    }
-    
-    if (jenisJadual === 'ketua') {
-        if (index > -1) { 
-            memoriTuntutanKetua[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; 
-        } else { 
-            memoriTuntutanKetua.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); 
-        }
-        if (typeof autoKiraTuntutanBerkumpulan === 'function') autoKiraTuntutanBerkumpulan(); 
-        renderJadualTuntutan();
-    } else if (jenisJadual.startsWith('tambahan_')) {
-        let idxTambahan = parseInt(jenisJadual.split('_')[1]);
-        if (index > -1) { 
-            memoriTuntutanTambahan[idxTambahan][index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; 
-        } else { 
-            memoriTuntutanTambahan[idxTambahan].push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); 
-        }
-        if (typeof autoKiraTuntutanBerkumpulan === 'function') autoKiraTuntutanBerkumpulan(); 
-        if (typeof renderJadualTuntutanTambahan === 'function') renderJadualTuntutanTambahan(idxTambahan);
-        renderJadualTuntutan(); 
+    if (index > -1) {
+        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
+        let targetList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
+        let item = targetList[index];
+        document.getElementById('jenisTuntutan').value = item.jenis || '';
+        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
+        document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
+        document.getElementById('statusAduanTuntutan').value = item.statusAduan || '';
     } else {
-        if (index > -1) { 
-            memoriTuntutan[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; 
-        } else { 
-            memoriTuntutan.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); 
-        }
-        renderJadualTuntutan();
+        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
+        document.getElementById('jenisTuntutan').value = "";
+        document.getElementById('keteranganTuntutan').value = "";
+        document.getElementById('hasilSiasatanTuntutan').value = "";
+        document.getElementById('statusAduanTuntutan').value = "";
     }
-
-    tutupModalTuntutan(); 
+    document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
+function simpanTuntutan() {
+    let jenis = document.getElementById('jenisTuntutan').value;
+    let keterangan = document.getElementById('keteranganTuntutan').value;
+    let hasilSiasatan = document.getElementById('hasilSiasatanTuntutan').value;
+    let statusAduan = document.getElementById('statusAduanTuntutan').value;
+    let index = parseInt(document.getElementById('indexTuntutanEdit').value);
+    let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
+
+    if (!jenis || !keterangan) {
+        alert("Sila lengkapkan Jenis Aduan dan Keterangan Aduan.");
+        return;
+    }
+
+    let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
+
+    if (index > -1) {
+        targetList[index].jenis = jenis;
+        targetList[index].keterangan = keterangan;
+        targetList[index].hasilSiasatan = hasilSiasatan;
+        targetList[index].statusAduan = statusAduan;
+    } else {
+        targetList.push({
+            jenis: jenis,
+            keterangan: keterangan,
+            hasilSiasatan: hasilSiasatan,
+            statusAduan: statusAduan
+        });
+    }
+
+    document.getElementById('modalTuntutan').style.display = 'none';
+    
+    // Kemaskini paparan jadual mengikut paparan semasa
+    if (typeof renderSemuaJadualTuntutan === 'function') {
+        renderSemuaJadualTuntutan();
+    } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
+        bukaMaklumatKes(indexKesSemasa);
+    }
+}
         function hapusTuntutan(index, jenisJadual = 'biasa') { 
             if (confirm("Adakah anda pasti mahu memadam tuntutan ini?")) { 
                 if (jenisJadual === 'ketua') {
@@ -7116,54 +7138,6 @@ function renderJadualTuntutanTambahan(idx) {
             </tr>`;
         });
     }
-}
-function bukaModalTuntutan(jenisJadual = 'biasa', indexEdit = -1) {
-    document.getElementById('modalTuntutan').style.display = 'flex';
-    document.getElementById('jenisJadualTuntutan').value = jenisJadual;
-    
-    const dropdown = document.getElementById('jenisTuntutan');
-    const jenisTuntutanLain = document.getElementById('jenisTuntutanLain');
-    
-    dropdown.innerHTML = '<option value="">-Sila Pilih-</option>';
-    const senaraiPilihan = senaraiTuntutanPekerja; // Auto fokus kepada senarai tuntutan pekerja
-    
-    senaraiPilihan.forEach(item => { dropdown.innerHTML += `<option value="${item}">${item}</option>`; });
-    
-    if(indexEdit > -1) {
-        let targetArray;
-        if (jenisJadual === 'ketua') {
-            targetArray = memoriTuntutanKetua;
-        } else if (jenisJadual.startsWith('tambahan_')) {
-            let idxTambahan = parseInt(jenisJadual.split('_')[1]);
-            targetArray = memoriTuntutanTambahan[idxTambahan];
-        } else {
-            targetArray = memoriTuntutan;
-        }
-
-        document.getElementById('tajukModal').innerHTML = "Kemaskini Tuntutan";
-        const storedJenis = targetArray[indexEdit].jenis;
-        
-        if (senaraiPilihan.includes(storedJenis)) {
-            document.getElementById('jenisTuntutan').value = storedJenis; jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = '';
-        } else {
-            document.getElementById('jenisTuntutan').value = 'Lain-lain'; jenisTuntutanLain.style.display = 'block'; jenisTuntutanLain.value = storedJenis;
-        }
-        let ketRaw = targetArray[indexEdit].keterangan;
-        if(ketRaw.startsWith('(') && ketRaw.endsWith(')')){ ketRaw = ketRaw.slice(1,-1); }
-        document.getElementById('keteranganTuntutan').value = ketRaw;
-        document.getElementById('indexTuntutanEdit').value = indexEdit;
-    } else {
-        let tajukBaru = "Tambah Tuntutan";
-        if (jenisJadual === 'ketua') tajukBaru = "Tambah Tuntutan Ketua";
-        else if (jenisJadual.startsWith('tambahan_')) tajukBaru = `Tambah Tuntutan Pengadu ${jenisJadual.split('_')[1]}`;
-        
-        document.getElementById('tajukModal').innerHTML = tajukBaru;
-        document.getElementById('jenisTuntutan').value = "";
-        jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = "";
-        document.getElementById('keteranganTuntutan').value = "";
-        document.getElementById('indexTuntutanEdit').value = "-1";
-    }
-    setTimeout(() => { document.getElementById('jenisTuntutan').focus(); document.getElementById('jenisTuntutan').style.boxShadow = '0 0 0 2px rgba(37, 99, 235, 0.3)'; document.getElementById('jenisTuntutan').addEventListener('blur', function() { this.style.boxShadow = 'none'; }, { once: true }); }, 100);
 }
 
 function kawalJenisAduanTuntutan() {
