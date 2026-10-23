@@ -7194,69 +7194,121 @@ function simpanTuntutan() {
 
 function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.display = 'none'; }
        
+
 function renderJadualTuntutan() {
+    // ==========================================
+    // 1. JADUAL TUNTUTAN BIASA
+    // ==========================================
     const tbody = document.querySelector("#jadualTuntutan tbody");
 
     if (tbody) {
-        tbody.innerHTML = ""; 
-        if (memoriTuntutan.length === 0) { 
-            tbody.innerHTML = `<tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr>`; 
-        } else {
-            memoriTuntutan.forEach((item, index) => {
-                
-        // Gantikan dengan kod bina jadual yang menyokong butang Edit siasatan baharu
-        senaraiTuntutanSemasa.forEach((item, index) => {
-            let statusBadge = item.status ? `<br><span style="font-size:0.8em; color:${item.status === 'Pelanggaran dikesan' ? 'var(--danger)' : 'var(--primary-blue)'}; font-weight:bold; display:inline-block; margin-top:4px;">[Status: ${item.status}]</span>` : '';
-            
-            let siasatanHtml = item.siasatan ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color); font-size: 0.9em; color: #334155;"><strong style="color: var(--text-main);">Hasil Siasatan:</strong><div style="white-space: pre-wrap; margin-top: 4px; line-height: 1.5; font-family: inherit;">${item.siasatan}</div></div>` : '';
+        tbody.innerHTML = "";
 
-            tbodyTuntutan.innerHTML += `
+        if (!Array.isArray(memoriTuntutan) || memoriTuntutan.length === 0) {
+            tbody.innerHTML = `
                 <tr>
-                    <td style="text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">${indexBil++}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; vertical-align: top;">${item.jenis || '-'}${statusBadge}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">
-                        <div>${item.keterangan || '-'}</div>
-                        ${siasatanHtml}
-                    </td>
-                    <td style="text-align: center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top; white-space: nowrap;">
-                        <button type="button" class="btn-edit-tbl" style="background-color: #0284c7; margin-bottom: 4px;" onclick="bukaModalEditTuntutanKes(${index})" title="Edit Siasatan">✏️ Siasatan</button><br>
-                        <button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')" title="Hapus Tuntutan">🗑️ Hapus</button>
+                    <td colspan="5" class="empty-row">
+                        Tiada maklumat aduan direkodkan.
                     </td>
                 </tr>`;
-        });
+        } else {
+            memoriTuntutan.forEach((item, index) => {
+                const statusBadge = item.status
+                    ? `<br><span style="font-size:0.8em; color:${item.status === 'Pelanggaran dikesan' ? 'var(--danger)' : 'var(--primary-blue)'}; font-weight:bold; display:inline-block; margin-top:4px;">[Status: ${item.status}]</span>`
+                    : "";
 
-                const tr = document.createElement('tr');
+                const siasatanHtml = item.siasatan
+                    ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color); font-size:0.9em; color:#334155;">
+                           <strong style="color:var(--text-main);">Hasil Siasatan:</strong>
+                           <div style="white-space:pre-wrap; margin-top:4px; line-height:1.5; font-family:inherit;">${item.siasatan}</div>
+                       </div>`
+                    : "";
+
+                const tr = document.createElement("tr");
+
                 tr.innerHTML = `
-                    <td style="text-align:center;">${index + 1}</td>
-                    <td>${item.jenis}</td>
-                    <td>${item.keterangan}</td>
-                    ${actionHtml}
-                `;
+                    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
+                        ${index + 1}
+                    </td>
+                    <td style="padding:12px; border-bottom:1px solid var(--border-color); font-weight:600; vertical-align:top;">
+                        ${item.jenis || "-"}${statusBadge}
+                    </td>
+                    <td style="padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
+                        <div>${item.keterangan || "-"}</div>
+                        ${siasatanHtml}
+                    </td>
+                    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top; white-space:nowrap;">
+                        <button
+                            type="button"
+                            class="btn-edit-tbl"
+                            style="background-color:#0284c7; margin-bottom:4px;"
+                            onclick="bukaModalEditTuntutanKes(${index})"
+                            title="Edit Siasatan">
+                            ✏️ Siasatan
+                        </button>
+                        <br>
+                        <button
+                            type="button"
+                            class="btn-delete-tbl"
+                            onclick="hapusTuntutan(${index}, 'biasa')"
+                            title="Hapus Tuntutan">
+                            🗑️ Hapus
+                        </button>
+                    </td>`;
+
                 tbody.appendChild(tr);
             });
         }
     }
 
+    // ==========================================
+    // 2. JADUAL TUNTUTAN KETUA
+    // ==========================================
     const tbodyKetua = document.querySelector("#jadualTuntutanKetua tbody");
+
     if (tbodyKetua) {
-        tbodyKetua.innerHTML = ""; 
-        if (memoriTuntutanKetua.length === 0) { 
-            tbodyKetua.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>`; 
+        tbodyKetua.innerHTML = "";
+
+        if (!Array.isArray(memoriTuntutanKetua) || memoriTuntutanKetua.length === 0) {
+            tbodyKetua.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-row"
+                        style="text-align:center; padding:12px;">
+                        Tiada maklumat aduan direkodkan.
+                    </td>
+                </tr>`;
         } else {
             memoriTuntutanKetua.forEach((item, index) => {
-                const tr = document.createElement('tr');
+                const tr = document.createElement("tr");
+
                 tr.innerHTML = `
-                    <td style="text-align: center;">${index + 1}</td>
-                    <td>${item.jenis}</td>
-                    <td>${item.keterangan}</td>
-                    <td style="text-align: center;"><button type="button" class="btn-edit-tbl" style="background-color: #0284c7;" onclick="bukaModalTuntutan('ketua', ${index})">✏️ Edit</button></td>
-                    <td style="text-align: center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'ketua')">🗑️ Hapus</button></td>
-                `;
+                    <td style="text-align:center;">${index + 1}</td>
+                    <td>${item.jenis || "-"}</td>
+                    <td>${item.keterangan || "-"}</td>
+                    <td style="text-align:center;">
+                        <button
+                            type="button"
+                            class="btn-edit-tbl"
+                            style="background-color:#0284c7;"
+                            onclick="bukaModalTuntutan('ketua', ${index})">
+                            ✏️ Edit
+                        </button>
+                    </td>
+                    <td style="text-align:center;">
+                        <button
+                            type="button"
+                            class="btn-delete-tbl"
+                            onclick="hapusTuntutan(${index}, 'ketua')">
+                            🗑️ Hapus
+                        </button>
+                    </td>`;
+
                 tbodyKetua.appendChild(tr);
             });
         }
     }
 }
+
 
 function renderJadualTuntutanTambahan(idx) {
     const tbody = document.querySelector(`#jadualTuntutanPengadu${idx} tbody`);
