@@ -3956,59 +3956,33 @@ function bukaMaklumatKes(index) {
     const tbodyTuntutan = document.getElementById('mk_body_tuntutan');
     tbodyTuntutan.innerHTML = '';
 
+    let senaraiTuntutanSemasa = [];
     if (kes.dataBorang) {
         if (isBerkumpulan) {
+            // Gabungkan tuntutan ketua dan tambahan ke dalam satu paparan senarai utama jika wujud
             if (kes.dataBorang.tuntutanKetua && kes.dataBorang.tuntutanKetua.length > 0) {
-                let namaKetua = kes.dataBorang.inputs && kes.dataBorang.inputs['namaPengadu'] ? kes.dataBorang.inputs['namaPengadu'].toUpperCase() : kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '').toUpperCase() : "KETUA PENGADU";
-                let indexBil = 1; let htmlKetuaRows = '';
-                kes.dataBorang.tuntutanKetua.forEach(t => {
-                    htmlKetuaRows += `<tr class="tuntutan-item-ketua" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td></tr>`;
-                });
-                tbodyTuntutan.innerHTML += `<tr style="background-color: #eff6ff; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="const rows = document.querySelectorAll('.tuntutan-item-ketua'); const btn = document.getElementById('btnTogolTuntutan_ketua'); let isHidden = rows[0].style.display === 'none'; rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none'); btn.innerHTML = isHidden ? '▲ Sembunyi' : '▼ Buka';"><td colspan="2" style="padding: 12px 15px; font-weight: 700; color: var(--primary-blue); border-bottom: 1px solid var(--border-color);">Aduan Ketua Pengadu</td><td style="padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border-color);"><span id="btnTogolTuntutan_ketua" style="font-size: 0.85em; font-weight: 600; background: #bfdbfe; color: #1e40af; padding: 4px 10px; border-radius: 20px; min-width: 80px; text-align: center; display: inline-block;">▼ Buka</span></td></tr>`;
-                tbodyTuntutan.innerHTML += htmlKetuaRows;
+                senaraiTuntutanSemasa = senaraiTuntutanSemasa.concat(kes.dataBorang.tuntutanKetua);
             }
-            
             if (kes.dataBorang.tuntutanTambahan) {
                 for (let key in kes.dataBorang.tuntutanTambahan) {
-                    const senaraiTambahan = kes.dataBorang.tuntutanTambahan[key];
-                    if (senaraiTambahan && senaraiTambahan.length > 0) {
-                        let namaPengaduTambahan = ""; let namaDitemui = null;
-                        if (kes.dataBorang && kes.dataBorang.inputs) {
-                            namaDitemui = kes.dataBorang.inputs['namaPengadu' + key] || kes.dataBorang.inputs['namaPengaduTambahan' + key] || kes.dataBorang.inputs['namaTambahan' + key] || kes.dataBorang.inputs['nama_pengadu_' + key];
-                        }
-                        if (!namaDitemui && kes.dataBorang && kes.dataBorang.inputs) {
-                            for (let prop in kes.dataBorang.inputs) { if (prop.toLowerCase().includes('nama') && prop.includes(key)) { namaDitemui = kes.dataBorang.inputs[prop]; break; } }
-                        }
-                        if (!namaDitemui && kes.pengaduTambahan && Array.isArray(kes.pengaduTambahan)) {
-                            let ptIndex = parseInt(key) - 2; if (kes.pengaduTambahan[ptIndex] && kes.pengaduTambahan[ptIndex].nama) { namaDitemui = kes.pengaduTambahan[ptIndex].nama; }
-                        }
-                        if (!namaDitemui) {
-                            let inputEl = document.getElementById('namaPengaduTambahan' + key) || document.getElementById('namaPengadu' + key); if (inputEl) namaDitemui = inputEl.value;
-                        }
-                        if (namaDitemui && typeof namaDitemui === 'string' && namaDitemui.trim() !== "") { namaPengaduTambahan = namaDitemui.trim().toUpperCase(); } else { namaPengaduTambahan = "PENGADU " + key; }
-
-                        let indexBil = 1; let htmlPengaduRows = '';
-                        senaraiTambahan.forEach(t => {
-                            htmlPengaduRows += `<tr class="tuntutan-item-pengadu-${key}" style="display: none; background-color: #fafafa;"><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${t.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${t.keterangan}</td></tr>`;
-                        });
-                        tbodyTuntutan.innerHTML += `<tr style="background-color: #f8fafc; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="const rows = document.querySelectorAll('.tuntutan-item-pengadu-${key}'); const btn = document.getElementById('btnTogolTuntutan_pengadu_${key}'); let isHidden = rows[0].style.display === 'none'; rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none'); btn.innerHTML = isHidden ? '▲ Sembunyi' : '▼ Buka';"><td colspan="2" style="padding: 12px 15px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);">Aduan Pengadu ${key} (${namaPengaduTambahan})</td><td style="padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border-color); border-top: 2px solid var(--border-color);"><span id="btnTogolTuntutan_pengadu_${key}" style="font-size: 0.85em; font-weight: 600; background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 20px; min-width: 80px; text-align: center; display: inline-block;">▼ Buka</span></td></tr>`;
-                        tbodyTuntutan.innerHTML += htmlPengaduRows;
+                    if (kes.dataBorang.tuntutanTambahan[key] && kes.dataBorang.tuntutanTambahan[key].length > 0) {
+                        senaraiTuntutanSemasa = senaraiTuntutanSemasa.concat(kes.dataBorang.tuntutanTambahan[key]);
                     }
                 }
             }
-        } else {
-            let senaraiTuntutanSemasa = kes.dataBorang.tuntutanBiasa || [];
-            let indexBil = 1;
-            senaraiTuntutanSemasa.forEach((item) => {
-                tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td></tr>`;
-            });
         }
-    } else {
-        let senaraiTuntutanSemasa = [ {jenis: "Baki Gaji", keterangan: "(MEI 2026)"}, {jenis: "Baki Gaji", keterangan: "(JUN 2026)"} ];
+        if (senaraiTuntutanSemasa.length === 0 && kes.dataBorang.tuntutanBiasa) {
+            senaraiTuntutanSemasa = kes.dataBorang.tuntutanBiasa;
+        }
+    }
+
+    if (senaraiTuntutanSemasa.length > 0) {
         let indexBil = 1;
         senaraiTuntutanSemasa.forEach((item) => {
-            tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan}</td></tr>`;
+            tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan || '-'}</td></tr>`;
         });
+    } else {
+        tbodyTuntutan.innerHTML = `<tr><td colspan="3" class="empty-row" style="padding: 15px; text-align: center;">Tiada maklumat tuntutan direkodkan.</td></tr>`;
     }
     const listKad = ['sebutan', 'sebutan_tangguh', 'sebutan_semula', 'bicara', 'bicara_tangguh', 'bicara_sambung', 'keputusan'];
     listKad.forEach(idPrefix => {
