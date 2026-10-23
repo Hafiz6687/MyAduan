@@ -1177,14 +1177,8 @@ body {
             
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Kategori Kehadiran</label>
-                <select id="pw_kategori" onchange="kawalKategoriPerwakilan()" style="width: 100%; box-sizing: border-box;">
-                    <option value="">-Sila Pilih-</option>
-                    <option value="Peguam">Peguam</option>
-                    <option value="Saksi">Saksi</option>
-                    <option value="Wakil Kesatuan">Wakil Kesatuan Sekerja</option>
-                    <option value="Wakil Pengadu">Wakil Pengadu</option>
-                    <option value="Wakil Defendan">Wakil Defendan</option>
-                </select>
+                <input type="hidden" id="pw_kategori" value="Wakil Pengadu">
+                <input type="text" value="Wakil Pengadu" readonly style="width: 100%; box-sizing: border-box; background-color: #e2e8f0; font-weight: 600; color: var(--primary-blue); cursor: not-allowed;">
             </div>
 
             <!-- BUNGKUSAN UTAMA YANG DIHILANGKAN SECARA LALAI -->
@@ -11812,66 +11806,15 @@ let pihakPerwakilanSemasa = 'pengadu'; // Pembolehubah global penentu pihak
 
 // 1. Paparkan medan berdasarkan pilihan kategori
 function kawalKategoriPerwakilan() {
-    const kat = document.getElementById('pw_kategori').value;
-    const ruanganUtama = document.getElementById('ruangan_pw_utama');
-    const ruanganFirma = document.getElementById('ruangan_pw_firma');
-    const ruanganJenisPend = document.getElementById('ruangan_pw_jenis_pend');
-    const ruanganJawatan = document.getElementById('ruangan_pw_jawatan');
-    
-    const labelNama = document.getElementById('pw_nama').previousElementSibling;
-    const labelFirma = document.getElementById('pw_firma').previousElementSibling;
-    const labelAlamat = document.getElementById('pw_alamat1').closest('.form-group').querySelector('label');
-    const labelKp = document.getElementById('pw_kp').previousElementSibling;
-    
-    if (kat === '') {
-        ruanganUtama.style.display = 'none';
-        return; 
-    } else {
-        ruanganUtama.style.display = 'block';
-    }
+    const rUtama = document.getElementById('ruangan_pw_utama');
+    const rJenisPend = document.getElementById('ruangan_pw_jenis_pend');
+    const rJawatan = document.getElementById('ruangan_pw_jawatan');
+    const rFirma = document.getElementById('ruangan_pw_firma');
 
-    // Reset tetapan paparan & teks lalai
-    ruanganFirma.style.display = 'none';
-    ruanganJenisPend.style.display = 'none';
-    ruanganJawatan.style.display = 'none';
-    labelKp.innerText = 'No. Kad Pengenalan';
-    document.getElementById('pw_kp').placeholder = 'Contoh: 880101-01-1234';
-
-    if (kat === 'Peguam') {
-        labelNama.innerText = 'Nama Peguam';
-        labelFirma.innerText = 'Nama Firma Guaman';
-        labelAlamat.innerText = 'Alamat Firma';
-        ruanganFirma.style.display = 'block';
-    } else if (kat === 'Wakil Kesatuan') {
-        labelNama.innerText = 'Nama Wakil Kesatuan';
-        labelFirma.innerText = 'Nama Kesatuan';
-        labelAlamat.innerText = 'Alamat Kesatuan';
-        ruanganFirma.style.display = 'block';
-    } else if (kat === 'Saksi') {
-        labelNama.innerText = 'Nama Saksi';
-    } else if (kat === 'Wakil Pengadu' || kat === 'Wakil Defendan') {
-        labelNama.innerText = 'Nama Wakil';
-        ruanganJenisPend.style.display = 'block';
-        ruanganJawatan.style.display = 'block';
-        kawalJenisPendPW(); // Tukar label MyKad/Pasport
-    }
-
-    // Pembersihan Kotak Jika Tidak Kelihatan
-    if (kat !== 'Peguam' && kat !== 'Wakil Kesatuan') {
-        document.getElementById('pw_firma').value = '';
-        document.getElementById('pw_alamat1').value = '';
-        document.getElementById('pw_alamat2').value = '';
-        document.getElementById('pw_alamat3').value = '';
-        document.getElementById('pw_poskod').value = '';
-        document.getElementById('pw_bandar').value = '';
-        document.getElementById('pw_negeri').value = '';
-        document.getElementById('pw_bandar').setAttribute('readonly', true);
-        document.getElementById('pw_negeri').setAttribute('readonly', true);
-    }
-    if (kat !== 'Wakil Pengadu' && kat !== 'Wakil Defendan') {
-        document.getElementById('pw_jenis_pend').value = 'MyKad';
-        document.getElementById('pw_jawatan').value = '';
-    }
+    if (rUtama) rUtama.style.display = 'block';
+    if (rJenisPend) rJenisPend.style.display = 'block';
+    if (rJawatan) rJawatan.style.display = 'block';
+    if (rFirma) rFirma.style.display = 'none'; // Sembunyikan ruangan firma guaman/kesatuan
 }
 
 // 1.5 Tukar Label No. KP/Pasport untuk Wakil
@@ -11921,43 +11864,23 @@ function formatMyKadWakil(inputElement) {
 
 // 2. Buka modal dan set tajuk mengikut pihak
 function bukaModalPerwakilan(pihak) {
-    // =========================================================================
-    // KOD BARU: KAWALAN PAPARAN DROPDOWN KATEGORI WAKIL (PENGADU / DEFENDAN)
-    // =========================================================================
-    const optPengadu = document.querySelector('#pw_kategori option[value="Wakil Pengadu"]');
-    const optDefendan = document.querySelector('#pw_kategori option[value="Wakil Defendan"]');
+    document.getElementById('pw_index').value = '-1';
+    document.getElementById('pw_kategori').value = 'Wakil Pengadu';
     
-    if (optPengadu && optDefendan) {
-        if (pihak === 'pengadu') {
-            optPengadu.style.display = 'block';
-            optDefendan.style.display = 'none';
-        } else if (pihak === 'defendan') {
-            optPengadu.style.display = 'none';
-            optDefendan.style.display = 'block';
-        }
-    }
-    pihakPerwakilanSemasa = pihak;
-    document.getElementById('pw_index').value = "-1"; 
-    const modalTitle = pihak === 'pengadu' ? 'Tambah Maklumat Wakil / Saksi (Pengadu)' : 'Tambah Maklumat Wakil / Saksi (Defendan)';
-    document.querySelector('#modalPerwakilan .modal-title').innerText = modalTitle;
-    
-    document.getElementById('pw_kategori').value = '';
+    // Bersihkan input lain
     document.getElementById('pw_nama').value = '';
-    document.getElementById('pw_jenis_pend').value = 'MyKad';
-    document.getElementById('pw_kp').value = '';
-    document.getElementById('pw_jawatan').value = '';
-    document.getElementById('pw_firma').value = '';
-    document.getElementById('pw_alamat1').value = '';
-    document.getElementById('pw_alamat2').value = '';
-    document.getElementById('pw_alamat3').value = '';
-    document.getElementById('pw_poskod').value = '';
-    document.getElementById('pw_bandar').value = '';
-    document.getElementById('pw_negeri').value = '';
-    document.getElementById('pw_bandar').setAttribute('readonly', true);
-    document.getElementById('pw_negeri').setAttribute('readonly', true);
-    document.getElementById('pw_tel').value = '';
-    document.getElementById('pw_emel').value = '';
-    kawalKategoriPerwakilan();
+    if(document.getElementById('pw_kp')) document.getElementById('pw_kp').value = '';
+    if(document.getElementById('pw_jawatan')) document.getElementById('pw_jawatan').value = '';
+    if(document.getElementById('pw_tel')) document.getElementById('pw_tel').value = '';
+    if(document.getElementById('pw_emel')) document.getElementById('pw_emel').value = '';
+    
+    // Paparkan ruangan utama perwakilan
+    const rUtama = document.getElementById('ruangan_pw_utama');
+    if (rUtama) rUtama.style.display = 'block';
+
+    // Jalankan kawalan paparan kategori jika wujud
+    if (typeof kawalKategoriPerwakilan === 'function') kawalKategoriPerwakilan();
+
     document.getElementById('modalPerwakilan').style.display = 'flex';
 }
 
