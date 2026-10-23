@@ -2066,30 +2066,6 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-<!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan (Defendan) -->
-            <div class="card full-width" id="kad_kehadiran_perwakilan_defendan">
-                <div class="card-header">
-                    Maklumat Pihak DiTemuduga
-                    <button class="btn-add btn-terapung" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em;" onclick="bukaModalPerwakilan('defendan')">+ Maklumat Pihak DiTemuduga</button>
-                </div>
-                <div class="card-body">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
-                        <thead style="background-color: var(--card-header-bg);">
-                            <tr>
-                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Kategori</th>
-                                <th style="width: 25%; padding: 12px; border-bottom: 1px solid var(--border-color);">Nama & No. KP</th>
-                                <th style="width: 30%; padding: 12px; border-bottom: 1px solid var(--border-color);">Firma Guaman & Alamat</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">No. Telefon / E-mel</th>
-                                <th style="width: 10%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mk_body_perwakilan_defendan">
-                            <tr><td colspan="6" class="empty-row" style="padding: 15px;">Tiada maklumat kehadiran / perwakilan direkodkan.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
             <!-- KAD PEMANTAUAN BAYARAN (MOU / BORANG C) -->
             <div class="card full-width" id="kad_pemantauan_mou" style="display: none;">
                 <div class="card-header">
@@ -4169,9 +4145,7 @@ function simpanDisahkanOleh(el) {
 
     const pemerhatiWakil = new MutationObserver(kawalCheckboxPenerimaNotis);
     const tbodyPengadu = document.getElementById('mk_body_perwakilan');
-    const tbodyDefendan = document.getElementById('mk_body_perwakilan_defendan');
     if (tbodyPengadu) pemerhatiWakil.observe(tbodyPengadu, { childList: true, subtree: true });
-    if (tbodyDefendan) pemerhatiWakil.observe(tbodyDefendan, { childList: true, subtree: true });
 
     let adaSebutanSaman = false;
     
@@ -11974,10 +11948,9 @@ function editPerwakilan(index, pihak) {
     document.getElementById('modalPerwakilan').style.display = 'flex';
 }
 
-// 5. Render kedua-dua jadual
+// 5. Render jadual perwakilan
 function renderSemuaJadualPerwakilan() {
     renderJadualPerwakilanPihak('pengadu', 'mk_body_perwakilan', 'kad_kehadiran_perwakilan');
-    renderJadualPerwakilanPihak('defendan', 'mk_body_perwakilan_defendan', 'kad_kehadiran_perwakilan_defendan');
 }
 
 // 6. Fungsi Universal Render Jadual (Dikemaskini untuk Jawatan)
