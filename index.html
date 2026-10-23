@@ -2059,6 +2059,43 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
+<!-- MODAL POP-UP EDIT TUNTUTAN & SIASATAN -->
+<div class="modal-overlay" id="modalEditTuntutanKes">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Kemaskini Aduan & Hasil Siasatan</div>
+        <input type="hidden" id="edit_index_tuntutan" value="-1">
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
+            <input type="text" id="edit_jenis_tuntutan" style="width: 100%; box-sizing: border-box;" readonly style="background-color: #e2e8f0;">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
+            <textarea id="edit_keterangan_tuntutan" rows="3" class="auto-expand" style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna format senarai bertingkat cth: 1., 1.1, a)</span></label>
+            <textarea id="edit_siasatan_tuntutan" rows="5" class="auto-expand" placeholder="Taipkan hasil siasatan di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">4. Status Aduan <span>*</span></label>
+            <select id="edit_status_tuntutan" style="width: 100%; box-sizing: border-box;">
+                <option value="">-Sila Pilih Status-</option>
+                <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
+                <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
+                <option value="Lain-lain">Lain-lain</option>
+            </select>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalEditTuntutanKes').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="simpanEditTuntutanKes()">✔ Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
 <!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan (Defendan) -->
             <div class="card full-width" id="kad_kehadiran_perwakilan_defendan">
                 <div class="card-header">
@@ -3979,13 +4016,14 @@ function bukaMaklumatKes(index) {
     if (senaraiTuntutanSemasa.length > 0) {
         let indexBil = 1;
         senaraiTuntutanSemasa.forEach((item, index) => {
+            let statusBadge = item.status ? `<br><span style="font-size:0.75em; color:var(--primary-blue); font-weight:bold;">[Status: ${item.status}]</span>` : '';
             tbodyTuntutan.innerHTML += `
                 <tr>
                     <td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}${statusBadge}</td>
                     <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan || '-'}</td>
                     <td style="text-align: center; padding: 10px; border-bottom: 1px solid var(--border-color);">
-                        <button class="btn-edit-tbl" onclick="alert('Fungsi edit akan diupdate kemudian');" title="Edit Tuntutan">✏️ Edit</button>
+                        <button class="btn-edit-tbl" onclick="bukaModalEditTuntutanKes(${index})" title="Edit Tuntutan">✏️ Edit</button>
                     </td>
                 </tr>`;
         });
@@ -4105,7 +4143,40 @@ function bukaMaklumatKes(index) {
     document.getElementById('butangCetakHeader').style.display = 'none'; 
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
+function bukaModalEditTuntutanKes(index) {
+    const kes = memoriSenaraiKes[indexKesSemasa];
+    if (!kes || !kes.dataBorang) return;
 
+    let targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua || [];
+    let item = targetList[index];
+    if (!item) return;
+
+    document.getElementById('edit_index_tuntutan').value = index;
+    document.getElementById('edit_jenis_tuntutan').value = item.jenis || '';
+    document.getElementById('edit_keterangan_tuntutan').value = item.keterangan || '';
+    document.getElementById('edit_siasatan_tuntutan').value = item.siasatan || '';
+    document.getElementById('edit_status_tuntutan').value = item.status || '';
+
+    document.getElementById('modalEditTuntutanKes').style.display = 'flex';
+}
+
+function simpanEditTuntutanKes() {
+    let index = parseInt(document.getElementById('edit_index_tuntutan').value, 10);
+    const kes = memoriSenaraiKes[indexKesSemasa];
+    if (!kes || !kes.dataBorang) return;
+
+    let targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua;
+    if (targetList && targetList[index]) {
+        targetList[index].keterangan = document.getElementById('edit_keterangan_tuntutan').value.trim();
+        targetList[index].siasatan = document.getElementById('edit_siasatan_tuntutan').value.trim();
+        targetList[index].status = document.getElementById('edit_status_tuntutan').value;
+
+        simpanSenaraiKeLokal();
+        document.getElementById('modalEditTuntutanKes').style.display = 'none';
+        bukaMaklumatKes(indexKesSemasa); // Refresh paparan
+        alert("Maklumat tuntutan dan siasatan berjaya dikemaskini.");
+    }
+}
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
         memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
