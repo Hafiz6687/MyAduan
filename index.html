@@ -8249,9 +8249,17 @@ function hapusKesDidaftar(index) {
         renderSenaraiTugas(); 
     } 
 }
+
 function bukaKesDidaftar(index) {
+    const kes = memoriSenaraiKes[index];
+
+    if (!kes) {
+        alert("Rekod kes tidak ditemui. Sila kembali ke senarai dan buka semula kes.");
+        return;
+    }
+
     isSelesaiDaftar = false;
-    isEditMode = true; 
+    isEditMode = true;
     indexKesSemasa = index;
     
     // --- MULA: SABUN PENCUCI (RESET BORANG) ---
@@ -8275,8 +8283,12 @@ function bukaKesDidaftar(index) {
 
     const kes = memoriSenaraiKes[index];
     
-    if (kes.dataBorang) {
-        const formData = kes.dataBorang.inputs;
+    if (
+    kes.dataBorang &&
+    kes.dataBorang.inputs &&
+    typeof kes.dataBorang.inputs === 'object'
+) {
+    const formData = kes.dataBorang.inputs;
         
         if(document.getElementById('aduanIndividu') && formData['aduan'] === 'Individu') document.getElementById('aduanIndividu').checked = true;
         if(document.getElementById('aduanBerkumpulan') && formData['aduan'] === 'Berkumpulan') document.getElementById('aduanBerkumpulan').checked = true;
