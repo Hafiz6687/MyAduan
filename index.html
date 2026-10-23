@@ -1839,7 +1839,7 @@ function populasikanLampiran2() {
 
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
             <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
-            <input type="text" id="edit_jenis_tuntutan" style="width: 100%; box-sizing: border-box;" readonly style="background-color: #e2e8f0;">
+            <input type="text" id="edit_jenis_tuntutan" style="width: 100%; box-sizing: border-box; background-color: #e2e8f0;" readonly>
         </div>
 
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
@@ -1848,8 +1848,8 @@ function populasikanLampiran2() {
         </div>
 
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna format senarai bertingkat cth: 1., 1.1, a)</span></label>
-            <textarea id="edit_siasatan_tuntutan" rows="5" class="auto-expand" placeholder="Taipkan hasil siasatan di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <span>*</span> <br><span style="font-size: 0.8em; color: var(--primary-blue); font-weight: normal;">(Tips Multilevel List: Anda boleh taip terus format seperti 1. [Tajuk Utama], 1.1 [Butiran], a) [Huraian] dengan menekan butang Enter untuk baris baru)</span></label>
+            <textarea id="edit_siasatan_tuntutan" rows="6" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen gaji:&#10;   1.1 Slip gaji bulan Januari hingga Mac 2025 diserahkan.&#10;   1.2 Didapati potongan tidak mengikut Akta Kerja 1955.&#10;2. Keterangan pihak majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit; line-height: 1.5;" oninput="autoResize(this)"></textarea>
         </div>
 
         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
@@ -4032,13 +4032,20 @@ function bukaMaklumatKes(index) {
     if (senaraiTuntutanSemasa.length > 0) {
         let indexBil = 1;
         senaraiTuntutanSemasa.forEach((item, index) => {
-            let statusBadge = item.status ? `<br><span style="font-size:0.75em; color:var(--primary-blue); font-weight:bold;">[Status: ${item.status}]</span>` : '';
+            let statusBadge = item.status ? `<br><span style="font-size:0.8em; color:${item.status === 'Pelanggaran dikesan' ? 'var(--danger)' : 'var(--primary-blue)'}; font-weight:bold; display:inline-block; margin-top:4px;">[Status: ${item.status}]</span>` : '';
+            
+            // Susunan kemas untuk hasil siasatan berserta Multilevel List
+            let siasatanHtml = item.siasatan ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color); font-size: 0.9em; color: #334155;"><strong style="color: var(--text-main);">Hasil Siasatan:</strong><div style="white-space: pre-wrap; margin-top: 4px; line-height: 1.5; font-family: inherit;">${item.siasatan}</div></div>` : '';
+
             tbodyTuntutan.innerHTML += `
                 <tr>
-                    <td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}${statusBadge}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan || '-'}</td>
-                    <td style="text-align: center; padding: 10px; border-bottom: 1px solid var(--border-color);">
+                    <td style="text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">${indexBil++}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; vertical-align: top;">${item.jenis || '-'}${statusBadge}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">
+                        <div>${item.keterangan || '-'}</div>
+                        ${siasatanHtml}
+                    </td>
+                    <td style="text-align: center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">
                         <button class="btn-edit-tbl" onclick="bukaModalEditTuntutanKes(${index})" title="Edit Tuntutan">✏️ Edit</button>
                     </td>
                 </tr>`;
