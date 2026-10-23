@@ -1997,8 +1997,9 @@ Portal rasmi : jtksm.mohr.gov.my
                             <thead style="background-color: var(--card-header-bg);">
                                 <tr>
                                     <th style="width: 5%; text-align:center; padding: 12px;">Bil.</th>
-                                    <th style="width: 35%; padding: 12px;">Jenis Aduan</th>
-                                    <th style="width: 60%; padding: 12px;">Keterangan Aduan</th>
+                                    <th style="width: 25%; padding: 12px;">Jenis Aduan</th>
+                                    <th style="width: 55%; padding: 12px;">Keterangan Aduan</th>
+                                    <th style="width: 15%; text-align: center; padding: 12px;">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody id="mk_body_tuntutan">
@@ -3959,7 +3960,6 @@ function bukaMaklumatKes(index) {
     let senaraiTuntutanSemasa = [];
     if (kes.dataBorang) {
         if (isBerkumpulan) {
-            // Gabungkan tuntutan ketua dan tambahan ke dalam satu paparan senarai utama jika wujud
             if (kes.dataBorang.tuntutanKetua && kes.dataBorang.tuntutanKetua.length > 0) {
                 senaraiTuntutanSemasa = senaraiTuntutanSemasa.concat(kes.dataBorang.tuntutanKetua);
             }
@@ -3978,11 +3978,19 @@ function bukaMaklumatKes(index) {
 
     if (senaraiTuntutanSemasa.length > 0) {
         let indexBil = 1;
-        senaraiTuntutanSemasa.forEach((item) => {
-            tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan || '-'}</td></tr>`;
+        senaraiTuntutanSemasa.forEach((item, index) => {
+            tbodyTuntutan.innerHTML += `
+                <tr>
+                    <td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan || '-'}</td>
+                    <td style="text-align: center; padding: 10px; border-bottom: 1px solid var(--border-color);">
+                        <button class="btn-edit-tbl" onclick="alert('Fungsi edit akan diupdate kemudian');" title="Edit Tuntutan">✏️ Edit</button>
+                    </td>
+                </tr>`;
         });
     } else {
-        tbodyTuntutan.innerHTML = `<tr><td colspan="3" class="empty-row" style="padding: 15px; text-align: center;">Tiada maklumat tuntutan direkodkan.</td></tr>`;
+        tbodyTuntutan.innerHTML = `<tr><td colspan="4" class="empty-row" style="padding: 15px; text-align: center;">Tiada maklumat tuntutan direkodkan.</td></tr>`;
     }
     const listKad = ['sebutan', 'sebutan_tangguh', 'sebutan_semula', 'bicara', 'bicara_tangguh', 'bicara_sambung', 'keputusan'];
     listKad.forEach(idPrefix => {
