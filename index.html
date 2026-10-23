@@ -1830,7 +1830,594 @@ function populasikanLampiran2() {
     </div>
 </div>
         
-    </div> <!-- END OF MODAL PREVIEW -->
+    </div>
+
+<div class="modal-overlay" id="modalEditTuntutanKes">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Kemaskini Aduan & Hasil Siasatan</div>
+        <input type="hidden" id="edit_index_tuntutan" value="-1">
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
+            <input type="text" id="edit_jenis_tuntutan" style="width: 100%; box-sizing: border-box;" readonly style="background-color: #e2e8f0;">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
+            <textarea id="edit_keterangan_tuntutan" rows="3" class="auto-expand" style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna format senarai bertingkat cth: 1., 1.1, a)</span></label>
+            <textarea id="edit_siasatan_tuntutan" rows="5" class="auto-expand" placeholder="Taipkan hasil siasatan di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">4. Status Aduan <span>*</span></label>
+            <select id="edit_status_tuntutan" style="width: 100%; box-sizing: border-box;">
+                <option value="">-Sila Pilih Status-</option>
+                <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
+                <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
+                <option value="Lain-lain">Lain-lain</option>
+            </select>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalEditTuntutanKes').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="simpanEditTuntutanKes()">✔ Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalSebutanTangguh">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Jana Notis Sebutan Kes (Tangguh)</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
+            <input type="date" id="stg_tarikh_notis" style="width: 100%; box-sizing: border-box;">
+        </div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
+            <input type="text" id="stg_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
+        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Sebutan</h5>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Sebutan <span>*</span></label>
+                <input type="date" id="stg_tarikh_sebutan" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Sebutan <span>*</span></label>
+                <input type="time" id="stg_masa_sebutan" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <!-- TOGGLE ALAMAT BERBEZA -->
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <input type="checkbox" id="tempatSebutanTangguhBerbeza" onchange="toggleTempatSebutanTangguh()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                <label for="tempatSebutanTangguhBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat sebutan berbeza dengan pejabat semasa?</label>
+            </div>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Sebutan (Alamat Penuh) berbeza.</p>
+        </div>
+
+        <!-- WRAPPER ALAMAT SEBUTAN TANGGUH (Disembunyikan secara lalai) -->
+        <div id="ruanganTempatSebutanTangguh" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Sebutan (Alamat Penuh) <span>*</span></label>
+                <input type="text" id="stg_tempat_nama" placeholder="Nama Tempat (Cth: PEJABAT TENAGA KERJA KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="stg_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="stg_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="stg_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="stg_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('stg_poskod', 'stg_negeri', 'stg_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
+                    <input type="text" id="stg_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <input type="text" id="stg_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalSebutanTangguh').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="janaSebutanTangguhDariModal()">✔ Teruskan</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalBicaraTangguh">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Jana Notis Perbicaraan Kes (Tangguh)</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
+            <input type="date" id="btg_tarikh_notis" style="width: 100%; box-sizing: border-box;">
+        </div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
+            <input type="text" id="btg_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+        </div>
+
+        <!-- CHECKBOX PENERIMA NOTIS -->
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
+        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Perbicaraan</h5>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Bicara <span>*</span></label>
+                <input type="date" id="btg_tarikh_bicara" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Bicara <span>*</span></label>
+                <input type="time" id="btg_masa_bicara" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <!-- TOGGLE ALAMAT BERBEZA -->
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <input type="checkbox" id="tempatBicaraTangguhBerbeza" onchange="toggleTempatBicaraTangguh()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                <label for="tempatBicaraTangguhBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat bicara berbeza dengan pejabat semasa?</label>
+            </div>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Bicara (Alamat Penuh) berbeza.</p>
+        </div>
+
+        <!-- WRAPPER ALAMAT BICARA TANGGUH (Disembunyikan secara lalai) -->
+        <div id="ruanganTempatBicaraTangguh" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Bicara (Alamat Penuh) <span>*</span></label>
+                <input type="text" id="btg_tempat_nama" placeholder="Nama Tempat (Cth: MAHKAMAH BURUH KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="btg_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="btg_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="btg_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="btg_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('btg_poskod', 'btg_negeri', 'btg_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
+                    <input type="text" id="btg_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <input type="text" id="btg_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalBicaraTangguh').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="janaBicaraTangguhDariModal()">✔ Teruskan</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalBicaraSambung">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Jana Notis Perbicaraan Kes (Sambung)</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
+            <input type="date" id="bsc_tarikh_notis" style="width: 100%; box-sizing: border-box;">
+        </div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
+            <input type="text" id="bsc_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+        </div>
+
+        <!-- CHECKBOX PENERIMA NOTIS -->
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
+        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Perbicaraan</h5>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Bicara <span>*</span></label>
+                <input type="date" id="bsc_tarikh_bicara" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Bicara <span>*</span></label>
+                <input type="time" id="bsc_masa_bicara" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <!-- TOGGLE ALAMAT BERBEZA -->
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <input type="checkbox" id="tempatBicaraSambungBerbeza" onchange="toggleTempatBicaraSambung()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                <label for="tempatBicaraSambungBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat bicara berbeza dengan pejabat semasa?</label>
+            </div>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Bicara (Alamat Penuh) berbeza.</p>
+        </div>
+
+        <!-- WRAPPER ALAMAT BICARA SAMBUNG (Disembunyikan secara lalai) -->
+        <div id="ruanganTempatBicaraSambung" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Bicara (Alamat Penuh) <span>*</span></label>
+                <input type="text" id="bsc_tempat_nama" placeholder="Nama Tempat (Cth: MAHKAMAH BURUH KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="bsc_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="bsc_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="bsc_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="bsc_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('bsc_poskod', 'bsc_negeri', 'bsc_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
+                    <input type="text" id="bsc_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <input type="text" id="bsc_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalBicaraSambung').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="janaBicaraSambungDariModal()">✔ Teruskan</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalKeputusan">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Jana Notis Keputusan Kes</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
+            <input type="date" id="kpt_tarikh_notis" style="width: 100%; box-sizing: border-box;">
+        </div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
+            <input type="text" id="kpt_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+        </div>
+
+        <!-- CHECKBOX PENERIMA NOTIS -->
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
+        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Penetapan Keputusan</h5>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Keputusan <span>*</span></label>
+                <input type="date" id="kpt_tarikh_keputusan" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Keputusan <span>*</span></label>
+                <input type="time" id="kpt_masa_keputusan" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <!-- TOGGLE ALAMAT BERBEZA -->
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <input type="checkbox" id="tempatKeputusanBerbeza" onchange="toggleTempatKeputusan()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                <label for="tempatKeputusanBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat keputusan berbeza dengan pejabat semasa?</label>
+            </div>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Keputusan (Alamat Penuh) berbeza.</p>
+        </div>
+
+        <!-- WRAPPER ALAMAT KEPUTUSAN (Disembunyikan secara lalai) -->
+        <div id="ruanganTempatKeputusan" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Keputusan (Alamat Penuh) <span>*</span></label>
+                <input type="text" id="kpt_tempat_nama" placeholder="Nama Tempat (Cth: MAHKAMAH BURUH KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="kpt_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="kpt_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="kpt_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="kpt_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('kpt_poskod', 'kpt_negeri', 'kpt_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
+                    <input type="text" id="kpt_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <input type="text" id="kpt_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalKeputusan').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="janaKeputusanDariModal()">✔ Teruskan</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalSamanA">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Jana Saman Hadir (Borang A) & Notis</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Tarikh Notis & Saman Borang A <span>*</span></label>
+            <input type="date" id="sma_tarikh_notis" style="width: 100%; box-sizing: border-box;">
+        </div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
+            <input type="text" id="sma_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
+        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Saman Hadir</h5>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Hadir <span>*</span></label>
+                <input type="date" id="sma_tarikh_hadir" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Hadir <span>*</span></label>
+                <input type="time" id="sma_masa_hadir" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <!-- TOGGLE ALAMAT BERBEZA -->
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <input type="checkbox" id="tempatSamanABerbeza" onchange="toggleTempatSamanA()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                <label for="tempatSamanABerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat saman hadir berbeza dengan pejabat semasa?</label>
+            </div>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Saman Hadir (Alamat Penuh) berbeza.</p>
+        </div>
+
+        <!-- WRAPPER ALAMAT SAMAN A (Disembunyikan secara lalai) -->
+        <div id="ruanganTempatSamanA" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Saman Hadir (Alamat Penuh) <span>*</span></label>
+                <input type="text" id="sma_tempat_nama" placeholder="Nama Tempat (Cth: PEJABAT TENAGA KERJA KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="sma_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="sma_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="sma_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="sma_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('sma_poskod', 'sma_negeri', 'sma_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
+                    <input type="text" id="sma_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <input type="text" id="sma_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalSamanA').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="janaSamanADariModal()">✔ Teruskan</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalSamanMemo">
+    <div class="modal-box" style="max-width: 900px; padding: 25px 30px;">
+        <div class="modal-title">Jana Saman (Memo Luar Kawasan)</div>
+
+        <!-- CHECKBOX PENERIMA NOTIS TAMBAHAN -->
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 20px;">
+            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
+
+        <!-- BUNGKUSAN SCROLL UNTUK KANDUNGAN PANJANG -->
+        <div style="max-height: 55vh; overflow-y: auto; padding-right: 15px; margin-bottom: 10px;">
+            <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em;">1. Maklumat Pejabat Penerima Memo</h5>
+            <div class="grid-memo">
+                <!-- ROW 1 -->
+                <div class="grid-memo-span3">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Pejabat Tenaga Kerja Luar Kawasan</label>
+                    <input type="text" id="mk_pejabat_memo" placeholder="Cth: PEJABAT TENAGA KERJA SEGAMAT" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+                <div class="grid-memo-span2">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Tarikh Saman Dikembalikan (Ke PTK Kluang)</label>
+                    <input type="date" id="mk_tarikh_saman_memo" onchange="semakButangSamanMemo()" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+
+                <!-- ROW 2 -->
+                <div class="grid-memo-span3">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 1</label>
+                    <input type="text" id="mk_alamat1_memo" placeholder="Baris 1" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+                <div class="grid-memo-span2">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Poskod</label>
+                    <input type="text" id="mk_poskod_memo" placeholder="50000" maxlength="5" onkeyup="cariPoskodAutomatik('mk_poskod_memo', 'mk_negeri_memo', 'mk_bandar_memo'); semakButangSamanMemo();" onblur="semakPoskod(this)" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+
+                <!-- ROW 3 -->
+                <div class="grid-memo-span3">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 2</label>
+                    <input type="text" id="mk_alamat2_memo" placeholder="Baris 2" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+                <div class="grid-memo-span2">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Bandar</label>
+                    <input type="text" id="mk_bandar_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
+                </div>
+
+                <!-- ROW 4 -->
+                <div class="grid-memo-span3">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 3</label>
+                    <input type="text" id="mk_alamat3_memo" placeholder="Baris 3" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+                <div class="grid-memo-span2">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Negeri</label>
+                    <input type="text" id="mk_negeri_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 25px 0 15px 0;">
+
+            <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em;">2. Maklumat Sebutan (Borang A & Notis Pengadu)</h5>
+            
+            <div class="grid-memo">
+                <!-- ROW 1 (Tarikh & Masa) -->
+                <div class="grid-memo-span3">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Tarikh Hadir / Sebutan</label>
+                    <input type="date" id="mk_tarikh_hadir_memo" onchange="semakButangSamanMemo()" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+                <div class="grid-memo-span2">
+                    <label class="info-label" style="display: block; margin-bottom: 4px;">Masa Hadir</label>
+                    <input type="time" id="mk_masa_hadir_memo" onchange="semakButangSamanMemo()" style="margin:0; height: 42px; box-sizing: border-box;">
+                </div>
+                
+                <!-- ROW 2 (Checkbox Toggle Alamat Berbeza) -->
+                <div style="grid-column: 1 / -1; margin-top: 10px; margin-bottom: -5px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <input type="checkbox" id="tempatHadirBerbeza_memo" onchange="toggleTempatHadirMemo()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                        <label for="tempatHadirBerbeza_memo" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat hadir berbeza dengan pejabat semasa?</label>
+                    </div>
+                    <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika tempat perbicaraan/sebutan bukan di pejabat semasa)</p>
+                </div>
+            </div>
+
+            <!-- WRAPPER ALAMAT TEMPAT HADIR BERBEZA -->
+            <div id="ruanganTempatHadir_memo" style="display: none; margin-top: 15px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color);">
+                <div class="grid-memo">
+                    <!-- Nama Pejabat / Lokasi -->
+                    <div style="grid-column: 1 / -1;">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Nama Pejabat / Lokasi</label>
+                        <input type="text" id="mk_tempat_hadir_nama" placeholder="Cth: MAHKAMAH MAJISTRET KLUANG" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    
+                    <!-- ROW 3 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 1</label>
+                        <input type="text" id="mk_tempat_hadir_a1" placeholder="Baris 1" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Bandar</label>
+                        <input type="text" id="mk_tempat_hadir_bdr" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
+                    </div>
+
+                    <!-- ROW 4 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 2</label>
+                        <input type="text" id="mk_tempat_hadir_a2" placeholder="Baris 2" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Negeri</label>
+                        <input type="text" id="mk_tempat_hadir_ngr" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
+                    </div>
+
+                    <!-- ROW 5 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 3</label>
+                        <input type="text" id="mk_tempat_hadir_a3" placeholder="Baris 3" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Poskod</label>
+                        <input type="text" id="mk_tempat_hadir_pos" placeholder="50000" maxlength="5" onkeyup="cariPoskodAutomatik('mk_tempat_hadir_pos', 'mk_tempat_hadir_ngr', 'mk_tempat_hadir_bdr'); semakButangSamanMemo();" onblur="semakPoskod(this)" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 25px 0 15px 0;">
+
+            <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em;">3. Maklumat Serahan (Defendan) Terkini</h5>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px;">*Sistem telah mengekstrak alamat berdaftar. Sila kemaskini jika alamat serahan terkini berbeza.</p>
+
+            <!-- CHECKBOX TOGGLE ALAMAT SERAHAN BERBEZA -->
+            <div style="margin-bottom: 15px;">
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <input type="checkbox" id="alamatSerahanBerbeza_memo" onchange="toggleAlamatSerahanMemo()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                    <label for="alamatSerahanBerbeza_memo" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Alamat serahan (Defendan) berbeza dengan alamat berdaftar?</label>
+                </div>
+                <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika ingin masukkan alamat serahan yang baharu)</p>
+            </div>
+
+            <!-- WRAPPER ALAMAT SERAHAN (Disembunyikan secara lalai) -->
+            <div id="ruanganAlamatSerahan_memo" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color);">
+                <div class="grid-memo">
+                    <!-- ROW 1 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Nama Defendan</label>
+                        <input type="text" id="mk_nama_defendan_memo" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Poskod</label>
+                        <input type="text" id="mk_poskod_def_memo" placeholder="50000" maxlength="5" onkeyup="cariPoskodAutomatik('mk_poskod_def_memo', 'mk_negeri_def_memo', 'mk_bandar_def_memo'); semakButangSamanMemo();" onblur="semakPoskod(this)" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+
+                    <!-- ROW 2 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 1</label>
+                        <input type="text" id="mk_alamat1_def_memo" placeholder="Baris 1" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Bandar</label>
+                        <input type="text" id="mk_bandar_def_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
+                    </div>
+
+                    <!-- ROW 3 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 2</label>
+                        <input type="text" id="mk_alamat2_def_memo" placeholder="Baris 2" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Negeri</label>
+                        <input type="text" id="mk_negeri_def_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
+                    </div>
+
+                    <!-- ROW 4 -->
+                    <div class="grid-memo-span3">
+                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 3</label>
+                        <input type="text" id="mk_alamat3_def_memo" placeholder="Baris 3" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
+                    </div>
+                    <div class="grid-memo-span2">
+                        <!-- RUANG KOSONG (Butang diturunkan ke Modal Actions) -->
+                    </div>
+                </div>
+            </div>
+        </div> <!-- TAMAT WRAPPER SCROLL -->
+
+        <div class="modal-actions" style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+            <button class="btn-cancel" onclick="document.getElementById('modalSamanMemo').style.display='none'">Batal</button>
+            <button id="btnTindakanSamanMemo" class="btn-save" style="opacity: 0.5; cursor: not-allowed;" onclick="janaSamanMemoDariModal()" disabled>✔ Jana Dokumen (Memo + Borang A + Notis)</button>
+        </div>
+
+    </div>
+</div>
+
+ <!-- END OF MODAL PREVIEW -->
 
 <!-- SIDEBAR -->
     <aside class="sidebar">
@@ -2060,42 +2647,7 @@ Portal rasmi : jtksm.mohr.gov.my
                 </div>
             </div>
 <!-- MODAL POP-UP EDIT TUNTUTAN & SIASATAN -->
-<div class="modal-overlay" id="modalEditTuntutanKes">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Kemaskini Aduan & Hasil Siasatan</div>
-        <input type="hidden" id="edit_index_tuntutan" value="-1">
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
-            <input type="text" id="edit_jenis_tuntutan" style="width: 100%; box-sizing: border-box;" readonly style="background-color: #e2e8f0;">
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
-            <textarea id="edit_keterangan_tuntutan" rows="3" class="auto-expand" style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna format senarai bertingkat cth: 1., 1.1, a)</span></label>
-            <textarea id="edit_siasatan_tuntutan" rows="5" class="auto-expand" placeholder="Taipkan hasil siasatan di sini..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">4. Status Aduan <span>*</span></label>
-            <select id="edit_status_tuntutan" style="width: 100%; box-sizing: border-box;">
-                <option value="">-Sila Pilih Status-</option>
-                <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
-                <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
-                <option value="Lain-lain">Lain-lain</option>
-            </select>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalEditTuntutanKes').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="simpanEditTuntutanKes()">✔ Simpan Perubahan</button>
-        </div>
-    </div>
-</div>
 <!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan (Defendan) -->
             <div class="card full-width" id="kad_kehadiran_perwakilan_defendan">
                 <div class="card-header">
@@ -2289,75 +2841,7 @@ Portal rasmi : jtksm.mohr.gov.my
 
 <!-- KAD-KAD TAMBAHAN NOTIS (GENERIK) -->
 <!-- MODAL POP-UP KHAS UNTUK SEBUTAN KES (TANGGUH) -->
-<div class="modal-overlay" id="modalSebutanTangguh">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Jana Notis Sebutan Kes (Tangguh)</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
-            <input type="date" id="stg_tarikh_notis" style="width: 100%; box-sizing: border-box;">
-        </div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
-            <input type="text" id="stg_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-        </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="stg_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
-        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Sebutan</h5>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Sebutan <span>*</span></label>
-                <input type="date" id="stg_tarikh_sebutan" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Sebutan <span>*</span></label>
-                <input type="time" id="stg_masa_sebutan" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <!-- TOGGLE ALAMAT BERBEZA -->
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <input type="checkbox" id="tempatSebutanTangguhBerbeza" onchange="toggleTempatSebutanTangguh()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                <label for="tempatSebutanTangguhBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat sebutan berbeza dengan pejabat semasa?</label>
-            </div>
-            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Sebutan (Alamat Penuh) berbeza.</p>
-        </div>
-
-        <!-- WRAPPER ALAMAT SEBUTAN TANGGUH (Disembunyikan secara lalai) -->
-        <div id="ruanganTempatSebutanTangguh" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Sebutan (Alamat Penuh) <span>*</span></label>
-                <input type="text" id="stg_tempat_nama" placeholder="Nama Tempat (Cth: PEJABAT TENAGA KERJA KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="stg_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="stg_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="stg_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="stg_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('stg_poskod', 'stg_negeri', 'stg_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
-                    <input type="text" id="stg_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-                </div>
-                <input type="text" id="stg_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalSebutanTangguh').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="janaSebutanTangguhDariModal()">✔ Teruskan</button>
-        </div>
-    </div>
-</div>
 
 <div class="card full-width" id="kad_bicara" style="display: none;">
     <div class="card-header">Penetapan Tarikh Perbicaraan</div>
@@ -2373,76 +2857,7 @@ Portal rasmi : jtksm.mohr.gov.my
 </div>
 
 <!-- MODAL POP-UP KHAS UNTUK BICARA (TANGGUH) -->
-<div class="modal-overlay" id="modalBicaraTangguh">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Jana Notis Perbicaraan Kes (Tangguh)</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
-            <input type="date" id="btg_tarikh_notis" style="width: 100%; box-sizing: border-box;">
-        </div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
-            <input type="text" id="btg_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-        </div>
 
-        <!-- CHECKBOX PENERIMA NOTIS -->
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="btg_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
-        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Perbicaraan</h5>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Bicara <span>*</span></label>
-                <input type="date" id="btg_tarikh_bicara" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Bicara <span>*</span></label>
-                <input type="time" id="btg_masa_bicara" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <!-- TOGGLE ALAMAT BERBEZA -->
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <input type="checkbox" id="tempatBicaraTangguhBerbeza" onchange="toggleTempatBicaraTangguh()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                <label for="tempatBicaraTangguhBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat bicara berbeza dengan pejabat semasa?</label>
-            </div>
-            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Bicara (Alamat Penuh) berbeza.</p>
-        </div>
-
-        <!-- WRAPPER ALAMAT BICARA TANGGUH (Disembunyikan secara lalai) -->
-        <div id="ruanganTempatBicaraTangguh" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Bicara (Alamat Penuh) <span>*</span></label>
-                <input type="text" id="btg_tempat_nama" placeholder="Nama Tempat (Cth: MAHKAMAH BURUH KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="btg_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="btg_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="btg_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="btg_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('btg_poskod', 'btg_negeri', 'btg_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
-                    <input type="text" id="btg_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-                </div>
-                <input type="text" id="btg_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalBicaraTangguh').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="janaBicaraTangguhDariModal()">✔ Teruskan</button>
-        </div>
-    </div>
-</div>
 
 <!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
 <input type="hidden" id="mk_tarikh_bicara_tangguh">
@@ -2450,76 +2865,7 @@ Portal rasmi : jtksm.mohr.gov.my
 <input type="hidden" id="mk_tempat_bicara_tangguh">
 
 <!-- MODAL POP-UP KHAS UNTUK BICARA (SAMBUNG) -->
-<div class="modal-overlay" id="modalBicaraSambung">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Jana Notis Perbicaraan Kes (Sambung)</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
-            <input type="date" id="bsc_tarikh_notis" style="width: 100%; box-sizing: border-box;">
-        </div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
-            <input type="text" id="bsc_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-        </div>
 
-        <!-- CHECKBOX PENERIMA NOTIS -->
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="bsc_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
-        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Perbicaraan</h5>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Bicara <span>*</span></label>
-                <input type="date" id="bsc_tarikh_bicara" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Bicara <span>*</span></label>
-                <input type="time" id="bsc_masa_bicara" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <!-- TOGGLE ALAMAT BERBEZA -->
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <input type="checkbox" id="tempatBicaraSambungBerbeza" onchange="toggleTempatBicaraSambung()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                <label for="tempatBicaraSambungBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat bicara berbeza dengan pejabat semasa?</label>
-            </div>
-            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Bicara (Alamat Penuh) berbeza.</p>
-        </div>
-
-        <!-- WRAPPER ALAMAT BICARA SAMBUNG (Disembunyikan secara lalai) -->
-        <div id="ruanganTempatBicaraSambung" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Bicara (Alamat Penuh) <span>*</span></label>
-                <input type="text" id="bsc_tempat_nama" placeholder="Nama Tempat (Cth: MAHKAMAH BURUH KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="bsc_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="bsc_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="bsc_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="bsc_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('bsc_poskod', 'bsc_negeri', 'bsc_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
-                    <input type="text" id="bsc_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-                </div>
-                <input type="text" id="bsc_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalBicaraSambung').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="janaBicaraSambungDariModal()">✔ Teruskan</button>
-        </div>
-    </div>
-</div>
 
 <!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
 <input type="hidden" id="mk_tarikh_bicara_sambung">
@@ -2527,151 +2873,14 @@ Portal rasmi : jtksm.mohr.gov.my
 <input type="hidden" id="mk_tempat_bicara_sambung">
 
 <!-- MODAL POP-UP KHAS UNTUK KEPUTUSAN KES -->
-<div class="modal-overlay" id="modalKeputusan">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Jana Notis Keputusan Kes</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Tarikh Notis <span>*</span></label>
-            <input type="date" id="kpt_tarikh_notis" style="width: 100%; box-sizing: border-box;">
-        </div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
-            <input type="text" id="kpt_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-        </div>
 
-        <!-- CHECKBOX PENERIMA NOTIS -->
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="kpt_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
-        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Penetapan Keputusan</h5>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Keputusan <span>*</span></label>
-                <input type="date" id="kpt_tarikh_keputusan" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Keputusan <span>*</span></label>
-                <input type="time" id="kpt_masa_keputusan" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <!-- TOGGLE ALAMAT BERBEZA -->
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <input type="checkbox" id="tempatKeputusanBerbeza" onchange="toggleTempatKeputusan()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                <label for="tempatKeputusanBerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat keputusan berbeza dengan pejabat semasa?</label>
-            </div>
-            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Keputusan (Alamat Penuh) berbeza.</p>
-        </div>
-
-        <!-- WRAPPER ALAMAT KEPUTUSAN (Disembunyikan secara lalai) -->
-        <div id="ruanganTempatKeputusan" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Keputusan (Alamat Penuh) <span>*</span></label>
-                <input type="text" id="kpt_tempat_nama" placeholder="Nama Tempat (Cth: MAHKAMAH BURUH KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="kpt_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="kpt_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="kpt_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="kpt_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('kpt_poskod', 'kpt_negeri', 'kpt_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
-                    <input type="text" id="kpt_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-                </div>
-                <input type="text" id="kpt_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalKeputusan').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="janaKeputusanDariModal()">✔ Teruskan</button>
-        </div>
-    </div>
-</div>
 
 <!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
 <input type="hidden" id="mk_tarikh_keputusan">
 <input type="hidden" id="mk_masa_keputusan">
 <input type="hidden" id="mk_tempat_keputusan">
 <!-- MODAL POP-UP KHAS UNTUK SAMAN HADIR (BORANG A) -->
-<div class="modal-overlay" id="modalSamanA">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Jana Saman Hadir (Borang A) & Notis</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Tarikh Notis & Saman Borang A <span>*</span></label>
-            <input type="date" id="sma_tarikh_notis" style="width: 100%; box-sizing: border-box;">
-        </div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pegawai <span>*</span></label>
-            <input type="text" id="sma_pegawai" style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-        </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="sma_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
-        <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em; margin-bottom: 10px;">Maklumat Saman Hadir</h5>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Tarikh Hadir <span>*</span></label>
-                <input type="date" id="sma_tarikh_hadir" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">Masa Hadir <span>*</span></label>
-                <input type="time" id="sma_masa_hadir" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <!-- TOGGLE ALAMAT BERBEZA -->
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <input type="checkbox" id="tempatSamanABerbeza" onchange="toggleTempatSamanA()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                <label for="tempatSamanABerbeza" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat saman hadir berbeza dengan pejabat semasa?</label>
-            </div>
-            <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*Sistem telah mengekstrak alamat semasa pejabat. Sila kemaskini jika Tempat Saman Hadir (Alamat Penuh) berbeza.</p>
-        </div>
-
-        <!-- WRAPPER ALAMAT SAMAN A (Disembunyikan secara lalai) -->
-        <div id="ruanganTempatSamanA" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px;">
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                <label style="text-align: left; margin-bottom: 5px; margin-top: 0;">Tempat Saman Hadir (Alamat Penuh) <span>*</span></label>
-                <input type="text" id="sma_tempat_nama" placeholder="Nama Tempat (Cth: PEJABAT TENAGA KERJA KLUANG)" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="sma_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="sma_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <input type="text" id="sma_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;" oninput="this.value = this.value.toUpperCase()">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="sma_poskod" placeholder="Poskod" maxlength="5" onkeyup="cariPoskodAutomatik('sma_poskod', 'sma_negeri', 'sma_bandar')" onblur="semakPoskod(this)" style="width: 100%; box-sizing: border-box;">
-                    <input type="text" id="sma_bandar" placeholder="Bandar" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-                </div>
-                <input type="text" id="sma_negeri" placeholder="Negeri" readonly style="width: 100%; box-sizing: border-box;" oninput="this.value = this.value.toUpperCase()">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalSamanA').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="janaSamanADariModal()">✔ Teruskan</button>
-        </div>
-    </div>
-</div>
 
 <!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI ASAL (JANGAN PADAM) -->
 <!-- Ini membolehkan fungsi sistem lama 'bukaPreviewSamanA' membaca data tanpa perlu diubah -->
@@ -2710,200 +2919,7 @@ Portal rasmi : jtksm.mohr.gov.my
 </style>
 
 <!-- MODAL POP-UP KHAS UNTUK SAMAN (MEMO LUAR KAWASAN) -->
-<div class="modal-overlay" id="modalSamanMemo">
-    <div class="modal-box" style="max-width: 900px; padding: 25px 30px;">
-        <div class="modal-title">Jana Saman (Memo Luar Kawasan)</div>
 
-        <!-- CHECKBOX PENERIMA NOTIS TAMBAHAN -->
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 20px;">
-            <label style="text-align: left;">Salinan Kepada (s.k.) / Penerima Notis Perwakilan <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Tanda untuk jana notis wakil / s.k.)</span></label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Peguam Pengadu"> Peguam (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Peguam Defendan"> Peguam (Defendan)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Wakil Kesatuan Pengadu"> Kesatuan (Pengadu)</label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="smm_penerima" value="Wakil Kesatuan Defendan"> Kesatuan (Defendan)</label>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0 15px 0;">
-
-        <!-- BUNGKUSAN SCROLL UNTUK KANDUNGAN PANJANG -->
-        <div style="max-height: 55vh; overflow-y: auto; padding-right: 15px; margin-bottom: 10px;">
-            <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em;">1. Maklumat Pejabat Penerima Memo</h5>
-            <div class="grid-memo">
-                <!-- ROW 1 -->
-                <div class="grid-memo-span3">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Pejabat Tenaga Kerja Luar Kawasan</label>
-                    <input type="text" id="mk_pejabat_memo" placeholder="Cth: PEJABAT TENAGA KERJA SEGAMAT" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-                <div class="grid-memo-span2">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Tarikh Saman Dikembalikan (Ke PTK Kluang)</label>
-                    <input type="date" id="mk_tarikh_saman_memo" onchange="semakButangSamanMemo()" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-
-                <!-- ROW 2 -->
-                <div class="grid-memo-span3">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 1</label>
-                    <input type="text" id="mk_alamat1_memo" placeholder="Baris 1" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-                <div class="grid-memo-span2">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Poskod</label>
-                    <input type="text" id="mk_poskod_memo" placeholder="50000" maxlength="5" onkeyup="cariPoskodAutomatik('mk_poskod_memo', 'mk_negeri_memo', 'mk_bandar_memo'); semakButangSamanMemo();" onblur="semakPoskod(this)" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-
-                <!-- ROW 3 -->
-                <div class="grid-memo-span3">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 2</label>
-                    <input type="text" id="mk_alamat2_memo" placeholder="Baris 2" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-                <div class="grid-memo-span2">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Bandar</label>
-                    <input type="text" id="mk_bandar_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
-                </div>
-
-                <!-- ROW 4 -->
-                <div class="grid-memo-span3">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 3</label>
-                    <input type="text" id="mk_alamat3_memo" placeholder="Baris 3" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-                <div class="grid-memo-span2">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Negeri</label>
-                    <input type="text" id="mk_negeri_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
-                </div>
-            </div>
-
-            <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 25px 0 15px 0;">
-
-            <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em;">2. Maklumat Sebutan (Borang A & Notis Pengadu)</h5>
-            
-            <div class="grid-memo">
-                <!-- ROW 1 (Tarikh & Masa) -->
-                <div class="grid-memo-span3">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Tarikh Hadir / Sebutan</label>
-                    <input type="date" id="mk_tarikh_hadir_memo" onchange="semakButangSamanMemo()" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-                <div class="grid-memo-span2">
-                    <label class="info-label" style="display: block; margin-bottom: 4px;">Masa Hadir</label>
-                    <input type="time" id="mk_masa_hadir_memo" onchange="semakButangSamanMemo()" style="margin:0; height: 42px; box-sizing: border-box;">
-                </div>
-                
-                <!-- ROW 2 (Checkbox Toggle Alamat Berbeza) -->
-                <div style="grid-column: 1 / -1; margin-top: 10px; margin-bottom: -5px;">
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                        <input type="checkbox" id="tempatHadirBerbeza_memo" onchange="toggleTempatHadirMemo()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                        <label for="tempatHadirBerbeza_memo" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Tempat hadir berbeza dengan pejabat semasa?</label>
-                    </div>
-                    <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika tempat perbicaraan/sebutan bukan di pejabat semasa)</p>
-                </div>
-            </div>
-
-            <!-- WRAPPER ALAMAT TEMPAT HADIR BERBEZA -->
-            <div id="ruanganTempatHadir_memo" style="display: none; margin-top: 15px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color);">
-                <div class="grid-memo">
-                    <!-- Nama Pejabat / Lokasi -->
-                    <div style="grid-column: 1 / -1;">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Nama Pejabat / Lokasi</label>
-                        <input type="text" id="mk_tempat_hadir_nama" placeholder="Cth: MAHKAMAH MAJISTRET KLUANG" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    
-                    <!-- ROW 3 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 1</label>
-                        <input type="text" id="mk_tempat_hadir_a1" placeholder="Baris 1" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Bandar</label>
-                        <input type="text" id="mk_tempat_hadir_bdr" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
-                    </div>
-
-                    <!-- ROW 4 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 2</label>
-                        <input type="text" id="mk_tempat_hadir_a2" placeholder="Baris 2" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Negeri</label>
-                        <input type="text" id="mk_tempat_hadir_ngr" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
-                    </div>
-
-                    <!-- ROW 5 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 3</label>
-                        <input type="text" id="mk_tempat_hadir_a3" placeholder="Baris 3" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Poskod</label>
-                        <input type="text" id="mk_tempat_hadir_pos" placeholder="50000" maxlength="5" onkeyup="cariPoskodAutomatik('mk_tempat_hadir_pos', 'mk_tempat_hadir_ngr', 'mk_tempat_hadir_bdr'); semakButangSamanMemo();" onblur="semakPoskod(this)" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                </div>
-            </div>
-
-            <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 25px 0 15px 0;">
-
-            <h5 style="margin-top:0; color:var(--primary-blue); font-size: 0.95em;">3. Maklumat Serahan (Defendan) Terkini</h5>
-            <p style="font-size: 0.8em; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px;">*Sistem telah mengekstrak alamat berdaftar. Sila kemaskini jika alamat serahan terkini berbeza.</p>
-
-            <!-- CHECKBOX TOGGLE ALAMAT SERAHAN BERBEZA -->
-            <div style="margin-bottom: 15px;">
-                <div style="display: flex; align-items: flex-start; gap: 10px;">
-                    <input type="checkbox" id="alamatSerahanBerbeza_memo" onchange="toggleAlamatSerahanMemo()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                    <label for="alamatSerahanBerbeza_memo" style="font-weight:600; font-size: 0.9em; color: var(--text-main); margin:0;">Alamat serahan (Defendan) berbeza dengan alamat berdaftar?</label>
-                </div>
-                <p style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika ingin masukkan alamat serahan yang baharu)</p>
-            </div>
-
-            <!-- WRAPPER ALAMAT SERAHAN (Disembunyikan secara lalai) -->
-            <div id="ruanganAlamatSerahan_memo" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color);">
-                <div class="grid-memo">
-                    <!-- ROW 1 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Nama Defendan</label>
-                        <input type="text" id="mk_nama_defendan_memo" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Poskod</label>
-                        <input type="text" id="mk_poskod_def_memo" placeholder="50000" maxlength="5" onkeyup="cariPoskodAutomatik('mk_poskod_def_memo', 'mk_negeri_def_memo', 'mk_bandar_def_memo'); semakButangSamanMemo();" onblur="semakPoskod(this)" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-
-                    <!-- ROW 2 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 1</label>
-                        <input type="text" id="mk_alamat1_def_memo" placeholder="Baris 1" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Bandar</label>
-                        <input type="text" id="mk_bandar_def_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
-                    </div>
-
-                    <!-- ROW 3 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 2</label>
-                        <input type="text" id="mk_alamat2_def_memo" placeholder="Baris 2" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Negeri</label>
-                        <input type="text" id="mk_negeri_def_memo" placeholder="Lengkapkan Poskod" oninput="this.value = this.value.toUpperCase(); semakButangSamanMemo();" style="margin:0; height: 42px; box-sizing: border-box;" readonly>
-                    </div>
-
-                    <!-- ROW 4 -->
-                    <div class="grid-memo-span3">
-                        <label class="info-label" style="display: block; margin-bottom: 4px;">Alamat Baris 3</label>
-                        <input type="text" id="mk_alamat3_def_memo" placeholder="Baris 3" oninput="this.value = this.value.toUpperCase();" style="margin:0; height: 42px; box-sizing: border-box;">
-                    </div>
-                    <div class="grid-memo-span2">
-                        <!-- RUANG KOSONG (Butang diturunkan ke Modal Actions) -->
-                    </div>
-                </div>
-            </div>
-        </div> <!-- TAMAT WRAPPER SCROLL -->
-
-        <div class="modal-actions" style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-            <button class="btn-cancel" onclick="document.getElementById('modalSamanMemo').style.display='none'">Batal</button>
-            <button id="btnTindakanSamanMemo" class="btn-save" style="opacity: 0.5; cursor: not-allowed;" onclick="janaSamanMemoDariModal()" disabled>✔ Jana Dokumen (Memo + Borang A + Notis)</button>
-        </div>
-
-    </div>
-</div>
             
 </div> <!-- TAMAT VIEW MAKLUMAT KES -->
 
