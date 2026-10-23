@@ -534,9 +534,8 @@ body {
             <input type="hidden" id="jenisJadualTuntutan" value="biasa">
             
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
-                <select id="jenisTuntutan" onchange="semakJenisTuntutanLain()"><option value="">-Sila Pilih-</option></select>
-                <input type="text" id="jenisTuntutanLain" placeholder="Sila nyatakan jenis aduan lain" style="display: none; margin-top: 8px; width: 100%;" oninput="hurufBesarAyatPertama(this)">
+                <label style="text-align: left;">1. Jenis Aduan</label>
+                <input type="text" id="jenisTuntutan" readonly style="background-color: #e2e8f0; font-weight: 600; color: var(--primary-blue); cursor: not-allowed; width: 100%; box-sizing: border-box;">
             </div>
             
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
@@ -7005,17 +7004,6 @@ function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
     
-    let selectJenis = document.getElementById('jenisTuntutan');
-    if (selectJenis) {
-        let optionsHtml = '<option value="">-Sila Pilih-</option>';
-        if (typeof senaraiTuntutanPekerja !== 'undefined') {
-            senaraiTuntutanPekerja.forEach(item => {
-                optionsHtml += `<option value="${item}">${item}</option>`;
-            });
-        }
-        selectJenis.innerHTML = optionsHtml;
-    }
-
     let currentTuntutanList = [];
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
         let kesAktif = memoriSenaraiKes[indexKesSemasa];
@@ -7029,11 +7017,15 @@ function bukaModalTuntutan(jenis, index = -1) {
 
     let statusSelect = document.getElementById('statusAduanTuntutan');
     let statusLainInput = document.getElementById('statusAduanLain');
+    let jenisTuntutanInput = document.getElementById('jenisTuntutan');
 
     if (index > -1 && currentTuntutanList[index]) {
         document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
         let item = currentTuntutanList[index];
-        document.getElementById('jenisTuntutan').value = item.jenis || '';
+        
+        // Ekstrak dan tetapkan nilai Jenis Aduan daripada jadual tuntutan
+        jenisTuntutanInput.value = item.jenis || '-';
+        
         document.getElementById('keteranganTuntutan').value = item.keterangan || '';
         document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
         
@@ -7051,22 +7043,14 @@ function bukaModalTuntutan(jenis, index = -1) {
             statusLainInput.style.display = 'none';
             statusLainInput.value = '';
         }
-        
-        if (typeof semakJenisTuntutanLain === 'function') {
-            semakJenisTuntutanLain();
-        }
     } else {
         document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
-        document.getElementById('jenisTuntutan').value = "";
+        jenisTuntutanInput.value = "";
         document.getElementById('keteranganTuntutan').value = "";
         document.getElementById('hasilSiasatanTuntutan').value = "";
         statusSelect.value = "";
         statusLainInput.style.display = 'none';
         statusLainInput.value = "";
-        if (document.getElementById('jenisTuntutanLain')) {
-            document.getElementById('jenisTuntutanLain').style.display = 'none';
-            document.getElementById('jenisTuntutanLain').value = '';
-        }
     }
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
@@ -7082,25 +7066,16 @@ function simpanTuntutan() {
     let index = parseInt(document.getElementById('indexTuntutanEdit').value);
     let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
 
-    if (!jenis || !keterangan) {
-        alert("Sila lengkapkan Jenis Aduan dan Keterangan Aduan.");
-        return;
+    let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa] && memoriSenaraiKes[indexKesSemasa].dataBorang) {
+        targetList = memoriSenaraiKes[indexKesSemasa].dataBorang.tuntutanBiasa || targetList;
     }
 
-    let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-
-    if (index > -1) {
-        targetList[index].jenis = jenis;
+    if (index > -1 && targetList[index]) {
+        targetList[index].jenis = jenis; // Kekalkan jenis asal yang diekstrak
         targetList[index].keterangan = keterangan;
         targetList[index].hasilSiasatan = hasilSiasatan;
         targetList[index].statusAduan = statusAduan;
-    } else {
-        targetList.push({
-            jenis: jenis,
-            keterangan: keterangan,
-            hasilSiasatan: hasilSiasatan,
-            statusAduan: statusAduan
-        });
     }
 
     document.getElementById('modalTuntutan').style.display = 'none';
