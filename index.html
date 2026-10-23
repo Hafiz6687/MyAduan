@@ -1830,45 +1830,427 @@ function populasikanLampiran2() {
     </div>
 </div>
         
-    </div>
+    </div> <!-- END OF MODAL PREVIEW -->
 
-<div class="modal-overlay" id="modalEditTuntutanKes">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Kemaskini Aduan & Hasil Siasatan</div>
-        <input type="hidden" id="edit_index_tuntutan" value="-1">
+<!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header" style="padding: 30px 20px 20px 20px; display: flex; flex-direction: column; align-items: center;">
+            <!-- Logo dibesarkan, shadow/border dibuang supaya clean seperti dalam gambar -->
+        <img src="logo-mysystem.png" alt="Logo" style="width: 100%; max-width: 220px; height: auto;">
+        </div>
+        
+        <!-- Background kotak profil dihilangkan supaya ia blend sempurna dengan background -->
+        <div style="display: flex; gap: 12px; margin: 0 20px 20px; align-items: center;">
+            
+            <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik. Seret untuk laras, Scroll/Cubit untuk zoom, Dwi-klik untuk tukar.">
+                <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
+                    <span style="font-size: 1.3em; color: var(--text-muted);">👤</span>
+                </div>
+                <img id="gambarProfil" src="" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
+            </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
-            <input type="text" id="edit_jenis_tuntutan" style="width: 100%; box-sizing: border-box; background-color: #e2e8f0;" readonly>
+            <div style="flex-grow: 1; overflow: hidden; text-align: left;">
+                <div id="namaProfilEdit" contenteditable="true" spellcheck="false" style="font-size: 0.85em; font-weight: 700; color: var(--text-main); line-height: 1.3; outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaProfil(this);" title="Klik untuk edit nama">Mohamad Hafiz bin<br>Abu Bakar</div>
+            </div>
+            
         </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
-            <textarea id="edit_keterangan_tuntutan" rows="3" class="auto-expand" style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="autoResize(this)"></textarea>
+        <ul class="nav-menu">
+            <li id="navSenarai" onclick="tukarView('senarai')">SENARAI TUGASAN</li>
+            <li id="navDaftar" class="active" onclick="tukarView('daftar')">PENDAFTARAN ADUAN</li>
+            <li id="navUrus" onclick="tukarView('urus')">PENGURUSAN ADUAN</li>
+            <li>CARIAN KES</li>
+            <li>KALENDAR ADUAN</li>
+            <li>LAPORAN</li>
+        </ul>
+        
+      <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
+            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s; word-wrap: break-word; overflow-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
+(KLUANG LABOUR OFFICE)<br>
+(KEMENTERIAN SUMBER MANUSIA)<br>
+(MINISTRY OF HUMAN RESOURCES)<br>
+JALAN PEJABAT KERAJAAN<br>
+86000 KLUANG<br>
+JOHOR DARUL TAKZIM
+<br><br>
+Telefon : 07-772 1646/2646<br>
+Telekerja : 07-7737111<br>
+E-mel : jtkdkluang@mohr.gov.my<br>
+Portal rasmi : jtksm.mohr.gov.my
+<br><br>
+<strong>“Pekerja MADANI Kesuma Bangsa”</strong></div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-header">
+            <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Aduan</span></div>
+            <div style="display: flex; gap: 10px;" id="butangCetakHeader">
+                <!-- Butang ini disembunyikan secara lalai (display: none) -->
+                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="if(typeof populasikanLampiran2 === 'function') populasikanLampiran2(); document.getElementById('modalPreview').style.display='flex';">📄 Semak & Cetak</button>
+            </div>
+        </div>
+        
+        <div id="viewSenaraiTugas" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
+            <div class="card full-width">
+                <div class="card-header">Senarai Kes Didaftarkan</div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                                    <tr>
+                                        <th class="sortable-th" style="width: 15%;" onclick="sortSenaraiTugas('noKes')" title="Klik untuk susun">No. Kes</th>
+                                        <th class="sortable-th" style="width: 25%;" onclick="sortSenaraiTugas('pengadu')" title="Klik untuk susun">Pengadu</th>
+                                        <th class="sortable-th" style="width: 25%;" onclick="sortSenaraiTugas('defendan')" title="Klik untuk susun">Defendan</th>
+                                        <th class="sortable-th" style="width: 15%;" onclick="sortSenaraiTugas('tarikh')" title="Klik untuk susun">Tarikh Daftar</th>
+                                        <th style="width: 20%; text-align: center;">Tindakan</th>
+                                    </tr>
+                                </thead>
+                        <tbody id="bodySenaraiTugas">
+                            <tr><td colspan="5" class="empty-row">Tiada kes didaftarkan setakat ini.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <span>*</span> <br><span style="font-size: 0.8em; color: var(--primary-blue); font-weight: normal;">(Tips Multilevel List: Anda boleh taip terus format seperti 1. [Tajuk Utama], 1.1 [Butiran], a) [Huraian] dengan menekan butang Enter untuk baris baru)</span></label>
-            <textarea id="edit_siasatan_tuntutan" rows="6" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen gaji:&#10;   1.1 Slip gaji bulan Januari hingga Mac 2025 diserahkan.&#10;   1.2 Didapati potongan tidak mengikut Akta Kerja 1955.&#10;2. Keterangan pihak majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit; line-height: 1.5;" oninput="autoResize(this)"></textarea>
-        </div>
+<!-- ========================================== -->
+<!-- PAPARAN MAKLUMAT KES TERPERINCI            -->
+<!-- ========================================== -->
+        <div id="viewMaklumatKes" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
+            
+<div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn-cancel btn-terapung" onclick="tukarView('senarai')" style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 1.2em; line-height: 1;">←</span> Kembali ke Senarai
+                </button>
+                <button id="btnEditRekodKes" class="btn-terapung" style="display: flex; align-items: center; gap: 8px; background-color: var(--primary-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <span style="font-size: 1.2em; line-height: 1;">✏️</span> Kemaskini
+                </button>
+            </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">4. Status Aduan <span>*</span></label>
-            <select id="edit_status_tuntutan" style="width: 100%; box-sizing: border-box;">
-                <option value="">-Sila Pilih Status-</option>
-                <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
-                <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
-                <option value="Lain-lain">Lain-lain</option>
-            </select>
-        </div>
+            <!-- BAHAGIAN 1: Maklumat Kes (2 Grid) -->
+            <!-- KODING BARU PENGGANTI -->
+<div class="card full-width">
+    <div class="card-header" id="mk_header_kes">Maklumat Kes</div>
+    <div class="card-body">
+        <style>
+            .grid-kes-4 {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            @media (max-width: 1024px) {
+                .grid-kes-4 { grid-template-columns: repeat(2, 1fr); }
+            }
+            @media (max-width: 600px) {
+                .grid-kes-4 { grid-template-columns: 1fr; }
+            }
+        </style>
+        <div class="grid-kes-4">
+            <!-- Card 1 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Didaftarkan oleh</div>
+                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-label">Tarikh Pendaftaran</div>
+                <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0;">-</div>
+            </div>
 
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalEditTuntutanKes').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="simpanEditTuntutanKes()">✔ Simpan Perubahan</button>
+            <!-- Card 2 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Pegawai Penyiasat</div>
+                <div class="info-value" id="mk_pegawai" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-label">Tarikh Siasatan</div>
+                <div class="info-value" id="mk_tarikh_tugas" style="margin-bottom: 0;">-</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Disahkan oleh</div>
+                <div class="info-value" id="mk_sah_oleh_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaDisahkanOleh(this);" title="Klik untuk edit nama pengesah">Mohd Faizal bin Mohammad</div>
+                <div class="info-label">Tarikh Pengesahan</div>
+                <div class="info-value" id="mk_tarikh_sah" style="margin-bottom: 0;">-</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Jawatan</div>
+                <div class="info-value" id="mk_ketua_pejabat" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanKetuaPejabat(this);" title="Klik untuk edit jawatan">Pegawai Pendengar</div>
+            </div>
         </div>
     </div>
 </div>
+            <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
+            <div class="card full-width">
+                <div class="card-header" id="mk_header_pengadu">Maklumat Pengadu</div>
+                <div class="card-body">
+                    <div class="grid-3" id="mk_grid_pengadu">
+                        <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Pengadu -->
+                    </div>
 
+           
+                    <!-- Tuntutan Digabungkan dalam Container yang sama -->
+                    <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
+                    <h4 style="margin-top:0; margin-bottom: 15px; color:var(--primary-blue);">Maklumat Tuntutan</h4>
+                    
+                    <div style="grid-column: 1 / -1; overflow-x: auto;">
+                        <table style="border:1px solid var(--border-color); width: 100%;">
+                            <thead style="background-color: var(--card-header-bg);">
+                                <tr>
+                                    <th style="width: 5%; text-align:center; padding: 12px;">Bil.</th>
+                                    <th style="width: 35%; padding: 12px;">Jenis Aduan</th>
+                                    <th style="width: 60%; padding: 12px;">Keterangan Aduan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mk_body_tuntutan">
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+<!-- BAHAGIAN BARU: Kenyataan Pengadu (DIALIH KE BAWAH MAKLUMAT PENGADU) -->
+            <div class="card full-width" id="kad_kenyataan_pengadu_view">
+                <div class="card-header" onclick="toggleKenyataanPengaduView()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    <span style="text-align: left; flex-grow: 1;">Kenyataan Pengadu</span>
+                    <!-- LALAIKAN KEPADA "▼ Buka" -->
+                    <span id="labelTogolKenyataanView" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1; flex-shrink: 0;">▼ Buka</span>
+                </div>
+                <!-- TAMBAH display: none; UNTUK AUTO-SEMBUNYI -->
+                <div class="card-body" id="kandunganKenyataanPengaduView" style="display: none;">
+                    <div class="info-value" id="mk_kenyataan_pengadu" style="white-space: pre-wrap; text-align: justify; line-height: 1.6;">
+                        <!-- Teks kenyataan akan dijana oleh JS di sini -->
+                        -
+                    </div>
+                </div>
+            </div>
+
+<!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan -->
+            <div class="card full-width" id="kad_kehadiran_perwakilan">
+                <div class="card-header">
+                    Maklumat Kehadiran / Perwakilan (Pengadu)
+                    <button class="btn-add btn-terapung" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em;" onclick="bukaModalPerwakilan('pengadu')">+ Tambah Wakil / Saksi</button>
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
+                        <thead style="background-color: var(--card-header-bg);">
+                            <tr>
+                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
+                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Kategori</th>
+                                <th style="width: 25%; padding: 12px; border-bottom: 1px solid var(--border-color);">Nama & No. KP</th>
+                                <th style="width: 30%; padding: 12px; border-bottom: 1px solid var(--border-color);">Firma Guaman & Alamat</th>
+                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">No. Telefon / E-mel</th>
+                                <th style="width: 10%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mk_body_perwakilan">
+                            <tr><td colspan="6" class="empty-row" style="padding: 15px;">Tiada maklumat kehadiran / perwakilan direkodkan.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- BAHAGIAN 3: Maklumat Defendan -->
+            <div class="card full-width" id="kad_maklumat_defendan">
+                <div class="card-header" id="mk_header_defendan">Maklumat Defendan</div>
+                <div class="card-body">
+                    <div class="grid-2" id="mk_grid_defendan">
+                        <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Defendan -->
+                    </div>
+                </div>
+            </div>
+<!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan (Defendan) -->
+            <div class="card full-width" id="kad_kehadiran_perwakilan_defendan">
+                <div class="card-header">
+                    Maklumat Kehadiran / Perwakilan (Defendan)
+                    <button class="btn-add btn-terapung" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em;" onclick="bukaModalPerwakilan('defendan')">+ Tambah Wakil / Saksi</button>
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
+                        <thead style="background-color: var(--card-header-bg);">
+                            <tr>
+                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
+                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Kategori</th>
+                                <th style="width: 25%; padding: 12px; border-bottom: 1px solid var(--border-color);">Nama & No. KP</th>
+                                <th style="width: 30%; padding: 12px; border-bottom: 1px solid var(--border-color);">Firma Guaman & Alamat</th>
+                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">No. Telefon / E-mel</th>
+                                <th style="width: 10%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mk_body_perwakilan_defendan">
+                            <tr><td colspan="6" class="empty-row" style="padding: 15px;">Tiada maklumat kehadiran / perwakilan direkodkan.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- KAD PEMANTAUAN BAYARAN (MOU / BORANG C) -->
+            <div class="card full-width" id="kad_pemantauan_mou" style="display: none;">
+                <div class="card-header">
+                    <span id="tajuk_kad_pemantauan">Pemantauan Bayaran</span>
+                    <button class="btn-add btn-terapung" id="btn_menu_pemantauan_mou" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em; display: flex; align-items: center; gap: 5px;" onclick="bukaModalPemantauanMou()">
+                        <span>💰 Kemaskini Rekod Bayaran</span>
+                    </button>
+                </div>
+                <div class="card-body" id="body_pemantauan_mou">
+                    <!-- Progress bar & ringkasan dijana dinamik oleh renderKadPemantauan() -->
+                </div>
+            </div>
+            <!-- BAHAGIAN 3.5: Sejarah Tindakan -->
+            <div class="card full-width" id="kad_sejarah_tindakan" style="display: none;">
+                <div class="card-header">Sejarah Tindakan</div>
+                <div class="card-body">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
+                        <thead style="background-color: var(--card-header-bg);">
+                            <tr>
+                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
+                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Tarikh & Masa Rekod</th>
+                                <th style="width: 20%; padding: 12px; border-bottom: 1px solid var(--border-color);">Jenis Tindakan</th>
+                                <th style="width: 45%; padding: 12px; border-bottom: 1px solid var(--border-color);">Butiran Lanjut</th>
+                                <th style="width: 15%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Jana Dokumen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mk_body_sejarah">
+                            <!-- JS Injection -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+<!-- BAHAGIAN 3.6: Menu Pilihan Tindakan Pengurusan Kes -->
+            <div class="card full-width" id="menu_tindakan_urus" style="display: none;">
+                <div class="card-header">Pilihan Tindakan Pengurusan</div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSebutan()">
+                            <span>📅 Sebutan Kes</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="toggleKadUrus('sebutan_semula')">
+                            <span>📅 Sebutan Kes<br>(Penetapan semula)</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSebutanTangguh()">
+                            <span>📅 Sebutan Kes<br>(Tangguh)</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalPeringatanBayaran('MOU')">
+                            <span>⚠️ Peringatan<br>Bayaran MOU</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSamanA()">
+                            <span>📄 Saman<br>(Borang A)</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSamanMemo()">
+                            <span>📄 Saman<br>(Memo Luar Kawasan)</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="toggleKadUrus('bicara')">
+                            <span>⚖️ Bicara</span>
+                        </button>
+                       <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalKeputusan()">
+                            <span>📜 Keputusan<br>Kes</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalPeringatanBayaran('Borang C')">
+                            <span>⚠️ Peringatan<br>Bayaran Perintah</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalAlamatTerkini()">
+                            <span>📍 Alamat Terkini<br>Defendan</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaPreviewTarikBalik()">
+                            <span>🚫 Tarik Balik<br>Kes</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalBatalKes()">
+                            <span>❌ Batal Kes</span>
+                        </button>
+                        <button class="btn-terapung" style="background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalNotisLain()">
+                            <span>📝 Notis<br>(Lain-lain)</span>
+                        </button>                                         
+                    </div>
+                </div>
+            </div>
+            
+<!-- BAHAGIAN 4: Penetapan Tarikh Sebutan Kes -->
+<div class="card full-width" id="kad_sebutan_kes">
+    <div class="card-header">Penetapan Tarikh Sebutan Kes</div>
+    <div class="card-body">
+        
+        <!-- INPUT TERSEMBUNYI (Penyelamat Fungsi Asal supaya sistem surat tidak error) -->
+        <input type="hidden" id="mk_tempat_sebutan" value="Pejabat Tenaga Kerja Kluang, Jalan Pejabat Kerajaan, 86000 Kluang, Johor">
+
+        <!-- Baris 1: Grid 4 Kolum (Tarikh Notis, Tarikh Sebutan, Masa Sebutan & Butang Jana Notis) -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; align-items: end; margin-bottom: 15px;">
+                <div>
+                    <label class="info-label" style="display:block; margin-bottom: 5px;">Tarikh Notis</label>
+                    <input type="date" id="mk_tarikh_notis" onchange="semakButangSebutan()" style="width: 100%; height: 42px; box-sizing: border-box; padding: 8px;">
+                </div>
+                <div>
+                    <label class="info-label" style="display:block; margin-bottom: 5px;">Tarikh Sebutan</label>
+                    <input type="date" id="mk_tarikh_sebutan" onchange="semakButangSebutan()" style="width: 100%; height: 42px; box-sizing: border-box; padding: 8px;">
+                </div>
+                <div>
+                    <label class="info-label" style="display:block; margin-bottom: 5px;">Masa Sebutan</label>
+                    <input type="time" id="mk_masa_sebutan" onchange="semakButangSebutan()" style="width: 100%; height: 42px; box-sizing: border-box; padding: 8px;">
+                </div>
+                <div>
+                    <button id="btnTindakanSebutan" class="btn-save" style="width: 100%; height: 42px; padding: 0 10px; font-size: 0.9em; display: flex; align-items: center; justify-content: center; gap: 8px; margin:0; opacity: 0.5; cursor: not-allowed; box-sizing: border-box;" onclick="tindakanSebutan()" disabled>
+                        📄 Jana Notis Sebutan
+                    </button>
+                </div>
+            </div>
+
+        <!-- Baris 2: Kotak Maklumat Alamat Berpusat -->
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin-bottom: 0px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+                <div style="font-weight: 600; color: var(--primary-blue); font-size: 0.95em;">Maklumat Tempat Sebutan</div>
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.85em; cursor: pointer; font-weight: 600; color: #b91c1c;">
+                    <input type="checkbox" id="cb_tempat_berbeza" onchange="toggleEditTempatSebutan()">
+                    Tempat sebutan berbeza?
+                </label>
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-muted); font-style: italic; margin-bottom: 15px; line-height: 1.3;">
+                *Sistem telah mengekstrak alamat semasa pejabat secara automatik. Sila tanda kotak di atas jika anda ingin menukar Tempat Sebutan ini.
+            </div>
+            
+            <!-- KONTENA INPUT (Disembunyikan secara lalai) -->
+            <div id="kontena_input_alamat_sebutan" style="display: none;">
+                <div style="margin-bottom: 10px;">
+                    <label class="info-label" style="display:block; margin-bottom: 5px;">Nama Pejabat / Tempat</label>
+                    <input type="text" id="mk_nama_tempat" value="Pejabat Tenaga Kerja Kluang" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <label class="info-label" style="display:block; margin-bottom: 5px;">Alamat Baris 1</label>
+                    <input type="text" id="mk_alamat1_tempat" value="Jalan Pejabat Kerajaan" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label class="info-label" style="display:block; margin-bottom: 5px;">Alamat Baris 2</label>
+                        <input type="text" id="mk_alamat2_tempat" value="" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
+                    </div>
+                    <div>
+                        <label class="info-label" style="display:block; margin-bottom: 5px;">Alamat Baris 3</label>
+                        <input type="text" id="mk_alamat3_tempat" value="" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label class="info-label" style="display:block; margin-bottom: 5px;">Poskod</label>
+                        <input type="text" id="mk_poskod_tempat" value="86000" maxlength="5" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="autoSemakPoskodTempat(); kemaskiniTempatSebutanLatar()">
+                    </div>
+                    <div>
+                        <label class="info-label" style="display:block; margin-bottom: 5px;">Daerah</label>
+                        <input type="text" id="mk_daerah_tempat" value="Kluang" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
+                    </div>
+                    <div>
+                        <label class="info-label" style="display:block; margin-bottom: 5px;">Negeri</label>
+                        <input type="text" id="mk_negeri_tempat" value="Johor" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
+                    </div>
+                </div>
+            </div>
+            <!-- TAMAT KONTENA INPUT -->
+        </div> <!-- Penutup untuk kotak kelabu Maklumat Tempat Sebutan -->
+        
+    </div> <!-- Penutup card-body -->
+</div> <!-- Penutup kad_sebutan_kes keseluruhan -->
+
+<!-- KAD-KAD TAMBAHAN NOTIS (GENERIK) -->
+<!-- MODAL POP-UP KHAS UNTUK SEBUTAN KES (TANGGUH) -->
 <div class="modal-overlay" id="modalSebutanTangguh">
     <div class="modal-box" style="max-width: 650px;">
         <div class="modal-title">Jana Notis Sebutan Kes (Tangguh)</div>
@@ -1939,6 +2321,20 @@ function populasikanLampiran2() {
     </div>
 </div>
 
+<div class="card full-width" id="kad_bicara" style="display: none;">
+    <div class="card-header">Penetapan Tarikh Perbicaraan</div>
+    <div class="card-body">
+        <div class="sebutan-grid-labels"><div class="info-label" style="margin:0;">Tarikh Bicara</div><div class="info-label" style="margin:0;">Masa Bicara</div><div class="info-label" style="margin:0;">Tempat Bicara</div><div></div></div>
+        <div class="sebutan-grid-inputs">
+            <div><input type="date" id="mk_tarikh_bicara" onchange="semakButangNotis('bicara')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
+            <div><input type="time" id="mk_masa_bicara" onchange="semakButangNotis('bicara')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
+            <div><input type="text" id="mk_tempat_bicara" value="Pejabat Tenaga Kerja Kluang" style="margin:0; height: 42px; box-sizing: border-box;"></div>
+            <div><button id="btnTindakan_bicara" class="btn-save" style="width: 100%; height: 42px; font-size: 0.9em; opacity: 0.5; cursor: not-allowed;" onclick="bukaPreviewNotisGenerik('bicara')" disabled>📄 Jana Notis</button></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL POP-UP KHAS UNTUK BICARA (TANGGUH) -->
 <div class="modal-overlay" id="modalBicaraTangguh">
     <div class="modal-box" style="max-width: 650px;">
         <div class="modal-title">Jana Notis Perbicaraan Kes (Tangguh)</div>
@@ -2010,6 +2406,12 @@ function populasikanLampiran2() {
     </div>
 </div>
 
+<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
+<input type="hidden" id="mk_tarikh_bicara_tangguh">
+<input type="hidden" id="mk_masa_bicara_tangguh">
+<input type="hidden" id="mk_tempat_bicara_tangguh">
+
+<!-- MODAL POP-UP KHAS UNTUK BICARA (SAMBUNG) -->
 <div class="modal-overlay" id="modalBicaraSambung">
     <div class="modal-box" style="max-width: 650px;">
         <div class="modal-title">Jana Notis Perbicaraan Kes (Sambung)</div>
@@ -2081,6 +2483,12 @@ function populasikanLampiran2() {
     </div>
 </div>
 
+<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
+<input type="hidden" id="mk_tarikh_bicara_sambung">
+<input type="hidden" id="mk_masa_bicara_sambung">
+<input type="hidden" id="mk_tempat_bicara_sambung">
+
+<!-- MODAL POP-UP KHAS UNTUK KEPUTUSAN KES -->
 <div class="modal-overlay" id="modalKeputusan">
     <div class="modal-box" style="max-width: 650px;">
         <div class="modal-title">Jana Notis Keputusan Kes</div>
@@ -2152,6 +2560,11 @@ function populasikanLampiran2() {
     </div>
 </div>
 
+<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
+<input type="hidden" id="mk_tarikh_keputusan">
+<input type="hidden" id="mk_masa_keputusan">
+<input type="hidden" id="mk_tempat_keputusan">
+<!-- MODAL POP-UP KHAS UNTUK SAMAN HADIR (BORANG A) -->
 <div class="modal-overlay" id="modalSamanA">
     <div class="modal-box" style="max-width: 650px;">
         <div class="modal-title">Jana Saman Hadir (Borang A) & Notis</div>
@@ -2222,6 +2635,43 @@ function populasikanLampiran2() {
     </div>
 </div>
 
+<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI ASAL (JANGAN PADAM) -->
+<!-- Ini membolehkan fungsi sistem lama 'bukaPreviewSamanA' membaca data tanpa perlu diubah -->
+<input type="hidden" id="mk_tarikh_saman">
+<input type="hidden" id="mk_masa_saman">
+<input type="hidden" id="mk_tempat_saman">
+
+<!-- BAHAGIAN 4.6: Sebutan Kes (Penetapan semula) -->
+            <div class="card full-width" id="kad_sebutan_semula" style="display: none;">
+    <div class="card-header">Penetapan Tarikh Sebutan Kes (Penetapan Semula)</div>
+    <div class="card-body">
+        <div class="sebutan-grid-labels">
+            <div class="info-label" style="margin:0;">Tarikh Sebutan</div>
+            <div class="info-label" style="margin:0;">Masa Sebutan</div>
+            <div class="info-label" style="margin:0;">Tempat Sebutan</div>
+            <div></div>
+        </div>
+        <div class="sebutan-grid-inputs">
+            <div><input type="date" id="mk_tarikh_sebutan_semula" onchange="semakButangNotis('sebutan_semula')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
+            <div><input type="time" id="mk_masa_sebutan_semula" onchange="semakButangNotis('sebutan_semula')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
+            <div><input type="text" id="mk_tempat_sebutan_semula" value="Pejabat Tenaga Kerja Kluang" style="margin:0; height: 42px; box-sizing: border-box;"></div>
+            <div><button id="btnTindakan_sebutan_semula" class="btn-save" style="width: 100%; height: 42px; font-size: 0.9em; opacity: 0.5; cursor: not-allowed;" onclick="bukaModalSebutanSemula()" disabled>📄 Jana Notis</button></div>
+           </div>
+    </div>
+</div>
+<!-- BAHAGIAN 4.7: Penetapan Tarikh Saman (Memo Luar Kawasan) -->
+<style>
+    .grid-memo { display: grid; grid-template-columns: repeat(4, 1fr) 180px; gap: 15px; align-items: end; }
+    .grid-memo-span3 { grid-column: span 3; }
+    .grid-memo-span2 { grid-column: span 2; } 
+    .grid-memo-span1 { grid-column: span 1; }
+    @media (max-width: 950px) {
+        .grid-memo { grid-template-columns: 1fr; gap: 10px; }
+        .grid-memo-span3, .grid-memo-span2, .grid-memo-span1 { grid-column: span 1; }
+    }
+</style>
+
+<!-- MODAL POP-UP KHAS UNTUK SAMAN (MEMO LUAR KAWASAN) -->
 <div class="modal-overlay" id="modalSamanMemo">
     <div class="modal-box" style="max-width: 900px; padding: 25px 30px;">
         <div class="modal-title">Jana Saman (Memo Luar Kawasan)</div>
@@ -2416,510 +2866,6 @@ function populasikanLampiran2() {
 
     </div>
 </div>
-
- <!-- END OF MODAL PREVIEW -->
-
-<!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-header" style="padding: 30px 20px 20px 20px; display: flex; flex-direction: column; align-items: center;">
-            <!-- Logo dibesarkan, shadow/border dibuang supaya clean seperti dalam gambar -->
-        <img src="logo-mysystem.png" alt="Logo" style="width: 100%; max-width: 220px; height: auto;">
-        </div>
-        
-        <!-- Background kotak profil dihilangkan supaya ia blend sempurna dengan background -->
-        <div style="display: flex; gap: 12px; margin: 0 20px 20px; align-items: center;">
-            
-            <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik. Seret untuk laras, Scroll/Cubit untuk zoom, Dwi-klik untuk tukar.">
-                <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
-                    <span style="font-size: 1.3em; color: var(--text-muted);">👤</span>
-                </div>
-                <img id="gambarProfil" src="" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
-            </div>
-
-            <div style="flex-grow: 1; overflow: hidden; text-align: left;">
-                <div id="namaProfilEdit" contenteditable="true" spellcheck="false" style="font-size: 0.85em; font-weight: 700; color: var(--text-main); line-height: 1.3; outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaProfil(this);" title="Klik untuk edit nama">Mohamad Hafiz bin<br>Abu Bakar</div>
-            </div>
-            
-        </div>
-
-        <ul class="nav-menu">
-            <li id="navSenarai" onclick="tukarView('senarai')">SENARAI TUGASAN</li>
-            <li id="navDaftar" class="active" onclick="tukarView('daftar')">PENDAFTARAN ADUAN</li>
-            <li id="navUrus" onclick="tukarView('urus')">PENGURUSAN ADUAN</li>
-            <li>CARIAN KES</li>
-            <li>KALENDAR ADUAN</li>
-            <li>LAPORAN</li>
-        </ul>
-        
-      <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
-            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s; word-wrap: break-word; overflow-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
-(KLUANG LABOUR OFFICE)<br>
-(KEMENTERIAN SUMBER MANUSIA)<br>
-(MINISTRY OF HUMAN RESOURCES)<br>
-JALAN PEJABAT KERAJAAN<br>
-86000 KLUANG<br>
-JOHOR DARUL TAKZIM
-<br><br>
-Telefon : 07-772 1646/2646<br>
-Telekerja : 07-7737111<br>
-E-mel : jtkdkluang@mohr.gov.my<br>
-Portal rasmi : jtksm.mohr.gov.my
-<br><br>
-<strong>“Pekerja MADANI Kesuma Bangsa”</strong></div>
-        </div>
-    </aside>
-
-    <main class="main-content">
-        <div class="top-header">
-            <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Aduan</span></div>
-            <div style="display: flex; gap: 10px;" id="butangCetakHeader">
-                <!-- Butang ini disembunyikan secara lalai (display: none) -->
-                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="if(typeof populasikanLampiran2 === 'function') populasikanLampiran2(); document.getElementById('modalPreview').style.display='flex';">📄 Semak & Cetak</button>
-            </div>
-        </div>
-        
-        <div id="viewSenaraiTugas" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
-            <div class="card full-width">
-                <div class="card-header">Senarai Kes Didaftarkan</div>
-                <div class="card-body">
-                    <table>
-                        <thead>
-                                    <tr>
-                                        <th class="sortable-th" style="width: 15%;" onclick="sortSenaraiTugas('noKes')" title="Klik untuk susun">No. Kes</th>
-                                        <th class="sortable-th" style="width: 25%;" onclick="sortSenaraiTugas('pengadu')" title="Klik untuk susun">Pengadu</th>
-                                        <th class="sortable-th" style="width: 25%;" onclick="sortSenaraiTugas('defendan')" title="Klik untuk susun">Defendan</th>
-                                        <th class="sortable-th" style="width: 15%;" onclick="sortSenaraiTugas('tarikh')" title="Klik untuk susun">Tarikh Daftar</th>
-                                        <th style="width: 20%; text-align: center;">Tindakan</th>
-                                    </tr>
-                                </thead>
-                        <tbody id="bodySenaraiTugas">
-                            <tr><td colspan="5" class="empty-row">Tiada kes didaftarkan setakat ini.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-<!-- ========================================== -->
-<!-- PAPARAN MAKLUMAT KES TERPERINCI            -->
-<!-- ========================================== -->
-        <div id="viewMaklumatKes" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
-            
-<div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn-cancel btn-terapung" onclick="tukarView('senarai')" style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 1.2em; line-height: 1;">←</span> Kembali ke Senarai
-                </button>
-                <button id="btnEditRekodKes" class="btn-terapung" style="display: flex; align-items: center; gap: 8px; background-color: var(--primary-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                    <span style="font-size: 1.2em; line-height: 1;">✏️</span> Kemaskini
-                </button>
-            </div>
-
-            <!-- BAHAGIAN 1: Maklumat Kes (2 Grid) -->
-            <!-- KODING BARU PENGGANTI -->
-<div class="card full-width">
-    <div class="card-header" id="mk_header_kes">Maklumat Kes</div>
-    <div class="card-body">
-        <style>
-            .grid-kes-4 {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
-            }
-            @media (max-width: 1024px) {
-                .grid-kes-4 { grid-template-columns: repeat(2, 1fr); }
-            }
-            @media (max-width: 600px) {
-                .grid-kes-4 { grid-template-columns: 1fr; }
-            }
-        </style>
-        <div class="grid-kes-4">
-            <!-- Card 1 -->
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                <div class="info-label">Didaftarkan oleh</div>
-                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
-                <div class="info-label">Tarikh Pendaftaran</div>
-                <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0;">-</div>
-            </div>
-
-            <!-- Card 2 -->
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                <div class="info-label">Pegawai Penyiasat</div>
-                <div class="info-value" id="mk_pegawai" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
-                <div class="info-label">Tarikh Siasatan</div>
-                <div class="info-value" id="mk_tarikh_tugas" style="margin-bottom: 0;">-</div>
-            </div>
-
-            <!-- Card 3 -->
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                <div class="info-label">Disahkan oleh</div>
-                <div class="info-value" id="mk_sah_oleh_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaDisahkanOleh(this);" title="Klik untuk edit nama pengesah">Mohd Faizal bin Mohammad</div>
-                <div class="info-label">Tarikh Pengesahan</div>
-                <div class="info-value" id="mk_tarikh_sah" style="margin-bottom: 0;">-</div>
-            </div>
-
-            <!-- Card 4 -->
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                <div class="info-label">Jawatan</div>
-                <div class="info-value" id="mk_ketua_pejabat" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanKetuaPejabat(this);" title="Klik untuk edit jawatan">Pegawai Pendengar</div>
-            </div>
-        </div>
-    </div>
-</div>
-            <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
-            <div class="card full-width">
-                <div class="card-header" id="mk_header_pengadu">Maklumat Pengadu</div>
-                <div class="card-body">
-                    <div class="grid-3" id="mk_grid_pengadu">
-                        <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Pengadu -->
-                    </div>
-
-           
-                    <!-- Tuntutan Digabungkan dalam Container yang sama -->
-                    <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
-                    <h4 style="margin-top:0; margin-bottom: 15px; color:var(--primary-blue);">Maklumat Tuntutan</h4>
-                    
-                    <div style="grid-column: 1 / -1; overflow-x: auto;">
-                        <table style="border:1px solid var(--border-color); width: 100%;">
-                            <thead style="background-color: var(--card-header-bg);">
-                                <tr>
-                                    <th style="width: 5%; text-align:center; padding: 12px;">Bil.</th>
-                                    <th style="width: 25%; padding: 12px;">Jenis Aduan</th>
-                                    <th style="width: 55%; padding: 12px;">Keterangan Aduan</th>
-                                    <th style="width: 15%; text-align: center; padding: 12px;">Tindakan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="mk_body_tuntutan">
-                                <!-- JS Injection -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-<!-- BAHAGIAN BARU: Kenyataan Pengadu (DIALIH KE BAWAH MAKLUMAT PENGADU) -->
-            <div class="card full-width" id="kad_kenyataan_pengadu_view">
-                <div class="card-header" onclick="toggleKenyataanPengaduView()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                    <span style="text-align: left; flex-grow: 1;">Kenyataan Pengadu</span>
-                    <!-- LALAIKAN KEPADA "▼ Buka" -->
-                    <span id="labelTogolKenyataanView" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1; flex-shrink: 0;">▼ Buka</span>
-                </div>
-                <!-- TAMBAH display: none; UNTUK AUTO-SEMBUNYI -->
-                <div class="card-body" id="kandunganKenyataanPengaduView" style="display: none;">
-                    <div class="info-value" id="mk_kenyataan_pengadu" style="white-space: pre-wrap; text-align: justify; line-height: 1.6;">
-                        <!-- Teks kenyataan akan dijana oleh JS di sini -->
-                        -
-                    </div>
-                </div>
-            </div>
-
-<!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan -->
-            <div class="card full-width" id="kad_kehadiran_perwakilan">
-                <div class="card-header">
-                    Maklumat Kehadiran / Perwakilan (Pengadu)
-                    <button class="btn-add btn-terapung" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em;" onclick="bukaModalPerwakilan('pengadu')">+ Tambah Wakil / Saksi</button>
-                </div>
-                <div class="card-body">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
-                        <thead style="background-color: var(--card-header-bg);">
-                            <tr>
-                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Kategori</th>
-                                <th style="width: 25%; padding: 12px; border-bottom: 1px solid var(--border-color);">Nama & No. KP</th>
-                                <th style="width: 30%; padding: 12px; border-bottom: 1px solid var(--border-color);">Firma Guaman & Alamat</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">No. Telefon / E-mel</th>
-                                <th style="width: 10%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mk_body_perwakilan">
-                            <tr><td colspan="6" class="empty-row" style="padding: 15px;">Tiada maklumat kehadiran / perwakilan direkodkan.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- BAHAGIAN 3: Maklumat Defendan -->
-            <div class="card full-width" id="kad_maklumat_defendan">
-                <div class="card-header" id="mk_header_defendan">Maklumat Defendan</div>
-                <div class="card-body">
-                    <div class="grid-2" id="mk_grid_defendan">
-                        <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Defendan -->
-                    </div>
-                </div>
-            </div>
-<!-- MODAL POP-UP EDIT TUNTUTAN & SIASATAN -->
-
-<!-- BAHAGIAN BARU: Maklumat Kehadiran / Perwakilan (Defendan) -->
-            <div class="card full-width" id="kad_kehadiran_perwakilan_defendan">
-                <div class="card-header">
-                    Maklumat Kehadiran / Perwakilan (Defendan)
-                    <button class="btn-add btn-terapung" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em;" onclick="bukaModalPerwakilan('defendan')">+ Tambah Wakil / Saksi</button>
-                </div>
-                <div class="card-body">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
-                        <thead style="background-color: var(--card-header-bg);">
-                            <tr>
-                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Kategori</th>
-                                <th style="width: 25%; padding: 12px; border-bottom: 1px solid var(--border-color);">Nama & No. KP</th>
-                                <th style="width: 30%; padding: 12px; border-bottom: 1px solid var(--border-color);">Firma Guaman & Alamat</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">No. Telefon / E-mel</th>
-                                <th style="width: 10%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mk_body_perwakilan_defendan">
-                            <tr><td colspan="6" class="empty-row" style="padding: 15px;">Tiada maklumat kehadiran / perwakilan direkodkan.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- KAD PEMANTAUAN BAYARAN (MOU / BORANG C) -->
-            <div class="card full-width" id="kad_pemantauan_mou" style="display: none;">
-                <div class="card-header">
-                    <span id="tajuk_kad_pemantauan">Pemantauan Bayaran</span>
-                    <button class="btn-add btn-terapung" id="btn_menu_pemantauan_mou" style="margin-left: auto; padding: 6px 12px; font-size: 0.85em; display: flex; align-items: center; gap: 5px;" onclick="bukaModalPemantauanMou()">
-                        <span>💰 Kemaskini Rekod Bayaran</span>
-                    </button>
-                </div>
-                <div class="card-body" id="body_pemantauan_mou">
-                    <!-- Progress bar & ringkasan dijana dinamik oleh renderKadPemantauan() -->
-                </div>
-            </div>
-            <!-- BAHAGIAN 3.5: Sejarah Tindakan -->
-            <div class="card full-width" id="kad_sejarah_tindakan" style="display: none;">
-                <div class="card-header">Sejarah Tindakan</div>
-                <div class="card-body">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
-                        <thead style="background-color: var(--card-header-bg);">
-                            <tr>
-                                <th style="width: 5%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Bil.</th>
-                                <th style="width: 15%; padding: 12px; border-bottom: 1px solid var(--border-color);">Tarikh & Masa Rekod</th>
-                                <th style="width: 20%; padding: 12px; border-bottom: 1px solid var(--border-color);">Jenis Tindakan</th>
-                                <th style="width: 45%; padding: 12px; border-bottom: 1px solid var(--border-color);">Butiran Lanjut</th>
-                                <th style="width: 15%; text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color);">Jana Dokumen</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mk_body_sejarah">
-                            <!-- JS Injection -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-<!-- BAHAGIAN 3.6: Menu Pilihan Tindakan Pengurusan Kes -->
-            <div class="card full-width" id="menu_tindakan_urus" style="display: none;">
-                <div class="card-header">Pilihan Tindakan Pengurusan</div>
-                <div class="card-body">
-                    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSebutan()">
-                            <span>📅 Sebutan Kes</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="toggleKadUrus('sebutan_semula')">
-                            <span>📅 Sebutan Kes<br>(Penetapan semula)</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSebutanTangguh()">
-                            <span>📅 Sebutan Kes<br>(Tangguh)</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalPeringatanBayaran('MOU')">
-                            <span>⚠️ Peringatan<br>Bayaran MOU</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSamanA()">
-                            <span>📄 Saman<br>(Borang A)</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalSamanMemo()">
-                            <span>📄 Saman<br>(Memo Luar Kawasan)</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="toggleKadUrus('bicara')">
-                            <span>⚖️ Bicara</span>
-                        </button>
-                       <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalKeputusan()">
-                            <span>📜 Keputusan<br>Kes</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalPeringatanBayaran('Borang C')">
-                            <span>⚠️ Peringatan<br>Bayaran Perintah</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalAlamatTerkini()">
-                            <span>📍 Alamat Terkini<br>Defendan</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: var(--card-header-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaPreviewTarikBalik()">
-                            <span>🚫 Tarik Balik<br>Kes</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalBatalKes()">
-                            <span>❌ Batal Kes</span>
-                        </button>
-                        <button class="btn-terapung" style="background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; padding: 8px; font-size: 0.85em; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; height: 60px; line-height: 1.3;" onclick="bukaModalNotisLain()">
-                            <span>📝 Notis<br>(Lain-lain)</span>
-                        </button>                                         
-                    </div>
-                </div>
-            </div>
-            
-<!-- BAHAGIAN 4: Penetapan Tarikh Sebutan Kes -->
-<div class="card full-width" id="kad_sebutan_kes">
-    <div class="card-header">Penetapan Tarikh Sebutan Kes</div>
-    <div class="card-body">
-        
-        <!-- INPUT TERSEMBUNYI (Penyelamat Fungsi Asal supaya sistem surat tidak error) -->
-        <input type="hidden" id="mk_tempat_sebutan" value="Pejabat Tenaga Kerja Kluang, Jalan Pejabat Kerajaan, 86000 Kluang, Johor">
-
-        <!-- Baris 1: Grid 4 Kolum (Tarikh Notis, Tarikh Sebutan, Masa Sebutan & Butang Jana Notis) -->
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; align-items: end; margin-bottom: 15px;">
-                <div>
-                    <label class="info-label" style="display:block; margin-bottom: 5px;">Tarikh Notis</label>
-                    <input type="date" id="mk_tarikh_notis" onchange="semakButangSebutan()" style="width: 100%; height: 42px; box-sizing: border-box; padding: 8px;">
-                </div>
-                <div>
-                    <label class="info-label" style="display:block; margin-bottom: 5px;">Tarikh Sebutan</label>
-                    <input type="date" id="mk_tarikh_sebutan" onchange="semakButangSebutan()" style="width: 100%; height: 42px; box-sizing: border-box; padding: 8px;">
-                </div>
-                <div>
-                    <label class="info-label" style="display:block; margin-bottom: 5px;">Masa Sebutan</label>
-                    <input type="time" id="mk_masa_sebutan" onchange="semakButangSebutan()" style="width: 100%; height: 42px; box-sizing: border-box; padding: 8px;">
-                </div>
-                <div>
-                    <button id="btnTindakanSebutan" class="btn-save" style="width: 100%; height: 42px; padding: 0 10px; font-size: 0.9em; display: flex; align-items: center; justify-content: center; gap: 8px; margin:0; opacity: 0.5; cursor: not-allowed; box-sizing: border-box;" onclick="tindakanSebutan()" disabled>
-                        📄 Jana Notis Sebutan
-                    </button>
-                </div>
-            </div>
-
-        <!-- Baris 2: Kotak Maklumat Alamat Berpusat -->
-        <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin-bottom: 0px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
-                <div style="font-weight: 600; color: var(--primary-blue); font-size: 0.95em;">Maklumat Tempat Sebutan</div>
-                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.85em; cursor: pointer; font-weight: 600; color: #b91c1c;">
-                    <input type="checkbox" id="cb_tempat_berbeza" onchange="toggleEditTempatSebutan()">
-                    Tempat sebutan berbeza?
-                </label>
-            </div>
-            <div style="font-size: 0.8em; color: var(--text-muted); font-style: italic; margin-bottom: 15px; line-height: 1.3;">
-                *Sistem telah mengekstrak alamat semasa pejabat secara automatik. Sila tanda kotak di atas jika anda ingin menukar Tempat Sebutan ini.
-            </div>
-            
-            <!-- KONTENA INPUT (Disembunyikan secara lalai) -->
-            <div id="kontena_input_alamat_sebutan" style="display: none;">
-                <div style="margin-bottom: 10px;">
-                    <label class="info-label" style="display:block; margin-bottom: 5px;">Nama Pejabat / Tempat</label>
-                    <input type="text" id="mk_nama_tempat" value="Pejabat Tenaga Kerja Kluang" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
-                </div>
-                
-                <div style="margin-bottom: 10px;">
-                    <label class="info-label" style="display:block; margin-bottom: 5px;">Alamat Baris 1</label>
-                    <input type="text" id="mk_alamat1_tempat" value="Jalan Pejabat Kerajaan" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <div>
-                        <label class="info-label" style="display:block; margin-bottom: 5px;">Alamat Baris 2</label>
-                        <input type="text" id="mk_alamat2_tempat" value="" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
-                    </div>
-                    <div>
-                        <label class="info-label" style="display:block; margin-bottom: 5px;">Alamat Baris 3</label>
-                        <input type="text" id="mk_alamat3_tempat" value="" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label class="info-label" style="display:block; margin-bottom: 5px;">Poskod</label>
-                        <input type="text" id="mk_poskod_tempat" value="86000" maxlength="5" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="autoSemakPoskodTempat(); kemaskiniTempatSebutanLatar()">
-                    </div>
-                    <div>
-                        <label class="info-label" style="display:block; margin-bottom: 5px;">Daerah</label>
-                        <input type="text" id="mk_daerah_tempat" value="Kluang" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
-                    </div>
-                    <div>
-                        <label class="info-label" style="display:block; margin-bottom: 5px;">Negeri</label>
-                        <input type="text" id="mk_negeri_tempat" value="Johor" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="kemaskiniTempatSebutanLatar()">
-                    </div>
-                </div>
-            </div>
-            <!-- TAMAT KONTENA INPUT -->
-        </div> <!-- Penutup untuk kotak kelabu Maklumat Tempat Sebutan -->
-        
-    </div> <!-- Penutup card-body -->
-</div> <!-- Penutup kad_sebutan_kes keseluruhan -->
-
-<!-- KAD-KAD TAMBAHAN NOTIS (GENERIK) -->
-<!-- MODAL POP-UP KHAS UNTUK SEBUTAN KES (TANGGUH) -->
-
-
-<div class="card full-width" id="kad_bicara" style="display: none;">
-    <div class="card-header">Penetapan Tarikh Perbicaraan</div>
-    <div class="card-body">
-        <div class="sebutan-grid-labels"><div class="info-label" style="margin:0;">Tarikh Bicara</div><div class="info-label" style="margin:0;">Masa Bicara</div><div class="info-label" style="margin:0;">Tempat Bicara</div><div></div></div>
-        <div class="sebutan-grid-inputs">
-            <div><input type="date" id="mk_tarikh_bicara" onchange="semakButangNotis('bicara')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
-            <div><input type="time" id="mk_masa_bicara" onchange="semakButangNotis('bicara')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
-            <div><input type="text" id="mk_tempat_bicara" value="Pejabat Tenaga Kerja Kluang" style="margin:0; height: 42px; box-sizing: border-box;"></div>
-            <div><button id="btnTindakan_bicara" class="btn-save" style="width: 100%; height: 42px; font-size: 0.9em; opacity: 0.5; cursor: not-allowed;" onclick="bukaPreviewNotisGenerik('bicara')" disabled>📄 Jana Notis</button></div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL POP-UP KHAS UNTUK BICARA (TANGGUH) -->
-
-
-<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
-<input type="hidden" id="mk_tarikh_bicara_tangguh">
-<input type="hidden" id="mk_masa_bicara_tangguh">
-<input type="hidden" id="mk_tempat_bicara_tangguh">
-
-<!-- MODAL POP-UP KHAS UNTUK BICARA (SAMBUNG) -->
-
-
-<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
-<input type="hidden" id="mk_tarikh_bicara_sambung">
-<input type="hidden" id="mk_masa_bicara_sambung">
-<input type="hidden" id="mk_tempat_bicara_sambung">
-
-<!-- MODAL POP-UP KHAS UNTUK KEPUTUSAN KES -->
-
-
-<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI RESET ASAL (JANGAN PADAM) -->
-<input type="hidden" id="mk_tarikh_keputusan">
-<input type="hidden" id="mk_masa_keputusan">
-<input type="hidden" id="mk_tempat_keputusan">
-<!-- MODAL POP-UP KHAS UNTUK SAMAN HADIR (BORANG A) -->
-
-
-<!-- HIDDEN INPUTS UNTUK KESERASIAN FUNGSI ASAL (JANGAN PADAM) -->
-<!-- Ini membolehkan fungsi sistem lama 'bukaPreviewSamanA' membaca data tanpa perlu diubah -->
-<input type="hidden" id="mk_tarikh_saman">
-<input type="hidden" id="mk_masa_saman">
-<input type="hidden" id="mk_tempat_saman">
-
-<!-- BAHAGIAN 4.6: Sebutan Kes (Penetapan semula) -->
-            <div class="card full-width" id="kad_sebutan_semula" style="display: none;">
-    <div class="card-header">Penetapan Tarikh Sebutan Kes (Penetapan Semula)</div>
-    <div class="card-body">
-        <div class="sebutan-grid-labels">
-            <div class="info-label" style="margin:0;">Tarikh Sebutan</div>
-            <div class="info-label" style="margin:0;">Masa Sebutan</div>
-            <div class="info-label" style="margin:0;">Tempat Sebutan</div>
-            <div></div>
-        </div>
-        <div class="sebutan-grid-inputs">
-            <div><input type="date" id="mk_tarikh_sebutan_semula" onchange="semakButangNotis('sebutan_semula')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
-            <div><input type="time" id="mk_masa_sebutan_semula" onchange="semakButangNotis('sebutan_semula')" style="margin:0; height: 42px; box-sizing: border-box;"></div>
-            <div><input type="text" id="mk_tempat_sebutan_semula" value="Pejabat Tenaga Kerja Kluang" style="margin:0; height: 42px; box-sizing: border-box;"></div>
-            <div><button id="btnTindakan_sebutan_semula" class="btn-save" style="width: 100%; height: 42px; font-size: 0.9em; opacity: 0.5; cursor: not-allowed;" onclick="bukaModalSebutanSemula()" disabled>📄 Jana Notis</button></div>
-           </div>
-    </div>
-</div>
-<!-- BAHAGIAN 4.7: Penetapan Tarikh Saman (Memo Luar Kawasan) -->
-<style>
-    .grid-memo { display: grid; grid-template-columns: repeat(4, 1fr) 180px; gap: 15px; align-items: end; }
-    .grid-memo-span3 { grid-column: span 3; }
-    .grid-memo-span2 { grid-column: span 2; } 
-    .grid-memo-span1 { grid-column: span 1; }
-    @media (max-width: 950px) {
-        .grid-memo { grid-template-columns: 1fr; gap: 10px; }
-        .grid-memo-span3, .grid-memo-span2, .grid-memo-span1 { grid-column: span 1; }
-    }
-</style>
-
-<!-- MODAL POP-UP KHAS UNTUK SAMAN (MEMO LUAR KAWASAN) -->
-
             
 </div> <!-- TAMAT VIEW MAKLUMAT KES -->
 
@@ -4013,6 +3959,7 @@ function bukaMaklumatKes(index) {
     let senaraiTuntutanSemasa = [];
     if (kes.dataBorang) {
         if (isBerkumpulan) {
+            // Gabungkan tuntutan ketua dan tambahan ke dalam satu paparan senarai utama jika wujud
             if (kes.dataBorang.tuntutanKetua && kes.dataBorang.tuntutanKetua.length > 0) {
                 senaraiTuntutanSemasa = senaraiTuntutanSemasa.concat(kes.dataBorang.tuntutanKetua);
             }
@@ -4031,27 +3978,11 @@ function bukaMaklumatKes(index) {
 
     if (senaraiTuntutanSemasa.length > 0) {
         let indexBil = 1;
-        senaraiTuntutanSemasa.forEach((item, index) => {
-            let statusBadge = item.status ? `<br><span style="font-size:0.8em; color:${item.status === 'Pelanggaran dikesan' ? 'var(--danger)' : 'var(--primary-blue)'}; font-weight:bold; display:inline-block; margin-top:4px;">[Status: ${item.status}]</span>` : '';
-            
-            // Susunan kemas untuk hasil siasatan berserta Multilevel List
-            let siasatanHtml = item.siasatan ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color); font-size: 0.9em; color: #334155;"><strong style="color: var(--text-main);">Hasil Siasatan:</strong><div style="white-space: pre-wrap; margin-top: 4px; line-height: 1.5; font-family: inherit;">${item.siasatan}</div></div>` : '';
-
-            tbodyTuntutan.innerHTML += `
-                <tr>
-                    <td style="text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">${indexBil++}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; vertical-align: top;">${item.jenis || '-'}${statusBadge}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">
-                        <div>${item.keterangan || '-'}</div>
-                        ${siasatanHtml}
-                    </td>
-                    <td style="text-align: center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">
-                        <button class="btn-edit-tbl" onclick="bukaModalEditTuntutanKes(${index})" title="Edit Tuntutan">✏️ Edit</button>
-                    </td>
-                </tr>`;
+        senaraiTuntutanSemasa.forEach((item) => {
+            tbodyTuntutan.innerHTML += `<tr><td style="text-align:center; padding: 10px; border-bottom: 1px solid var(--border-color);">${indexBil++}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color); font-weight: 500;">${item.jenis || '-'}</td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.keterangan || '-'}</td></tr>`;
         });
     } else {
-        tbodyTuntutan.innerHTML = `<tr><td colspan="4" class="empty-row" style="padding: 15px; text-align: center;">Tiada maklumat tuntutan direkodkan.</td></tr>`;
+        tbodyTuntutan.innerHTML = `<tr><td colspan="3" class="empty-row" style="padding: 15px; text-align: center;">Tiada maklumat tuntutan direkodkan.</td></tr>`;
     }
     const listKad = ['sebutan', 'sebutan_tangguh', 'sebutan_semula', 'bicara', 'bicara_tangguh', 'bicara_sambung', 'keputusan'];
     listKad.forEach(idPrefix => {
@@ -4130,30 +4061,11 @@ function bukaMaklumatKes(index) {
     if (btnKemaskiniPendaftaran) {
         btnKemaskiniPendaftaran.style.display = 'flex';
         btnKemaskiniPendaftaran.innerHTML = '<span style="font-size: 1.2em; line-height: 1;">✏️</span> Kemaskini';
-        
-        // Tetapkan fungsi klik yang sahih untuk membuka mod kemaskini borang
-        btnKemaskiniPendaftaran.onclick = function() {
-            if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) {
-                // 1. Panggil semula fungsi buka kes supaya data dimasukkan ke dalam input borang
-                bukaKesDidaftar(indexKesSemasa);
-                
-                // 2. Buka paparan borang pendaftaran
-                tukarView('daftar', true);
-                
-                // 3. Nyah-kunci (unlock) input borang supaya boleh diedit
-                if (typeof setStatusBorang === 'function') {
-                    setStatusBorang(false);
-                }
-                
-                // 4. Pergi ke tab pertama (Pengadu & Majikan)
-                if (typeof pergiKeTabBorang === 'function') {
-                    pergiKeTabBorang('tab1');
-                }
-            } else {
-                alert("Ralat: Tiada rujukan kes dipilih untuk dikemaskini.");
-            }
-        };
     }
+
+    document.getElementById('btnEditRekodKes').onclick = function() {
+        bukaKesDidaftar(indexKesSemasa);
+    };
 
     const kadKenyataanView = document.getElementById('kad_kenyataan_pengadu_view');
     const kandunganKenyataan = document.getElementById('kandunganKenyataanPengaduView');
@@ -4185,76 +4097,7 @@ function bukaMaklumatKes(index) {
     document.getElementById('butangCetakHeader').style.display = 'none'; 
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
-    
-window.bukaModalEditTuntutanKes = function(index) {
-    const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) ? memoriSenaraiKes[indexKesSemasa] : null;
-    
-    let targetList = [];
-    if (kes && kes.dataBorang) {
-        if (kes.jenisAduan === 'Berkumpulan') {
-            targetList = kes.dataBorang.tuntutanKetua || kes.dataBorang.tuntutanBiasa || [];
-        } else {
-            targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua || [];
-        }
-    } else if (typeof memoriTuntutan !== 'undefined') {
-        targetList = memoriTuntutan;
-    }
 
-    let item = targetList[index];
-    if (!item) {
-        alert("Maklumat tuntutan tidak dijumpai.");
-        return;
-    }
-
-    document.getElementById('edit_index_tuntutan').value = index;
-    document.getElementById('edit_jenis_tuntutan').value = item.jenis || '';
-    document.getElementById('edit_keterangan_tuntutan').value = item.keterangan || '';
-    document.getElementById('edit_siasatan_tuntutan').value = item.siasatan || '';
-    document.getElementById('edit_status_tuntutan').value = item.status || '';
-
-    const modal = document.getElementById('modalEditTuntutanKes');
-    if (modal) {
-        modal.style.display = 'flex';
-        modal.style.zIndex = '99999';
-    }
-};
-
-window.simpanEditTuntutanKes = function() {
-    let index = parseInt(document.getElementById('edit_index_tuntutan').value, 10);
-    const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) ? memoriSenaraiKes[indexKesSemasa] : null;
-    
-    let targetList = [];
-    if (kes && kes.dataBorang) {
-        if (kes.jenisAduan === 'Berkumpulan') {
-            targetList = kes.dataBorang.tuntutanKetua || kes.dataBorang.tuntutanBiasa || [];
-        } else {
-            targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua || [];
-        }
-    } else if (typeof memoriTuntutan !== 'undefined') {
-        targetList = memoriTuntutan;
-    }
-
-    if (targetList && targetList[index]) {
-        targetList[index].keterangan = document.getElementById('edit_keterangan_tuntutan').value.trim();
-        targetList[index].siasatan = document.getElementById('edit_siasatan_tuntutan').value.trim();
-        targetList[index].status = document.getElementById('edit_status_tuntutan').value;
-
-        if (typeof simpanSenaraiKeLokal === 'function') {
-            simpanSenaraiKeLokal();
-        }
-
-        document.getElementById('modalEditTuntutanKes').style.display = 'none';
-
-        if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof bukaMaklumatKes === 'function') {
-            bukaMaklumatKes(indexKesSemasa);
-        } else if (typeof renderJadualTuntutan === 'function') {
-            renderJadualTuntutan();
-        }
-
-        alert("Maklumat tuntutan dan hasil siasatan berjaya dikemaskini.");
-    }
-};
-    
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
         memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
@@ -7195,124 +7038,54 @@ function simpanTuntutan() {
 
 function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.display = 'none'; }
        
-
 function renderJadualTuntutan() {
-    // ==========================================
-    // 1. JADUAL TUNTUTAN BIASA
-    // ==========================================
     const tbody = document.querySelector("#jadualTuntutan tbody");
 
     if (tbody) {
-        tbody.innerHTML = "";
-
-        if (!Array.isArray(memoriTuntutan) || memoriTuntutan.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="empty-row">
-                        Tiada maklumat aduan direkodkan.
-                    </td>
-                </tr>`;
+        tbody.innerHTML = ""; 
+        if (memoriTuntutan.length === 0) { 
+            tbody.innerHTML = `<tr><td colspan="5" class="empty-row">Tiada maklumat aduan direkodkan.</td></tr>`; 
         } else {
             memoriTuntutan.forEach((item, index) => {
-                const statusBadge = item.status
-                    ? `<br><span style="font-size:0.8em; color:${item.status === 'Pelanggaran dikesan' ? 'var(--danger)' : 'var(--primary-blue)'}; font-weight:bold; display:inline-block; margin-top:4px;">[Status: ${item.status}]</span>`
-                    : "";
-
-                const siasatanHtml = item.siasatan
-                    ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color); font-size:0.9em; color:#334155;">
-                           <strong style="color:var(--text-main);">Hasil Siasatan:</strong>
-                           <div style="white-space:pre-wrap; margin-top:4px; line-height:1.5; font-family:inherit;">${item.siasatan}</div>
-                       </div>`
-                    : "";
-
-                const tr = document.createElement("tr");
-
                 
-tr.innerHTML = `
-    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
-        ${index + 1}
-    </td>
-    <td style="padding:12px; border-bottom:1px solid var(--border-color); font-weight:600; vertical-align:top;">
-        ${item.jenis || "-"}${statusBadge}
-    </td>
-    <td style="padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
-        <div>${item.keterangan || "-"}</div>
-        ${siasatanHtml}
-    </td>
-    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
-        <button
-            type="button"
-            class="btn-edit-tbl"
-            style="background-color:#0284c7;"
-            onclick="bukaModalEditTuntutanKes(${index})"
-            title="Edit Siasatan">
-            ✏️ Edit
-        </button>
-    </td>
-    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
-        <button
-            type="button"
-            class="btn-delete-tbl"
-            onclick="hapusTuntutan(${index}, 'biasa')"
-            title="Hapus Tuntutan">
-            🗑️ Hapus
-        </button>
-    </td>`;
-    
-tbody.appendChild(tr);
+                // Sentiasa paparkan butang Edit dan Hapus untuk setiap baris tuntutan
+                const actionHtml = `
+                    <td style="text-align:center;"><button type="button" class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
+                    <td style="text-align:center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>
+                `;
 
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${index + 1}</td>
+                    <td>${item.jenis}</td>
+                    <td>${item.keterangan}</td>
+                    ${actionHtml}
+                `;
+                tbody.appendChild(tr);
             });
         }
     }
 
-    // ==========================================
-    // 2. JADUAL TUNTUTAN KETUA
-    // ==========================================
     const tbodyKetua = document.querySelector("#jadualTuntutanKetua tbody");
-
     if (tbodyKetua) {
-        tbodyKetua.innerHTML = "";
-
-        if (!Array.isArray(memoriTuntutanKetua) || memoriTuntutanKetua.length === 0) {
-            tbodyKetua.innerHTML = `
-                <tr>
-                    <td colspan="5" class="empty-row"
-                        style="text-align:center; padding:12px;">
-                        Tiada maklumat aduan direkodkan.
-                    </td>
-                </tr>`;
+        tbodyKetua.innerHTML = ""; 
+        if (memoriTuntutanKetua.length === 0) { 
+            tbodyKetua.innerHTML = `<tr><td colspan="5" class="empty-row" style="text-align: center; padding: 12px;">Tiada maklumat aduan direkodkan.</td></tr>`; 
         } else {
             memoriTuntutanKetua.forEach((item, index) => {
-                const tr = document.createElement("tr");
-
+                const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="text-align:center;">${index + 1}</td>
-                    <td>${item.jenis || "-"}</td>
-                    <td>${item.keterangan || "-"}</td>
-                    <td style="text-align:center;">
-                        <button
-                            type="button"
-                            class="btn-edit-tbl"
-                            style="background-color:#0284c7;"
-                            onclick="bukaModalTuntutan('ketua', ${index})">
-                            ✏️ Edit
-                        </button>
-                    </td>
-                    <td style="text-align:center;">
-                        <button
-                            type="button"
-                            class="btn-delete-tbl"
-                            onclick="hapusTuntutan(${index}, 'ketua')">
-                            🗑️ Hapus
-                        </button>
-                    </td>`;
-
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td>${item.jenis}</td>
+                    <td>${item.keterangan}</td>
+                    <td style="text-align: center;"><button type="button" class="btn-edit-tbl" style="background-color: #0284c7;" onclick="bukaModalTuntutan('ketua', ${index})">✏️ Edit</button></td>
+                    <td style="text-align: center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'ketua')">🗑️ Hapus</button></td>
+                `;
                 tbodyKetua.appendChild(tr);
             });
         }
     }
 }
-
 
 function renderJadualTuntutanTambahan(idx) {
     const tbody = document.querySelector(`#jadualTuntutanPengadu${idx} tbody`);
@@ -8305,7 +8078,6 @@ function hapusKesDidaftar(index) {
         renderSenaraiTugas(); 
     } 
 }
-
 function bukaKesDidaftar(index) {
     isSelesaiDaftar = false;
     isEditMode = true; 
@@ -8333,7 +8105,7 @@ function bukaKesDidaftar(index) {
     const kes = memoriSenaraiKes[index];
     
     if (kes.dataBorang) {
-    const formData = kes.dataBorang.inputs;
+        const formData = kes.dataBorang.inputs;
         
         if(document.getElementById('aduanIndividu') && formData['aduan'] === 'Individu') document.getElementById('aduanIndividu').checked = true;
         if(document.getElementById('aduanBerkumpulan') && formData['aduan'] === 'Berkumpulan') document.getElementById('aduanBerkumpulan').checked = true;
