@@ -6992,10 +6992,21 @@ function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
     
-    if (index > -1) {
+    // Ambil data tuntutan dari kes yang sedang aktif jika berada dalam paparan maklumat kes terperinci
+    let currentTuntutanList = [];
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
+        let kesAktif = memoriSenaraiKes[indexKesSemasa];
+        if (kesAktif.dataBorang && kesAktif.dataBorang.tuntutanBiasa) {
+            currentTuntutanList = kesAktif.dataBorang.tuntutanBiasa;
+        }
+    }
+    if (currentTuntutanList.length === 0) {
+        currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
+    }
+
+    if (index > -1 && currentTuntutanList[index]) {
         document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
-        let targetList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-        let item = targetList[index];
+        let item = currentTuntutanList[index];
         document.getElementById('jenisTuntutan').value = item.jenis || '';
         document.getElementById('keteranganTuntutan').value = item.keterangan || '';
         document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
