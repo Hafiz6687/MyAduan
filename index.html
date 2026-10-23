@@ -6992,7 +6992,19 @@ function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
     
-    // Ambil data tuntutan dari kes yang sedang aktif jika berada dalam paparan maklumat kes terperinci
+    // 1. Ekstrak danjana senarai pilihan Jenis Aduan ke dalam elemen <select id="jenisTuntutan">
+    let selectJenis = document.getElementById('jenisTuntutan');
+    if (selectJenis) {
+        let optionsHtml = '<option value="">-Sila Pilih-</option>';
+        if (typeof senaraiTuntutanPekerja !== 'undefined') {
+            senaraiTuntutanPekerja.forEach(item => {
+                optionsHtml += `<option value="${item}">${item}</option>`;
+            });
+        }
+        selectJenis.innerHTML = optionsHtml;
+    }
+
+    // 2. Ambil data tuntutan dari kes yang sedang aktif
     let currentTuntutanList = [];
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
         let kesAktif = memoriSenaraiKes[indexKesSemasa];
@@ -7011,12 +7023,21 @@ function bukaModalTuntutan(jenis, index = -1) {
         document.getElementById('keteranganTuntutan').value = item.keterangan || '';
         document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
         document.getElementById('statusAduanTuntutan').value = item.statusAduan || '';
+        
+        // Kawal paparan input "Lain-lain" jika jenis aduan berkaitan
+        if (typeof semakJenisTuntutanLain === 'function') {
+            semakJenisTuntutanLain();
+        }
     } else {
         document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
         document.getElementById('jenisTuntutan').value = "";
         document.getElementById('keteranganTuntutan').value = "";
         document.getElementById('hasilSiasatanTuntutan').value = "";
         document.getElementById('statusAduanTuntutan').value = "";
+        if (document.getElementById('jenisTuntutanLain')) {
+            document.getElementById('jenisTuntutanLain').style.display = 'none';
+            document.getElementById('jenisTuntutanLain').value = '';
+        }
     }
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
