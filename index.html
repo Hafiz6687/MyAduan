@@ -551,12 +551,13 @@ body {
 
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">4. Status Aduan <span>*</span></label>
-                <select id="statusAduanTuntutan" style="width: 100%; box-sizing: border-box;">
+                <select id="statusAduanTuntutan" onchange="kawalStatusAduanLain()" style="width: 100%; box-sizing: border-box;">
                     <option value="">-Sila Pilih Status-</option>
                     <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
                     <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
                     <option value="Lain-lain">Lain-lain</option>
                 </select>
+                <input type="text" id="statusAduanLain" placeholder="Sila nyatakan status aduan lain" style="display: none; margin-top: 8px; width: 100%; box-sizing: border-box;" oninput="hurufBesarAyatPertama(this)">
             </div>
             
             <div class="modal-actions">
@@ -6988,11 +6989,22 @@ function bukaTab(tabId, elemenTab) {
             if(val === 'Lain-lain') { jenisTuntutanLain.style.display = 'block'; } else { jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = ''; }
         }
 
+function kawalStatusAduanLain() {
+    let selectStatus = document.getElementById('statusAduanTuntutan').value;
+    let inputLain = document.getElementById('statusAduanLain');
+    if (selectStatus === 'Lain-lain') {
+        inputLain.style.display = 'block';
+    } else {
+        inputLain.style.display = 'none';
+        inputLain.value = '';
+    }
+}
+
+// Di dalam fungsi bukaModalTuntutan, pastikan logik ini disertakan:
 function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
     
-    // 1. Ekstrak danjana senarai pilihan Jenis Aduan ke dalam elemen <select id="jenisTuntutan">
     let selectJenis = document.getElementById('jenisTuntutan');
     if (selectJenis) {
         let optionsHtml = '<option value="">-Sila Pilih-</option>';
@@ -7004,7 +7016,6 @@ function bukaModalTuntutan(jenis, index = -1) {
         selectJenis.innerHTML = optionsHtml;
     }
 
-    // 2. Ambil data tuntutan dari kes yang sedang aktif
     let currentTuntutanList = [];
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
         let kesAktif = memoriSenaraiKes[indexKesSemasa];
@@ -7016,15 +7027,31 @@ function bukaModalTuntutan(jenis, index = -1) {
         currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
     }
 
+    let statusSelect = document.getElementById('statusAduanTuntutan');
+    let statusLainInput = document.getElementById('statusAduanLain');
+
     if (index > -1 && currentTuntutanList[index]) {
         document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
         let item = currentTuntutanList[index];
         document.getElementById('jenisTuntutan').value = item.jenis || '';
         document.getElementById('keteranganTuntutan').value = item.keterangan || '';
         document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
-        document.getElementById('statusAduanTuntutan').value = item.statusAduan || '';
         
-        // Kawal paparan input "Lain-lain" jika jenis aduan berkaitan
+        let valStatus = item.statusAduan || '';
+        if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
+            statusSelect.value = valStatus;
+            statusLainInput.style.display = 'none';
+            statusLainInput.value = '';
+        } else if (valStatus !== "") {
+            statusSelect.value = "Lain-lain";
+            statusLainInput.style.display = 'block';
+            statusLainInput.value = valStatus;
+        } else {
+            statusSelect.value = "";
+            statusLainInput.style.display = 'none';
+            statusLainInput.value = '';
+        }
+        
         if (typeof semakJenisTuntutanLain === 'function') {
             semakJenisTuntutanLain();
         }
@@ -7033,7 +7060,9 @@ function bukaModalTuntutan(jenis, index = -1) {
         document.getElementById('jenisTuntutan').value = "";
         document.getElementById('keteranganTuntutan').value = "";
         document.getElementById('hasilSiasatanTuntutan').value = "";
-        document.getElementById('statusAduanTuntutan').value = "";
+        statusSelect.value = "";
+        statusLainInput.style.display = 'none';
+        statusLainInput.value = "";
         if (document.getElementById('jenisTuntutanLain')) {
             document.getElementById('jenisTuntutanLain').style.display = 'none';
             document.getElementById('jenisTuntutanLain').value = '';
@@ -7042,11 +7071,14 @@ function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
+// Pastikan juga fungsi simpanTuntutan mengambil nilai teks bebas jika "Lain-lain" dipilih:
 function simpanTuntutan() {
     let jenis = document.getElementById('jenisTuntutan').value;
     let keterangan = document.getElementById('keteranganTuntutan').value;
     let hasilSiasatan = document.getElementById('hasilSiasatanTuntutan').value;
-    let statusAduan = document.getElementById('statusAduanTuntutan').value;
+    let selectStatus = document.getElementById('statusAduanTuntutan').value;
+    let statusAduan = (selectStatus === 'Lain-lain') ? document.getElementById('statusAduanLain').value : selectStatus;
+    
     let index = parseInt(document.getElementById('indexTuntutanEdit').value);
     let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
 
@@ -7073,14 +7105,14 @@ function simpanTuntutan() {
 
     document.getElementById('modalTuntutan').style.display = 'none';
     
-    // Kemaskini paparan jadual mengikut paparan semasa
     if (typeof renderSemuaJadualTuntutan === 'function') {
         renderSemuaJadualTuntutan();
     } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
         bukaMaklumatKes(indexKesSemasa);
     }
 }
-        function hapusTuntutan(index, jenisJadual = 'biasa') { 
+        
+function hapusTuntutan(index, jenisJadual = 'biasa') { 
             if (confirm("Adakah anda pasti mahu memadam tuntutan ini?")) { 
                 if (jenisJadual === 'ketua') {
                     memoriTuntutanKetua.splice(index, 1); 
