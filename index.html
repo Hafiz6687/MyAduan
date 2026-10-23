@@ -7226,37 +7226,40 @@ function renderJadualTuntutan() {
 
                 const tr = document.createElement("tr");
 
-                tr.innerHTML = `
-                    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
-                        ${index + 1}
-                    </td>
-                    <td style="padding:12px; border-bottom:1px solid var(--border-color); font-weight:600; vertical-align:top;">
-                        ${item.jenis || "-"}${statusBadge}
-                    </td>
-                    <td style="padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
-                        <div>${item.keterangan || "-"}</div>
-                        ${siasatanHtml}
-                    </td>
-                    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top; white-space:nowrap;">
-                        <button
-                            type="button"
-                            class="btn-edit-tbl"
-                            style="background-color:#0284c7; margin-bottom:4px;"
-                            onclick="bukaModalEditTuntutanKes(${index})"
-                            title="Edit Siasatan">
-                            ✏️ Siasatan
-                        </button>
-                        <br>
-                        <button
-                            type="button"
-                            class="btn-delete-tbl"
-                            onclick="hapusTuntutan(${index}, 'biasa')"
-                            title="Hapus Tuntutan">
-                            🗑️ Hapus
-                        </button>
-                    </td>`;
+                
+tr.innerHTML = `
+    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
+        ${index + 1}
+    </td>
+    <td style="padding:12px; border-bottom:1px solid var(--border-color); font-weight:600; vertical-align:top;">
+        ${item.jenis || "-"}${statusBadge}
+    </td>
+    <td style="padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
+        <div>${item.keterangan || "-"}</div>
+        ${siasatanHtml}
+    </td>
+    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
+        <button
+            type="button"
+            class="btn-edit-tbl"
+            style="background-color:#0284c7;"
+            onclick="bukaModalEditTuntutanKes(${index})"
+            title="Edit Siasatan">
+            ✏️ Siasatan
+        </button>
+    </td>
+    <td style="text-align:center; padding:12px; border-bottom:1px solid var(--border-color); vertical-align:top;">
+        <button
+            type="button"
+            class="btn-delete-tbl"
+            onclick="hapusTuntutan(${index}, 'biasa')"
+            title="Hapus Tuntutan">
+            🗑️ Hapus
+        </button>
+    </td>`;
+    
+tbody.appendChild(tr);
 
-                tbody.appendChild(tr);
             });
         }
     }
