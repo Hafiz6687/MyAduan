@@ -4167,37 +4167,71 @@ function bukaMaklumatKes(index) {
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
 function bukaModalEditTuntutanKes(index) {
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    if (!kes || !kes.dataBorang) return;
+    // 1. Dapatkan kes semasa dari memori (atau fallback ke memori sementara jika mode baru)
+    const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) ? memoriSenaraiKes[indexKesSemasa] : null;
+    
+    let targetList = [];
+    if (kes && kes.dataBorang) {
+        if (kes.jenisAduan === 'Berkumpulan') {
+            targetList = kes.dataBorang.tuntutanKetua || kes.dataBorang.tuntutanBiasa || [];
+        } else {
+            targetList = kes.dataBorang.tuntutanBiasa || [];
+        }
+    } else if (typeof memoriTuntutan !== 'undefined') {
+        targetList = memoriTuntutan;
+    }
 
-    let targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua || [];
     let item = targetList[index];
-    if (!item) return;
+    if (!item) {
+        alert("Ralat: Maklumat tuntutan tidak dijumpai.");
+        return;
+    }
 
+    // 2. Masukkan data ke dalam elemen pop-up
     document.getElementById('edit_index_tuntutan').value = index;
     document.getElementById('edit_jenis_tuntutan').value = item.jenis || '';
     document.getElementById('edit_keterangan_tuntutan').value = item.keterangan || '';
     document.getElementById('edit_siasatan_tuntutan').value = item.siasatan || '';
     document.getElementById('edit_status_tuntutan').value = item.status || '';
 
-    document.getElementById('modalEditTuntutanKes').style.display = 'flex';
+    // 3. Paksa modal terpapar secara sahih
+    const modal = document.getElementById('modalEditTuntutanKes');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
 }
 
 function simpanEditTuntutanKes() {
     let index = parseInt(document.getElementById('edit_index_tuntutan').value, 10);
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    if (!kes || !kes.dataBorang) return;
+    const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) ? memoriSenaraiKes[indexKesSemasa] : null;
+    
+    let targetList = [];
+    if (kes && kes.dataBorang) {
+        targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua;
+    } else if (typeof memoriTuntutan !== 'undefined') {
+        targetList = memoriTuntutan;
+    }
 
-    let targetList = kes.dataBorang.tuntutanBiasa || kes.dataBorang.tuntutanKetua;
     if (targetList && targetList[index]) {
         targetList[index].keterangan = document.getElementById('edit_keterangan_tuntutan').value.trim();
         targetList[index].siasatan = document.getElementById('edit_siasatan_tuntutan').value.trim();
         targetList[index].status = document.getElementById('edit_status_tuntutan').value;
 
-        simpanSenaraiKeLokal();
+        if (typeof simpanSenaraiKeLokal === 'function') {
+            simpanSenaraiKeLokal();
+        }
+
+        // Tutup modal
         document.getElementById('modalEditTuntutanKes').style.display = 'none';
-        bukaMaklumatKes(indexKesSemasa); // Refresh paparan
-        alert("Maklumat tuntutan dan siasatan berjaya dikemaskini.");
+
+        // Refresh paparan terperinci kes jika berada dalam mod maklumat kes
+        if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof bukaMaklumatKes === 'function') {
+            bukaMaklumatKes(indexKesSemasa);
+        } else if (typeof renderJadualTuntutan === 'function') {
+            renderJadualTuntutan();
+        }
+
+        alert("Maklumat tuntutan dan hasil siasatan berjaya dikemaskini.");
     }
 }
 function simpanDisahkanOleh(el) {
