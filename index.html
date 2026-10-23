@@ -1178,12 +1178,18 @@ body {
                     <input type="hidden" id="pw_kategori" value="Wakil Pengadu">
 
                     <!-- BUNGKUSAN UTAMA -->
-                    <div id="ruangan_pw_utama" style="display: block;">
-                        
-                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                            <label style="text-align: left;">Nama <span>*</span></label>
-                            <input type="text" id="pw_nama" placeholder="Nama penuh individu" oninput="hurufBesarSetiapPerkataan(this)">
-                        </div>
+<div id="ruangan_pw_utama" style="display: block;">
+    <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+        <label style="text-align: left;">Kategori <span>*</span></label>
+        <select id="pw_kategori_pihak" style="width: 100%; box-sizing: border-box;">
+            <option value="Pekerja">Pekerja</option>
+            <option value="Wakil Majikan">Wakil Majikan</option>
+        </select>
+    </div>
+    <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+        <label style="text-align: left;">Nama <span>*</span></label>
+        <input type="text" id="pw_nama" placeholder="Nama penuh individu" oninput="hurufBesarSetiapPerkataan(this)">
+    </div>
 
                         <!-- RUANGAN BARU: JENIS PENDAFTARAN -->
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;" id="ruangan_pw_jenis_pend">
