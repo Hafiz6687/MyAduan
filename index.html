@@ -4166,6 +4166,7 @@ function bukaMaklumatKes(index) {
     document.getElementById('butangCetakHeader').style.display = 'none'; 
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
+    
 function bukaModalEditTuntutanKes(index) {
     // 1. Dapatkan kes semasa dari memori (atau fallback ke memori sementara jika mode baru)
     const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1) ? memoriSenaraiKes[indexKesSemasa] : null;
@@ -7184,11 +7185,26 @@ function renderJadualTuntutan() {
         } else {
             memoriTuntutan.forEach((item, index) => {
                 
-                // Sentiasa paparkan butang Edit dan Hapus untuk setiap baris tuntutan
-                const actionHtml = `
-                    <td style="text-align:center;"><button type="button" class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
-                    <td style="text-align:center;"><button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>
-                `;
+        // Gantikan dengan kod bina jadual yang menyokong butang Edit siasatan baharu
+        senaraiTuntutanSemasa.forEach((item, index) => {
+            let statusBadge = item.status ? `<br><span style="font-size:0.8em; color:${item.status === 'Pelanggaran dikesan' ? 'var(--danger)' : 'var(--primary-blue)'}; font-weight:bold; display:inline-block; margin-top:4px;">[Status: ${item.status}]</span>` : '';
+            
+            let siasatanHtml = item.siasatan ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color); font-size: 0.9em; color: #334155;"><strong style="color: var(--text-main);">Hasil Siasatan:</strong><div style="white-space: pre-wrap; margin-top: 4px; line-height: 1.5; font-family: inherit;">${item.siasatan}</div></div>` : '';
+
+            tbodyTuntutan.innerHTML += `
+                <tr>
+                    <td style="text-align:center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">${indexBil++}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; vertical-align: top;">${item.jenis || '-'}${statusBadge}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top;">
+                        <div>${item.keterangan || '-'}</div>
+                        ${siasatanHtml}
+                    </td>
+                    <td style="text-align: center; padding: 12px; border-bottom: 1px solid var(--border-color); vertical-align: top; white-space: nowrap;">
+                        <button type="button" class="btn-edit-tbl" style="background-color: #0284c7; margin-bottom: 4px;" onclick="bukaModalEditTuntutanKes(${index})" title="Edit Siasatan">✏️ Siasatan</button><br>
+                        <button type="button" class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')" title="Hapus Tuntutan">🗑️ Hapus</button>
+                    </td>
+                </tr>`;
+        });
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
