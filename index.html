@@ -2011,10 +2011,10 @@ Portal rasmi : jtksm.mohr.gov.my
 
 <!-- BAHAGIAN BARU: Kenyataan Pengadu (DIALIH KE BAWAH MAKLUMAT PENGADU) -->
             <div class="card full-width" id="kad_kenyataan_pengadu_view">
-                <div class="card-header" onclick="toggleKenyataanPengaduView()" style="cursor: pointer; justify-content: space-between; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                    <span>Kenyataan Pengadu</span>
+                <div class="card-header" onclick="toggleKenyataanPengaduView()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    <span style="text-align: left; flex-grow: 1;">Kenyataan Pengadu</span>
                     <!-- LALAIKAN KEPADA "▼ Buka" -->
-                    <span id="labelTogolKenyataanView" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1;">▼ Buka</span>
+                    <span id="labelTogolKenyataanView" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1; flex-shrink: 0;">▼ Buka</span>
                 </div>
                 <!-- TAMBAH display: none; UNTUK AUTO-SEMBUNYI -->
                 <div class="card-body" id="kandunganKenyataanPengaduView" style="display: none;">
