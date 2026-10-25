@@ -608,6 +608,49 @@ body {
         </div>
     </div>
 </div>
+    <!-- MODAL KEMASKINI MAKLUMAT MAJIKAN -->
+<div class="modal-overlay" id="modalKemaskiniMajikan" style="z-index: 2200;">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Kemaskini Maklumat Majikan</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Majikan <span>*</span></label>
+            <input type="text" id="edit_namaDefendan" placeholder="Nama penuh majikan / syarikat" style="width: 100%; box-sizing: border-box;">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">No. MyKad / Pendaftaran Syarikat (SSM) <span>*</span></label>
+            <input type="text" id="edit_noPendDefendan" placeholder="No. Pengenalan / Pendaftaran" style="width: 100%; box-sizing: border-box;">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Alamat Penuh Majikan <span>*</span></label>
+            <input type="text" id="edit_alamatDefendan1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <input type="text" id="edit_alamatDefendan2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <input type="text" id="edit_alamatDefendan3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <input type="text" id="edit_poskodDefendan" placeholder="Poskod" maxlength="5" style="width: 100%; box-sizing: border-box;">
+                <input type="text" id="edit_bandarDefendan" placeholder="Bandar" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">No. Telefon (H/P)</label>
+                <input type="text" id="edit_hpDefendan" placeholder="012-3456789" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">E-mel</label>
+                <input type="email" id="edit_emelDefendan" placeholder="emel@domain.com" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalKemaskiniMajikan').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="simpanKemaskiniMajikan()">✔ Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
     <!-- MODAL POP-UP KHAS UNTUK TARIK BALIK KES (MAJIKAN) -->
     <div class="modal-overlay" id="modalTarikBalikMajikan">
         <div class="modal-box">
@@ -16607,6 +16650,65 @@ function simpanKemaskiniPengadu() {
     // Segarkan paparan Maklumat Kes supaya perubahan terus kelihatan
     bukaMaklumatKes(indexKesSemasa);
     alert("Maklumat pengadu berjaya dikemaskini!");
+}
+    function bukaModalKemaskiniMajikan() {
+    const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined') ? memoriSenaraiKes[indexKesSemasa] : null;
+    if (!kes) return;
+    const inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
+
+    document.getElementById('edit_namaDefendan').value = inputs['namaDefendan'] || kes.namaDefendan.replace(/<br>.*$/g, '') || '';
+    document.getElementById('edit_noPendDefendan').value = inputs['noPendDefendan'] || '';
+    document.getElementById('edit_alamatDefendan1').value = inputs['alamatDefendan1'] || '';
+    document.getElementById('edit_alamatDefendan2').value = inputs['alamatDefendan2'] || '';
+    document.getElementById('edit_alamatDefendan3').value = inputs['alamatDefendan3'] || '';
+    document.getElementById('edit_poskodDefendan').value = inputs['poskodDefendan'] || '';
+    document.getElementById('edit_bandarDefendan').value = inputs['bandarDefendan'] || '';
+    document.getElementById('edit_hpDefendan').value = inputs['hpDefendan'] || inputs['telHpDefendan'] || '';
+    document.getElementById('edit_emelDefendan').value = inputs['emelDefendan'] || '';
+
+    document.getElementById('modalKemaskiniMajikan').style.display = 'flex';
+}
+
+function simpanKemaskiniMajikan() {
+    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa === -1 || !memoriSenaraiKes[indexKesSemasa]) return;
+    const kes = memoriSenaraiKes[indexKesSemasa];
+    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
+    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
+
+    const valNama = document.getElementById('edit_namaDefendan').value.trim();
+    const valNoPend = document.getElementById('edit_noPendDefendan').value.trim();
+    const valA1 = document.getElementById('edit_alamatDefendan1').value.trim();
+    const valA2 = document.getElementById('edit_alamatDefendan2').value.trim();
+    const valA3 = document.getElementById('edit_alamatDefendan3').value.trim();
+    const valPos = document.getElementById('edit_poskodDefendan').value.trim();
+    const valBdr = document.getElementById('edit_bandarDefendan').value.trim();
+    const valHp = document.getElementById('edit_hpDefendan').value.trim();
+    const valEmel = document.getElementById('edit_emelDefendan').value.trim();
+
+    if (!valNama) {
+        alert("Sila masukkan nama majikan.");
+        return;
+    }
+
+    kes.dataBorang.inputs['namaDefendan'] = valNama;
+    kes.dataBorang.inputs['noPendDefendan'] = valNoPend;
+    kes.dataBorang.inputs['alamatDefendan1'] = valA1;
+    kes.dataBorang.inputs['alamatDefendan2'] = valA2;
+    kes.dataBorang.inputs['alamatDefendan3'] = valA3;
+    kes.dataBorang.inputs['poskodDefendan'] = valPos;
+    kes.dataBorang.inputs['bandarDefendan'] = valBdr;
+    kes.dataBorang.inputs['hpDefendan'] = valHp;
+    kes.dataBorang.inputs['emelDefendan'] = valEmel;
+
+    kes.namaDefendan = valNama;
+
+    if (typeof simpanSenaraiKeLokal === 'function') {
+        simpanSenaraiKeLokal();
+    }
+
+    document.getElementById('modalKemaskiniMajikan').style.display = 'none';
+    bukaMaklumatKes(indexKesSemasa);
+    alert("Maklumat Majikan berjaya dikemaskini!");
 }
 </script>
 
