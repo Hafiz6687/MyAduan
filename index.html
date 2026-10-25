@@ -1963,17 +1963,17 @@ Portal rasmi : jtksm.mohr.gov.my
             <!-- Card 1 -->
             <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
                 <div class="info-label">Didaftarkan oleh</div>
-                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-value" id="mk_daftar_oleh" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanDidaftarkanOleh(this);" title="Klik untuk edit pendaftar">Mohamad Hafiz bin Abu Bakar</div>
                 <div class="info-label">Tarikh Pendaftaran</div>
-                <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0;">-</div>
+                <div class="info-value" id="mk_tarikh_daftar" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanTarikhDaftar(this);" title="Klik untuk edit tarikh pendaftaran">-</div>
             </div>
 
             <!-- Card 2 -->
             <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
                 <div class="info-label">Pegawai Penyiasat</div>
-                <div class="info-value" id="mk_pegawai" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-value" id="mk_pegawai" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanPegawaiPenyiasat(this);" title="Klik untuk edit pegawai penyiasat">Mohamad Hafiz bin Abu Bakar</div>
                 <div class="info-label">Tarikh Siasatan</div>
-                <div class="info-value" id="mk_tarikh_tugas" style="margin-bottom: 0;">-</div>
+                <div class="info-value" id="mk_tarikh_tugas" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanTarikhSiasatan(this);" title="Klik untuk edit tarikh siasatan">-</div>
             </div>
 
             <!-- Card 3 -->
@@ -1981,7 +1981,7 @@ Portal rasmi : jtksm.mohr.gov.my
                 <div class="info-label">Disahkan oleh</div>
                 <div class="info-value" id="mk_sah_oleh_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaDisahkanOleh(this);" title="Klik untuk edit nama pengesah">Mohd Faizal bin Mohammad</div>
                 <div class="info-label">Tarikh Pengesahan</div>
-                <div class="info-value" id="mk_tarikh_sah" style="margin-bottom: 0;">-</div>
+                <div class="info-value" id="mk_tarikh_sah" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanTarikhPengesahan(this);" title="Klik untuk edit tarikh pengesahan">-</div>
             </div>
 
             <!-- Card 4 -->
@@ -3776,9 +3776,24 @@ function bukaMaklumatKes(index) {
     const isBerkumpulan = kes.jenisAduan === 'Berkumpulan';
     
     document.getElementById('mk_header_kes').innerHTML = `Maklumat Kes (${kes.noKes})`;
-    document.getElementById('mk_tarikh_daftar').innerText = kes.tarikh;
-    document.getElementById('mk_tarikh_sah').innerText = kes.tarikh; 
-    document.getElementById('mk_tarikh_tugas').innerText = kes.tarikh; 
+
+    const inputsData = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
+
+    if (document.getElementById('mk_daftar_oleh')) {
+        document.getElementById('mk_daftar_oleh').innerText = inputsData['didaftarkanOlehCustom'] || "Mohamad Hafiz bin Abu Bakar";
+    }
+    if (document.getElementById('mk_tarikh_daftar')) {
+        document.getElementById('mk_tarikh_daftar').innerText = inputsData['tarikhDaftarCustom'] || kes.tarikh || "-";
+    }
+    if (document.getElementById('mk_pegawai')) {
+        document.getElementById('mk_pegawai').innerText = inputsData['pegawaiPenyiasatCustom'] || "Mohamad Hafiz bin Abu Bakar";
+    }
+    if (document.getElementById('mk_tarikh_tugas')) {
+        document.getElementById('mk_tarikh_tugas').innerText = inputsData['tarikhSiasatanCustom'] || kes.tarikh || "-";
+    }
+    if (document.getElementById('mk_tarikh_sah')) {
+        document.getElementById('mk_tarikh_sah').innerText = inputsData['tarikhPengesahanCustom'] || kes.tarikh || "-";
+    }
 
     // --- SUNTIK KOD PEMULIHAN NILAI DI SINI ---
     const savedDisahkan = (kes.dataBorang && kes.dataBorang.inputs && kes.dataBorang.inputs['disahkanOlehCustom']) 
@@ -16429,7 +16444,51 @@ function simpanKetuaPejabat(el) {
         if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
     }
 }
+function simpanDidaftarkanOleh(el) {
+    const teks = el.innerText.trim();
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['didaftarkanOlehCustom'] = teks;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
 
+function simpanTarikhDaftar(el) {
+    const teks = el.innerText.trim();
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        memoriSenaraiKes[indexKesSemasa].tarikh = teks;
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['tarikhDaftarCustom'] = teks;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
+
+function simpanPegawaiPenyiasat(el) {
+    const teks = el.innerText.trim();
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['pegawaiPenyiasatCustom'] = teks;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
+
+function simpanTarikhSiasatan(el) {
+    const teks = el.innerText.trim();
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['tarikhSiasatanCustom'] = teks;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
+
+function simpanTarikhPengesahan(el) {
+    const teks = el.innerText.trim();
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['tarikhPengesahanCustom'] = teks;
+        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
+    }
+}
 </script>
 
 <!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
