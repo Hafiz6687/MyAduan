@@ -565,7 +565,49 @@ body {
             </div>
         </div>
     </div>
+<!-- MODAL KEMASKINI MAKLUMAT PENGADU -->
+<div class="modal-overlay" id="modalKemaskiniPengadu" style="z-index: 2200;">
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title">Kemaskini Maklumat Pengadu</div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Nama Pengadu <span>*</span></label>
+            <input type="text" id="edit_namaPengadu" placeholder="Nama penuh pengadu" style="width: 100%; box-sizing: border-box;">
+        </div>
 
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">No. MyKad / Pasport <span>*</span></label>
+            <input type="text" id="edit_noPendPengadu" placeholder="No. Pengenalan" style="width: 100%; box-sizing: border-box;" maxlength="14">
+        </div>
+
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">Alamat Penuh <span>*</span></label>
+            <input type="text" id="edit_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <input type="text" id="edit_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <input type="text" id="edit_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <input type="text" id="edit_poskod" placeholder="Poskod" maxlength="5" style="width: 100%; box-sizing: border-box;">
+                <input type="text" id="edit_bandar" placeholder="Bandar" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">No. Telefon (H/P)</label>
+                <input type="text" id="edit_hpPengadu" placeholder="012-3456789" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">E-mel</label>
+                <input type="email" id="edit_emelPengadu" placeholder="emel@domain.com" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="document.getElementById('modalKemaskiniPengadu').style.display='none'">Batal</button>
+            <button class="btn-save" onclick="simpanKemaskiniPengadu()">✔ Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
     <!-- MODAL POP-UP KHAS UNTUK TARIK BALIK KES (MAJIKAN) -->
     <div class="modal-overlay" id="modalTarikBalikMajikan">
         <div class="modal-box">
@@ -1993,9 +2035,15 @@ Portal rasmi : jtksm.mohr.gov.my
     </div>
 </div>
             <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
-            <div class="card full-width">
-                <div class="card-header" id="mk_header_pengadu">Maklumat Pengadu</div>
-                <div class="card-body">
+            <!-- KODING BARU -->
+<div class="card full-width">
+    <div class="card-header" id="mk_header_pengadu" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Maklumat Pengadu</span>
+        <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: flex; align-items: center; gap: 5px;" onclick="bukaModalKemaskiniPengadu()">
+            ✏️ Kemaskini
+        </button>
+    </div>
+    <div class="card-body">
                     <div class="grid-3" id="mk_grid_pengadu">
                         <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Pengadu -->
                     </div>
@@ -4123,7 +4171,61 @@ function simpanDisahkanOleh(el) {
         }
     }
 }
-    
+
+    // Buka modal dan tarik data pengadu semasa kes yang sedang dibuka
+function bukaModalKemaskiniPengadu() {
+    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
+    const kes = memoriSenaraiKes[indexKesSemasa];
+    const inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
+
+    // Masukkan data sedia ada ke dalam input pop-up
+    document.getElementById('edit_namaPengadu').value = kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '') : (inputs['namaPengadu'] || '');
+    document.getElementById('edit_noPendPengadu').value = inputs['noPendPengadu'] || '';
+    document.getElementById('edit_alamat1').value = inputs['alamatPengadu1'] || '';
+    document.getElementById('edit_alamat2').value = inputs['alamatPengadu2'] || '';
+    document.getElementById('edit_alamat3').value = inputs['alamatPengadu3'] || '';
+    document.getElementById('edit_poskod').value = inputs['poskodPengadu'] || '';
+    document.getElementById('edit_bandar').value = inputs['bandarPengadu'] || '';
+    document.getElementById('edit_hpPengadu').value = inputs['hpPengadu'] || '';
+    document.getElementById('edit_emelPengadu').value = inputs['emelPengadu'] || '';
+
+    // Paparkan modal
+    document.getElementById('modalKemaskiniPengadu').style.display = 'flex';
+}
+
+// Simpan perubahan dari modal ke dalam memori kes dan pangkalan data lokal/awan
+function simpanKemaskiniPengadu() {
+    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
+    let kes = memoriSenaraiKes[indexKesSemasa];
+
+    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
+    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
+
+    // Tangkap nilai baharu dari input modal
+    const namaBaru = document.getElementById('edit_namaPengadu').value.trim();
+    kes.namaPengadu = namaBaru;
+    kes.dataBorang.inputs['namaPengadu'] = namaBaru;
+    kes.dataBorang.inputs['noPendPengadu'] = document.getElementById('edit_noPendPengadu').value.trim();
+    kes.dataBorang.inputs['alamatPengadu1'] = document.getElementById('edit_alamat1').value.trim();
+    kes.dataBorang.inputs['alamatPengadu2'] = document.getElementById('edit_alamat2').value.trim();
+    kes.dataBorang.inputs['alamatPengadu3'] = document.getElementById('edit_alamat3').value.trim();
+    kes.dataBorang.inputs['poskodPengadu'] = document.getElementById('edit_poskod').value.trim();
+    kes.dataBorang.inputs['bandarPengadu'] = document.getElementById('edit_bandar').value.trim();
+    kes.dataBorang.inputs['hpPengadu'] = document.getElementById('edit_hpPengadu').value.trim();
+    kes.dataBorang.inputs['emelPengadu'] = document.getElementById('edit_emelPengadu').value.trim();
+
+    // Tutup modal
+    document.getElementById('modalKemaskiniPengadu').style.display = 'none';
+
+    // Simpan ke storan (Lokal / Awan)
+    if (typeof simpanSenaraiKeLokal === 'function') {
+        simpanSenaraiKeLokal();
+    }
+
+    // Segarkan paparan Maklumat Kes supaya perubahan terus kelihatan
+    bukaMaklumatKes(indexKesSemasa);
+    alert("Maklumat pengadu berjaya dikemaskini!");
+}
     function kawalCheckboxPenerimaNotis() {
         const kes = memoriSenaraiKes[indexKesSemasa];
         if (!kes) return;
