@@ -559,63 +559,17 @@ body {
                 <input type="text" id="statusAduanLain" placeholder="Sila nyatakan status aduan lain" style="display: none; margin-top: 8px; width: 100%; box-sizing: border-box;" oninput="hurufBesarAyatPertama(this)">
             </div>
             
-<div class="modal-actions">
+            <div class="modal-actions">
                 <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
                 <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
             </div>
         </div>
     </div>
 
-<!-- MODAL POP-UP KHAS UNTUK KEMASKINI MAKLUMAT PENGADU -->
-<div class="modal-overlay" id="modalKemaskiniPengadu">
-    <div class="modal-box" style="max-width: 600px;">
-        <div class="modal-title">Kemaskini Maklumat Pengadu</div>
-        <input type="hidden" id="kp_indexKes">
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pengadu <span>*</span></label>
-            <input type="text" id="kp_nama" placeholder="Nama penuh" style="width: 100%; box-sizing: border-box;">
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">No. MyKad / Pasport <span>*</span></label>
-            <input type="text" id="kp_kp" placeholder="Contoh: 880101-01-1234" style="width: 100%; box-sizing: border-box;">
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Alamat Pengadu <span>*</span></label>
-            <input type="text" id="kp_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <input type="text" id="kp_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <input type="text" id="kp_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box;">
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">No. Telefon</label>
-                <input type="text" id="kp_tel" placeholder="Contoh: 07-1234567" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 5px;">No. Tel (H/P)</label>
-                <input type="text" id="kp_hp" placeholder="Contoh: 012-3456789" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">E-mel</label>
-            <input type="email" id="kp_emel" placeholder="emel@domain.com" style="width: 100%; box-sizing: border-box;">
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalKemaskiniPengadu').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="simpanKemaskiniPengaduDariModal()">✔ Simpan Perubahan</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL POP-UP KHAS UNTUK TARIK BALIK KES (MAJIKAN) -->
-<div class="modal-overlay" id="modalTarikBalikMajikan">
-    <div class="modal-box">
-        <div class="modal-title">Maklumat Wakil Tarik Balik Kes</div>
+    <!-- MODAL POP-UP KHAS UNTUK TARIK BALIK KES (MAJIKAN) -->
+    <div class="modal-overlay" id="modalTarikBalikMajikan">
+        <div class="modal-box">
+            <div class="modal-title">Maklumat Wakil Tarik Balik Kes</div>
             
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Nama Majikan / Wakil Majikan <span>*</span></label>
@@ -2042,10 +1996,7 @@ Portal rasmi : jtksm.mohr.gov.my
 </div>
             <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
             <div class="card full-width">
-                <div class="card-header" id="mk_header_pengadu" style="display: flex; justify-content: space-between; align-items: center;">
-    <span>Maklumat Pengadu</span>
-    <button class="btn-add btn-terapung" style="margin: 0; padding: 4px 12px; font-size: 0.8em; background-color: var(--primary-blue);" onclick="bukaModalKemaskiniPengadu()">✏️ Kemaskini</button>
-</div>
+                <div class="card-header" id="mk_header_pengadu">Maklumat Pengadu</div>
                 <div class="card-body">
                     <div class="grid-3" id="mk_grid_pengadu">
                         <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Pengadu -->
@@ -4198,79 +4149,9 @@ function simpanDisahkanOleh(el) {
         }
     }
 }
-
-function bukaModalKemaskiniPengadu() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    if (!kes) return;
-
-    let inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
-
-    // Masukkan data semasa ke dalam input pop-up
-    document.getElementById('kp_nama').value = inputs['namaPengadu'] || kes.namaPengadu.replace(/<br>.*$/, '') || '';
-    document.getElementById('kp_kp').value = inputs['noPendPengadu'] || '';
-    document.getElementById('kp_alamat1').value = inputs['alamatPengadu1'] || '';
-    document.getElementById('kp_alamat2').value = inputs['alamatPengadu2'] || '';
-    document.getElementById('kp_alamat3').value = inputs['alamatPengadu3'] || '';
-    document.getElementById('kp_tel').value = inputs['telPengadu'] || '';
-    document.getElementById('kp_hp').value = inputs['hpPengadu'] || '';
-    document.getElementById('kp_emel').value = inputs['emelPengadu'] || '';
-
-    document.getElementById('modalKemaskiniPengadu').style.display = 'flex';
-}
-
-function simpanKemaskiniPengaduDariModal() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    if (!kes) return;
-
-    let namaBaru = document.getElementById('kp_nama').value.trim().toUpperCase();
-    let kpBaru = document.getElementById('kp_kp').value.trim();
-    let a1Baru = document.getElementById('kp_alamat1').value.trim();
-    let a2Baru = document.getElementById('kp_alamat2').value.trim();
-    let a3Baru = document.getElementById('kp_alamat3').value.trim();
-    let telBaru = document.getElementById('kp_tel').value.trim();
-    let hpBaru = document.getElementById('kp_hp').value.trim();
-    let emelBaru = document.getElementById('kp_emel').value.trim();
-
-    if (!namaBaru) {
-        alert("Sila masukkan nama pengadu.");
-        return;
-    }
-
-    // Kemaskini data di dalam memori kes
-    kes.namaPengadu = namaBaru;
-    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
-    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
-
-    kes.dataBorang.inputs['namaPengadu'] = namaBaru;
-    kes.dataBorang.inputs['noPendPengadu'] = kpBaru;
-    kes.dataBorang.inputs['alamatPengadu1'] = a1Baru;
-    kes.dataBorang.inputs['alamatPengadu2'] = a2Baru;
-    kes.dataBorang.inputs['alamatPengadu3'] = a3Baru;
-    kes.dataBorang.inputs['telPengadu'] = telBaru;
-    kes.dataBorang.inputs['hpPengadu'] = hpBaru;
-    kes.dataBorang.inputs['emelPengadu'] = emelBaru;
-
-    // Simpan ke local storage / awan
-    if (typeof simpanSenaraiKeLokal === 'function') {
-        simpanSenaraiKeLokal();
-    }
-
-    // Tutup modal dan refresh paparan kes terperinci
-    document.getElementById('modalKemaskiniPengadu').style.display = 'none';
-    bukaMaklumatKes(indexKesSemasa);
-
-    // Rekod sejarah tindakan secara automatik
-    if (typeof rekodSejarahTindakan === 'function') {
-        rekodSejarahTindakan(indexKesSemasa, "Kemaskini Maklumat Pengadu", "Butiran peribadi pengadu telah dikemaskini melalui paparan terperinci.");
-    }
-
-    alert("Maklumat pengadu berjaya dikemaskini.");
-}
-
-function inisialisasiLogikKes(dataSistem, kes) {
+    
     function kawalCheckboxPenerimaNotis() {
+        const kes = memoriSenaraiKes[indexKesSemasa];
         if (!kes) return;
 
         let adaPeguamPengadu = false;
@@ -4337,7 +4218,7 @@ function inisialisasiLogikKes(dataSistem, kes) {
     }
     
     window.scrollTo(0, 0);
-}
+} 
 
 function tindakanSebutan() {
     const elTarikh = document.getElementById('mk_tarikh_sebutan');
