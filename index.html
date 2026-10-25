@@ -3911,7 +3911,16 @@ function bukaMaklumatKes(index) {
     const p_bil_pengadu = dataSistem['bilPengadu'] ? dataSistem['bilPengadu'] + " Orang" : "-";
 
     const headerPengadu = document.getElementById('mk_header_pengadu');
-    if (headerPengadu) headerPengadu.innerText = 'Maklumat Pengadu';
+if (headerPengadu) {
+    headerPengadu.innerHTML = `
+        <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
+            <span>Maklumat Pengadu</span>
+            <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniPengadu()">
+                ✏️ Kemaskini
+            </button>
+        </span>
+    `;
+}
         
     let p_id = dataSistem['noPendPengadu'] || "-";
     let p_tel = dataSistem['telPengadu'] || "-";
