@@ -1960,23 +1960,21 @@ Portal rasmi : jtksm.mohr.gov.my
             }
         </style>
         <div class="grid-kes-4">
-            <!-- Kotak 1: Didaftarkan oleh & Tarikh Pendaftaran -->
-<div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-    <div class="info-label">Didaftarkan oleh</div>
-    <div class="info-value" id="mk_daftar_oleh_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanDidaftarkanOleh(this);" title="Klik untuk edit nama pendaftar">Mohamad Hafiz bin Abu Bakar</div>
-    
-    <div class="info-label">Tarikh Pendaftaran</div>
-    <div class="info-value" id="mk_tarikh_daftar_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanTarikhPendaftaran(this);" title="Klik untuk edit tarikh pendaftaran">-</div>
-</div>
+            <!-- Card 1 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Didaftarkan oleh</div>
+                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-label">Tarikh Pendaftaran</div>
+                <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0;">-</div>
+            </div>
 
-<!-- Kotak 2: Pegawai Penyiasat & Tarikh Siasatan -->
-<div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-    <div class="info-label">Pegawai Penyiasat</div>
-    <div class="info-value" id="mk_pegawai_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanPegawaiPenyiasat(this);" title="Klik untuk edit pegawai penyiasat">Mohamad Hafiz bin Abu Bakar</div>
-    
-    <div class="info-label">Tarikh Siasatan</div>
-    <div class="info-value" id="mk_tarikh_tugas_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 0; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanTarikhSiasatan(this);" title="Klik untuk edit tarikh siasatan">-</div>
-</div>
+            <!-- Card 2 -->
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="info-label">Pegawai Penyiasat</div>
+                <div class="info-value" id="mk_pegawai" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-label">Tarikh Siasatan</div>
+                <div class="info-value" id="mk_tarikh_tugas" style="margin-bottom: 0;">-</div>
+            </div>
 
             <!-- Card 3 -->
             <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
@@ -4098,45 +4096,6 @@ function bukaMaklumatKes(index) {
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
 
-function simpanDidaftarkanOleh(el) {
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
-        memoriSenaraiKes[indexKesSemasa].didaftarkanOleh = el.innerText;
-        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
-            memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
-        }
-        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['didaftarkanOlehCustom'] = el.innerText;
-        if (typeof simpanSenaraiKeLokal === 'function') {
-            simpanSenaraiKeLokal();
-        }
-    }
-}
-function simpanTarikhPendaftaran(el) {
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
-        memoriSenaraiKes[indexKesSemasa].tarikh = el.innerText;
-        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
-        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['tarikhPendaftaranCustom'] = el.innerText;
-        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
-        if (typeof renderSenaraiTugas === 'function') renderSenaraiTugas();
-    }
-}
-
-function simpanPegawaiPenyiasat(el) {
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
-        memoriSenaraiKes[indexKesSemasa].pegawaiPenyiasat = el.innerText;
-        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
-        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['pegawaiPenyiasatCustom'] = el.innerText;
-        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
-    }
-}
-
-function simpanTarikhSiasatan(el) {
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
-        memoriSenaraiKes[indexKesSemasa].tarikhSiasatan = el.innerText;
-        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
-        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['tarikhSiasatanCustom'] = el.innerText;
-        if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
-    }
-}
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
         memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
