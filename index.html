@@ -4198,7 +4198,8 @@ function simpanDisahkanOleh(el) {
         }
     }
 }
-    function bukaModalKemaskiniPengadu() {
+
+function bukaModalKemaskiniPengadu() {
     if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
     const kes = memoriSenaraiKes[indexKesSemasa];
     if (!kes) return;
@@ -4267,8 +4268,9 @@ function simpanKemaskiniPengaduDariModal() {
 
     alert("Maklumat pengadu berjaya dikemaskini.");
 }
+
+functioninisialisasiLogikKes(dataSistem, kes) {
     function kawalCheckboxPenerimaNotis() {
-        const kes = memoriSenaraiKes[indexKesSemasa];
         if (!kes) return;
 
         let adaPeguamPengadu = false;
@@ -4335,7 +4337,7 @@ function simpanKemaskiniPengaduDariModal() {
     }
     
     window.scrollTo(0, 0);
-} 
+}
 
 function tindakanSebutan() {
     const elTarikh = document.getElementById('mk_tarikh_sebutan');
