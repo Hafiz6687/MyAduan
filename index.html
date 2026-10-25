@@ -1963,7 +1963,7 @@ Portal rasmi : jtksm.mohr.gov.my
             <!-- Card 1 -->
             <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
                 <div class="info-label">Didaftarkan oleh</div>
-                <div class="info-value" id="mk_daftar_oleh" style="margin-bottom: 16px;">Mohamad Hafiz bin Abu Bakar</div>
+                <div class="info-value" id="mk_daftar_oleh_edit" contenteditable="true" spellcheck="false" style="font-size: 0.95em; font-weight: 500; color: var(--text-main); outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; margin-bottom: 16px; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanDidaftarkanOleh(this);" title="Klik untuk edit nama pendaftar">Mohamad Hafiz bin Abu Bakar</div>
                 <div class="info-label">Tarikh Pendaftaran</div>
                 <div class="info-value" id="mk_tarikh_daftar" style="margin-bottom: 0;">-</div>
             </div>
@@ -4096,6 +4096,18 @@ function bukaMaklumatKes(index) {
 
     if (typeof renderSemuaJadualPerwakilan === 'function') renderSemuaJadualPerwakilan();
 
+function simpanDidaftarkanOleh(el) {
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
+        memoriSenaraiKes[indexKesSemasa].didaftarkanOleh = el.innerText;
+        if (!memoriSenaraiKes[indexKesSemasa].dataBorang) {
+            memoriSenaraiKes[indexKesSemasa].dataBorang = { inputs: {} };
+        }
+        memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['didaftarkanOlehCustom'] = el.innerText;
+        if (typeof simpanSenaraiKeLokal === 'function') {
+            simpanSenaraiKeLokal();
+        }
+    }
+}
 function simpanDisahkanOleh(el) {
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa]) {
         memoriSenaraiKes[indexKesSemasa].disahkanOleh = el.value;
