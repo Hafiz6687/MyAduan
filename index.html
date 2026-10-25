@@ -4182,60 +4182,6 @@ function simpanDisahkanOleh(el) {
     }
 }
 
-    // Buka modal dan tarik data pengadu semasa kes yang sedang dibuka
-function bukaModalKemaskiniPengadu() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    const inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
-
-    // Masukkan data sedia ada ke dalam input pop-up
-    document.getElementById('edit_namaPengadu').value = kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '') : (inputs['namaPengadu'] || '');
-    document.getElementById('edit_noPendPengadu').value = inputs['noPendPengadu'] || '';
-    document.getElementById('edit_alamat1').value = inputs['alamatPengadu1'] || '';
-    document.getElementById('edit_alamat2').value = inputs['alamatPengadu2'] || '';
-    document.getElementById('edit_alamat3').value = inputs['alamatPengadu3'] || '';
-    document.getElementById('edit_poskod').value = inputs['poskodPengadu'] || '';
-    document.getElementById('edit_bandar').value = inputs['bandarPengadu'] || '';
-    document.getElementById('edit_hpPengadu').value = inputs['hpPengadu'] || '';
-    document.getElementById('edit_emelPengadu').value = inputs['emelPengadu'] || '';
-
-    // Paparkan modal
-    document.getElementById('modalKemaskiniPengadu').style.display = 'flex';
-}
-
-// Simpan perubahan dari modal ke dalam memori kes dan pangkalan data lokal/awan
-function simpanKemaskiniPengadu() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
-    let kes = memoriSenaraiKes[indexKesSemasa];
-
-    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
-    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
-
-    // Tangkap nilai baharu dari input modal
-    const namaBaru = document.getElementById('edit_namaPengadu').value.trim();
-    kes.namaPengadu = namaBaru;
-    kes.dataBorang.inputs['namaPengadu'] = namaBaru;
-    kes.dataBorang.inputs['noPendPengadu'] = document.getElementById('edit_noPendPengadu').value.trim();
-    kes.dataBorang.inputs['alamatPengadu1'] = document.getElementById('edit_alamat1').value.trim();
-    kes.dataBorang.inputs['alamatPengadu2'] = document.getElementById('edit_alamat2').value.trim();
-    kes.dataBorang.inputs['alamatPengadu3'] = document.getElementById('edit_alamat3').value.trim();
-    kes.dataBorang.inputs['poskodPengadu'] = document.getElementById('edit_poskod').value.trim();
-    kes.dataBorang.inputs['bandarPengadu'] = document.getElementById('edit_bandar').value.trim();
-    kes.dataBorang.inputs['hpPengadu'] = document.getElementById('edit_hpPengadu').value.trim();
-    kes.dataBorang.inputs['emelPengadu'] = document.getElementById('edit_emelPengadu').value.trim();
-
-    // Tutup modal
-    document.getElementById('modalKemaskiniPengadu').style.display = 'none';
-
-    // Simpan ke storan (Lokal / Awan)
-    if (typeof simpanSenaraiKeLokal === 'function') {
-        simpanSenaraiKeLokal();
-    }
-
-    // Segarkan paparan Maklumat Kes supaya perubahan terus kelihatan
-    bukaMaklumatKes(indexKesSemasa);
-    alert("Maklumat pengadu berjaya dikemaskini!");
-}
     function kawalCheckboxPenerimaNotis() {
         const kes = memoriSenaraiKes[indexKesSemasa];
         if (!kes) return;
@@ -16600,6 +16546,60 @@ function simpanTarikhPengesahan(el) {
         memoriSenaraiKes[indexKesSemasa].dataBorang.inputs['tarikhPengesahanCustom'] = teks;
         if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
     }
+}
+           // Buka modal dan tarik data pengadu semasa kes yang sedang dibuka
+function bukaModalKemaskiniPengadu() {
+    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
+    const kes = memoriSenaraiKes[indexKesSemasa];
+    const inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
+
+    // Masukkan data sedia ada ke dalam input pop-up
+    document.getElementById('edit_namaPengadu').value = kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '') : (inputs['namaPengadu'] || '');
+    document.getElementById('edit_noPendPengadu').value = inputs['noPendPengadu'] || '';
+    document.getElementById('edit_alamat1').value = inputs['alamatPengadu1'] || '';
+    document.getElementById('edit_alamat2').value = inputs['alamatPengadu2'] || '';
+    document.getElementById('edit_alamat3').value = inputs['alamatPengadu3'] || '';
+    document.getElementById('edit_poskod').value = inputs['poskodPengadu'] || '';
+    document.getElementById('edit_bandar').value = inputs['bandarPengadu'] || '';
+    document.getElementById('edit_hpPengadu').value = inputs['hpPengadu'] || '';
+    document.getElementById('edit_emelPengadu').value = inputs['emelPengadu'] || '';
+
+    // Paparkan modal
+    document.getElementById('modalKemaskiniPengadu').style.display = 'flex';
+}
+
+// Simpan perubahan dari modal ke dalam memori kes dan pangkalan data lokal/awan
+function simpanKemaskiniPengadu() {
+    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
+    let kes = memoriSenaraiKes[indexKesSemasa];
+
+    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
+    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
+
+    // Tangkap nilai baharu dari input modal
+    const namaBaru = document.getElementById('edit_namaPengadu').value.trim();
+    kes.namaPengadu = namaBaru;
+    kes.dataBorang.inputs['namaPengadu'] = namaBaru;
+    kes.dataBorang.inputs['noPendPengadu'] = document.getElementById('edit_noPendPengadu').value.trim();
+    kes.dataBorang.inputs['alamatPengadu1'] = document.getElementById('edit_alamat1').value.trim();
+    kes.dataBorang.inputs['alamatPengadu2'] = document.getElementById('edit_alamat2').value.trim();
+    kes.dataBorang.inputs['alamatPengadu3'] = document.getElementById('edit_alamat3').value.trim();
+    kes.dataBorang.inputs['poskodPengadu'] = document.getElementById('edit_poskod').value.trim();
+    kes.dataBorang.inputs['bandarPengadu'] = document.getElementById('edit_bandar').value.trim();
+    kes.dataBorang.inputs['hpPengadu'] = document.getElementById('edit_hpPengadu').value.trim();
+    kes.dataBorang.inputs['emelPengadu'] = document.getElementById('edit_emelPengadu').value.trim();
+
+    // Tutup modal
+    document.getElementById('modalKemaskiniPengadu').style.display = 'none';
+
+    // Simpan ke storan (Lokal / Awan)
+    if (typeof simpanSenaraiKeLokal === 'function') {
+        simpanSenaraiKeLokal();
+    }
+
+    // Segarkan paparan Maklumat Kes supaya perubahan terus kelihatan
+    bukaMaklumatKes(indexKesSemasa);
+    alert("Maklumat pengadu berjaya dikemaskini!");
 }
 </script>
 
