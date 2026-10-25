@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Kes Buruh</title>
+    <title>Pendaftaran Aduan</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -7774,7 +7774,7 @@ function tukarView(jenisView, dariBukaKes = false) {
     } else if (jenisView === 'daftar') {
         if (navDaftar) navDaftar.classList.add('active');
         if (viewDaftar) viewDaftar.style.display = 'block';
-        if (tajukHalaman) tajukHalaman.innerHTML = 'Pendaftaran Kes Buruh';
+        if (tajukHalaman) tajukHalaman.innerHTML = 'Pendaftaran Aduan';
         if (btnCetakHeader) btnCetakHeader.style.display = 'flex';
         if (btnBatalLuar) btnBatalLuar.style.display = 'flex';
         if (typeof setStatusBorang === 'function') setStatusBorang(false);
