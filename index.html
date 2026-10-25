@@ -2114,7 +2114,14 @@ Portal rasmi : jtksm.mohr.gov.my
             </div>
             <!-- BAHAGIAN 3: Maklumat Majikan -->
             <div class="card full-width" id="kad_maklumat_defendan">
-                <div class="card-header" id="mk_header_defendan">Maklumat Majikan</div>
+                <div class="card-header" id="mk_header_defendan" style="padding-right: 15px;">
+                    <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
+                        <span>Maklumat Majikan</span>
+                        <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniMajikan()">
+                            ✏️ Kemaskini
+                        </button>
+                    </span>
+                </div>
                 <div class="card-body">
         <div class="grid-2" id="mk_grid_defendan">
             <!-- Ruangan ini akan dijana oleh JS -->
