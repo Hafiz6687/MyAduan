@@ -3909,12 +3909,12 @@ function bukaMaklumatKes(index) {
     `;
     document.getElementById('mk_grid_pengadu').innerHTML = htmlPengadu;
 
-    document.getElementById('mk_header_defendan').innerText = 'Maklumat Defendan';
+    document.getElementById('mk_header_defendan').innerText = 'Maklumat Majikan';
     let lbl_id = d_isMyKad ? 'No. MyKad' : 'No. Pendaftaran';
     let htmlDefendan = `
         <div style="display: flex; flex-direction: column;">
             <div style="flex-grow: 1; padding-bottom: 15px;">
-                <div class="info-label">Nama Defendan</div>
+                <div class="info-label">Nama Majikan</div>
                 <div class="info-value" style="margin-bottom:0;">${d_nama}</div>
             </div>
             <div style="display:flex; gap:8px; align-items:center; padding-bottom: 8px;">
@@ -3932,7 +3932,7 @@ function bukaMaklumatKes(index) {
         </div>
         <div style="display: flex; flex-direction: column;">
             <div style="flex-grow: 1; padding-bottom: 15px;">
-                <div class="info-label">Alamat Defendan</div>
+                <div class="info-label">Alamat Majikan</div>
                 <div class="info-value" style="margin-bottom:0;">${d_alamat}</div>
             </div>
             <div>
