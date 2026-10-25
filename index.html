@@ -4032,7 +4032,17 @@ if (headerPengadu) {
     `;
     document.getElementById('mk_grid_pengadu').innerHTML = htmlPengadu;
 
-    document.getElementById('mk_header_defendan').innerText = 'Maklumat Majikan';
+    const headerDefendan = document.getElementById('mk_header_defendan');
+if (headerDefendan) {
+    headerDefendan.innerHTML = `
+        <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
+            <span>Maklumat Majikan</span>
+            <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniMajikan()">
+                ✏️ Kemaskini
+            </button>
+        </span>
+    `;
+}
     let lbl_id = d_isMyKad ? 'No. MyKad' : 'No. Pendaftaran';
     let htmlDefendan = `
         <div style="display: flex; flex-direction: column;">
