@@ -6632,17 +6632,32 @@ function muatNaikGambarProfil(input) {
                 img.src = optimizedBase64;
                 img.style.cursor = 'grab';
 
-                // KOD BAHARU: Tetapkan saiz gambar supaya muat sempurna di tengah kotak (Object-Fit)
+               // KOD ASAL ANDA DIPULIHKAN SEPENUHNYA
+document.getElementById('ikonKamera').style.display = 'none';
 const img = document.getElementById('gambarProfil');
 img.style.display = 'block';
-img.style.width = '100%';
-img.style.height = '100%';
-img.style.objectFit = 'cover';
-img.style.objectPosition = 'center';
-img.style.top = '0';
-img.style.left = '0';
-img.style.transform = 'none'; // Reset kedudukan supaya tidak teranjak ke hidung sahaja
 img.src = optimizedBase64;
+img.style.cursor = 'grab';
+
+if (img.naturalHeight > img.naturalWidth) {
+    img.style.width = '100%';
+    img.style.height = 'auto';
+} else {
+    img.style.width = 'auto';
+    img.style.height = '100%';
+}
+
+currentScale = 1.2; 
+currentPosX = 0; 
+currentPosY = 0;
+if (typeof updateTransform === 'function') updateTransform();
+
+// Simpan ke LocalStorage dan terus HANTAR KE FIREBASE
+localStorage.setItem('eLC_gambarProfil', optimizedBase64);
+localStorage.setItem('eLC_gambarScale', "1.2");
+localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
+
+simpanProfilKeAwan(optimizedBase64, {x: 0, y: 0}, "1.2", null);
 
                 currentScale = 1.2; 
                 currentPosX = 0; 
