@@ -3752,8 +3752,7 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         if (!window.db || !window.doc || !window.setDoc) return;
 
         const docRef = window.doc(window.db, "data_pengguna", "profil_hafiz_abubakar");
-        
-        // Dapatkan nilai semasa jika tidak dihantar
+
         const namaSimpan = namaText || document.getElementById('namaProfilEdit').innerHTML || localStorage.getItem('eLC_namaProfil') || "";
         const gambarSimpan = gambarBase64 || localStorage.getItem('eLC_gambarProfil') || "";
         const posSimpan = posObj || (localStorage.getItem('eLC_gambarPos') ? JSON.parse(localStorage.getItem('eLC_gambarPos')) : {x: 0, y: 0});
@@ -3770,7 +3769,7 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         console.log("Berjaya! Gambar profil dan tetapan disimpan ke Firebase.");
     } catch (error) {
         console.error("Ralat menyimpan profil ke Firebase:", error);
-        alert("Ralat menyimpan gambar ke awan. Sila pastikan saiz gambar tidak terlalu besar.");
+        alert("Gagal menyimpan ke pangkalan data. Sila pastikan sambungan internet stabil.");
     }
 }
 // --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
@@ -6577,65 +6576,51 @@ function muatNaikGambarProfil(input) {
         const reader = new FileReader();
 
         reader.onload = function (e) {
-            const imgTemp = new Image();
-            imgTemp.src = e.target.result;
+            const imgElement = new Image();
+            imgElement.src = e.target.result;
 
-            imgTemp.onload = function() {
-                // Mampatkan saiz gambar (Max 300x300px) supaya pantas dimuatkan dari Firebase
+            imgElement.onload = function () {
+                // Buat Canvas untuk mengecilkan resolusi & memampatkan imej
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 300;
-                const MAX_HEIGHT = 300;
-                let width = imgTemp.width;
-                let height = imgTemp.height;
+                const ctx = canvas.getContext('2d');
+
+                // Tetapkan resolusi maksimum (cth: 300x300px)
+                const maxWidth = 300;
+                const maxHeight = 300;
+                let width = imgElement.width;
+                let height = imgElement.height;
 
                 if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
                     }
                 } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
                     }
                 }
 
                 canvas.width = width;
                 canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(imgTemp, 0, 0, width, height);
+                ctx.drawImage(imgElement, 0, 0, width, height);
 
-                // Tukar kepada data Base64 berkualiti optimum (0.85)
-                const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+                // Tukar kepada JPEG dengan kualiti 0.7 (mampat lebih 80%)
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
-                // Paparkan pada elemen UI
+                // Paparkan pada UI
                 document.getElementById('ikonKamera').style.display = 'none';
                 const img = document.getElementById('gambarProfil');
                 img.style.display = 'block';
-                img.src = optimizedBase64;
-                img.style.cursor = 'grab';
+                img.src = compressedBase64;
 
-                if (img.naturalHeight > img.naturalWidth) {
-                    img.style.width = '100%';
-                    img.style.height = 'auto';
-                } else {
-                    img.style.width = 'auto';
-                    img.style.height = '100%';
-                }
-
-                currentScale = 1.2; 
-                currentPosX = 0; 
-                currentPosY = 0;
-                if (typeof updateTransform === 'function') updateTransform();
-
-                // Simpan ke LocalStorage dan terus HANTAR KE FIREBASE
-                localStorage.setItem('eLC_gambarProfil', optimizedBase64);
-                localStorage.setItem('eLC_gambarScale', "1.2");
-                localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
-
-                simpanProfilKeAwan(optimizedBase64, {x: 0, y: 0}, "1.2", null);
+                // Simpan ke LocalStorage & Firestore Awan
+                localStorage.setItem('eLC_gambarProfil', compressedBase64);
+                simpanProfilKeAwan(compressedBase64);
             };
         };
+
         reader.readAsDataURL(file);
     }
 }
