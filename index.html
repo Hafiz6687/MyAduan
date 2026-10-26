@@ -3777,7 +3777,7 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         console.log("Berjaya! Gambar profil dan tetapan disimpan ke Firebase.");
     } catch (error) {
         console.error("Ralat menyimpan profil ke Firebase:", error);
-        alert("Ralat menyimpan gambar ke awan. Sila pastikan saiz gambar tidak terlalu besar.");
+        // Amaran ralat dibuang supaya sistem terus berjalan lancar
     }
 }
 // --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
