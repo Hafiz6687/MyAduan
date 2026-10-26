@@ -3591,21 +3591,16 @@ Portal rasmi : jtksm.mohr.gov.my
         let isEditMode = false; // Penanda untuk check jika kita sedang edit draf lama
 
         document.addEventListener('DOMContentLoaded', function() {
-    
-    // Panggil muat turun gambar dan profil dari awan secara automatik semasa refresh
-    if (typeof muatkanProfilDariAwan === 'function') {
-        muatkanProfilDariAwan();
-    }
+            
+            // Set Tarikh Akhir Kerja kepada tarikh hari ini secara lalai
+            let tAkhir = document.getElementById('tarikhAkhirKerja');
+            if (tAkhir && !tAkhir.value) {
+                let today = new Date();
+                tAkhir.value = today.toISOString().split('T')[0];
+            }
 
-    // Set Tarikh Akhir Kerja kepada tarikh hari ini secara lalai
-    let tAkhir = document.getElementById('tarikhAkhirKerja');
-    if (tAkhir && !tAkhir.value) {
-        let today = new Date();
-        tAkhir.value = today.toISOString().split('T')[0];
-    }
-
-    kemaskiniDropdownPendaftaran();
-    semakWakilLengkap();
+            kemaskiniDropdownPendaftaran();
+            semakWakilLengkap();
 
         window.addEventListener('click', function(e) {
                 if (!e.target.closest('.action-dropdown-container')) {
@@ -3764,13 +3759,6 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         const posSimpan = posObj || (localStorage.getItem('eLC_gambarPos') ? JSON.parse(localStorage.getItem('eLC_gambarPos')) : {x: 0, y: 0});
         const scaleSimpan = scaleVal || localStorage.getItem('eLC_gambarScale') || "1.2";
 
-        // Semak saiz data gambar Base64 (1 aksara Base64 = ~0.75 bait)
-        // Pastikan saiz string gambar tidak melebihi ~900,000 aksara (~800KB)
-        if (gambarSimpan.length > 900000) {
-            alert("Saiz imej masih terlalu besar untuk disimpan ke pangkalan data. Sila pilih imej yang lebih kecil atau ringkas.");
-            return;
-        }
-
         await window.setDoc(docRef, {
             nama: namaSimpan,
             gambar: gambarSimpan,
@@ -3782,7 +3770,7 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         console.log("Berjaya! Gambar profil dan tetapan disimpan ke Firebase.");
     } catch (error) {
         console.error("Ralat menyimpan profil ke Firebase:", error);
-        // Amaran ralat dibuang supaya sistem terus berjalan lancar
+        alert("Ralat menyimpan gambar ke awan. Sila pastikan saiz gambar tidak terlalu besar.");
     }
 }
 // --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
@@ -6581,7 +6569,8 @@ bekasProfil.addEventListener('wheel', function(e) {
             imgProfile.addEventListener('dblclick', function() { inputProfil.click(); });
         }
 
-// KOD BARU: Mampatkan gambar profil di bawah 1MB secara automatik menggunakan Canvas
+// DELETE / GANTI KOD ASAL INI:
+// KOD BARU: Muat naik, mampatkan gambar secara automatik, dan terus hantar ke Firebase
 function muatNaikGambarProfil(input) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
@@ -6592,9 +6581,10 @@ function muatNaikGambarProfil(input) {
             imgTemp.src = e.target.result;
 
             imgTemp.onload = function() {
+                // Mampatkan saiz gambar (Max 300x300px) supaya pantas dimuatkan dari Firebase
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 500;
-                const MAX_HEIGHT = 500;
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
                 let width = imgTemp.width;
                 let height = imgTemp.height;
 
@@ -6615,15 +6605,8 @@ function muatNaikGambarProfil(input) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(imgTemp, 0, 0, width, height);
 
-                // Mula mampat dengan kualiti 0.8 (80%)
-                let quality = 0.8;
-                let optimizedBase64 = canvas.toDataURL('image/jpeg', quality);
-
-                // Gelung kawalan: Jika saiz melebihi 1MB (1048576 bait), kurangkan kualiti secara berperingkat
-                while (optimizedBase64.length > 1048576 && quality > 0.1) {
-                    quality -= 0.1;
-                    optimizedBase64 = canvas.toDataURL('image/jpeg', quality);
-                }
+                // Tukar kepada data Base64 berkualiti optimum (0.85)
+                const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
 
                 // Paparkan pada elemen UI
                 document.getElementById('ikonKamera').style.display = 'none';
@@ -6632,32 +6615,13 @@ function muatNaikGambarProfil(input) {
                 img.src = optimizedBase64;
                 img.style.cursor = 'grab';
 
-               // KOD ASAL ANDA DIPULIHKAN SEPENUHNYA
-document.getElementById('ikonKamera').style.display = 'none';
-const img = document.getElementById('gambarProfil');
-img.style.display = 'block';
-img.src = optimizedBase64;
-img.style.cursor = 'grab';
-
-if (img.naturalHeight > img.naturalWidth) {
-    img.style.width = '100%';
-    img.style.height = 'auto';
-} else {
-    img.style.width = 'auto';
-    img.style.height = '100%';
-}
-
-currentScale = 1.2; 
-currentPosX = 0; 
-currentPosY = 0;
-if (typeof updateTransform === 'function') updateTransform();
-
-// Simpan ke LocalStorage dan terus HANTAR KE FIREBASE
-localStorage.setItem('eLC_gambarProfil', optimizedBase64);
-localStorage.setItem('eLC_gambarScale', "1.2");
-localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
-
-simpanProfilKeAwan(optimizedBase64, {x: 0, y: 0}, "1.2", null);
+                if (img.naturalHeight > img.naturalWidth) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                } else {
+                    img.style.width = 'auto';
+                    img.style.height = '100%';
+                }
 
                 currentScale = 1.2; 
                 currentPosX = 0; 
@@ -16758,12 +16722,14 @@ function simpanKemaskiniMajikan() {
 }
 </script>
 
-<!-- KOD BAHARU: Memuatkan Firebase secara Global & Segera -->
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+<!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-<script>
-  // Inisialisasi Firebase Compat
+// Dan tambah baris ini di bawah window.setDoc = setDoc;
+window.getDoc = getDoc;
+  // 1. Konfigurasi Firebase anda yang sebenar
   const firebaseConfig = {
     apiKey: "AIzaSyCEJL04DfA_N7GFhWHa8czWRzqGtV6jMu4",
     authDomain: "myaduan-sistem.firebaseapp.com",
@@ -16773,82 +16739,16 @@ function simpanKemaskiniMajikan() {
     appId: "1:527762768437:web:4469a8997447529e68677c"
   };
 
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  const db = firebase.firestore();
+  // 2. Inisialisasi Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  // Fungsi memuat turun profil dari awan dengan fallback LocalStorage
-  async function muatkanProfilDariAwan() {
-    try {
-      // 1. Semak & paparkan terus dari LocalStorage dulu supaya gambar muncul serta-merta tanpa tunggu internet
-      const gambarLokal = localStorage.getItem('eLC_gambarProfil');
-      const namaLokal = localStorage.getItem('eLC_namaProfil');
-
-      if (gambarLokal) {
-        const img = document.getElementById('gambarProfil');
-        const ikon = document.getElementById('ikonKamera');
-        if (img) {
-          img.style.display = 'block';
-          img.src = gambarLokal;
-        }
-        if (ikon) ikon.style.display = 'none';
-      }
-
-      if (namaLokal) {
-        const elNama = document.getElementById('namaProfilEdit');
-        if (elNama) elNama.innerHTML = namaLokal;
-      }
-
-      // 2. Tarik data terkini dari Firebase Firestore untuk kemaskini
-      const docSnap = await db.collection("data_pengguna").doc("profil_hafiz_abubakar").get();
-
-      if (docSnap.exists) {
-        const dataProfil = docSnap.data();
-
-        if (dataProfil.nama) {
-          document.getElementById('namaProfilEdit').innerHTML = dataProfil.nama;
-          localStorage.setItem('eLC_namaProfil', dataProfil.nama);
-        }
-
-        if (dataProfil.gambar) {
-          const img = document.getElementById('gambarProfil');
-          const ikon = document.getElementById('ikonKamera');
-          if (img) {
-            img.style.display = 'block';
-            img.src = dataProfil.gambar;
-          }
-          if (ikon) ikon.style.display = 'none';
-          localStorage.setItem('eLC_gambarProfil', dataProfil.gambar);
-        }
-      }
-    } catch (error) {
-        console.error("Gagal menarik data profil dari Firebase:", error);
-    }
-  }
-
-  // Fungsi menyimpan profil ke Firebase
-  async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
-    try {
-      const namaSimpan = namaText || document.getElementById('namaProfilEdit').innerHTML || localStorage.getItem('eLC_namaProfil') || "";
-      const gambarSimpan = gambarBase64 || localStorage.getItem('eLC_gambarProfil') || "";
-
-      await db.collection("data_pengguna").doc("profil_hafiz_abubakar").set({
-        nama: namaSimpan,
-        gambar: gambarSimpan,
-        pos: posObj || {x: 0, y: 0},
-        scale: scaleVal || "1.2",
-        kemaskiniTerakhir: new Date().toISOString()
-      }, { merge: true });
-
-      console.log("Gambar profil berjaya disimpan ke Firebase.");
-    } catch (error) {
-      console.error("Ralat simpan profil:", error);
-    }
-  }
-
-  // Jalankan fungsi serta-merta apabila skrip dimuatkan
-  muatkanProfilDariAwan();
+  // Jadikan ia global supaya fungsi asal anda boleh mengaksesnya
+  window.db = db;
+  window.collection = collection;
+  window.getDocs = getDocs;
+  window.doc = doc;
+  window.setDoc = setDoc;
 </script>
 </body>
 </html>
