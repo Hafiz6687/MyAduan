@@ -3759,6 +3759,13 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         const posSimpan = posObj || (localStorage.getItem('eLC_gambarPos') ? JSON.parse(localStorage.getItem('eLC_gambarPos')) : {x: 0, y: 0});
         const scaleSimpan = scaleVal || localStorage.getItem('eLC_gambarScale') || "1.2";
 
+        // Semak saiz data gambar Base64 (1 aksara Base64 = ~0.75 bait)
+        // Pastikan saiz string gambar tidak melebihi ~900,000 aksara (~800KB)
+        if (gambarSimpan.length > 900000) {
+            alert("Saiz imej masih terlalu besar untuk disimpan ke pangkalan data. Sila pilih imej yang lebih kecil atau ringkas.");
+            return;
+        }
+
         await window.setDoc(docRef, {
             nama: namaSimpan,
             gambar: gambarSimpan,
