@@ -3591,16 +3591,21 @@ Portal rasmi : jtksm.mohr.gov.my
         let isEditMode = false; // Penanda untuk check jika kita sedang edit draf lama
 
         document.addEventListener('DOMContentLoaded', function() {
-            
-            // Set Tarikh Akhir Kerja kepada tarikh hari ini secara lalai
-            let tAkhir = document.getElementById('tarikhAkhirKerja');
-            if (tAkhir && !tAkhir.value) {
-                let today = new Date();
-                tAkhir.value = today.toISOString().split('T')[0];
-            }
+    
+    // Panggil muat turun gambar dan profil dari awan secara automatik semasa refresh
+    if (typeof muatkanProfilDariAwan === 'function') {
+        muatkanProfilDariAwan();
+    }
 
-            kemaskiniDropdownPendaftaran();
-            semakWakilLengkap();
+    // Set Tarikh Akhir Kerja kepada tarikh hari ini secara lalai
+    let tAkhir = document.getElementById('tarikhAkhirKerja');
+    if (tAkhir && !tAkhir.value) {
+        let today = new Date();
+        tAkhir.value = today.toISOString().split('T')[0];
+    }
+
+    kemaskiniDropdownPendaftaran();
+    semakWakilLengkap();
 
         window.addEventListener('click', function(e) {
                 if (!e.target.closest('.action-dropdown-container')) {
