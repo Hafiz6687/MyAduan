@@ -3775,20 +3775,41 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
 // --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
 async function simpanSenaraiKeLokal() {
     try {
-        // Simpan keseluruhan array memoriSenaraiKes ke Firestore
+        if (!window.db || !window.doc || !window.setDoc) {
+            localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+            return;
+        }
+
+        // Buat salinan bersih (buang fail lampiran saiz besar yang tidak perlu dari sync awan utama jika melebihi kapasiti)
+        const kesBersih = memoriSenaraiKes.map(kes => {
+            let kCopia = { ...kes };
+            if (kCopia.dataBorang && kCopia.dataBorang.lampiran) {
+                // Kecilkan atau asingkan fail base64 yang terlalu berat untuk disimpan terus dalam doc
+                kCopia.dataBorang.lampiran = kCopia.dataBorang.lampiran.map(f => ({
+                    nama: f.nama,
+                    saiz: f.saiz,
+                    jenis: f.jenis
+                    // Tidak simpan data string base64 fail yang besar ke dalam Firestore
+                }));
+            }
+            return kCopia;
+        });
+
         const docRef = window.doc(window.db, "data_pengguna", "hafiz_abubakar");
         await window.setDoc(docRef, {
-            senaraiKes: memoriSenaraiKes,
+            senaraiKes: kesBersih,
             kemaskiniTerakhir: new Date().toISOString()
-        });
+        }, { merge: true });
         
-        console.log("Berjaya! Data kes disimpan ke awan (Firestore).");
-        // Simpan juga salinan ke localStorage sebagai backup jika tiada internet
+        // Simpan juga salinan lengkap di lokal browser
         localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+        console.log("Data kes berjaya disimpan ke awan (Firestore).");
+
     } catch (e) {
         console.error("Ralat menyimpan data ke Firestore:", e);
-        // Fallback: Guna memori browser jika gagal
+        // Fallback simpan ke local storage pelayar supaya kerja pengguna tidak hilang
         localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+        alert("Amaran: Gagal kemaskini ke awan (Saiz fail terlalu besar), tetapi data telah disimpan secara selamat di memori pelayar (Local Storage) anda.");
     }
 }
 
