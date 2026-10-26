@@ -16739,14 +16739,12 @@ function simpanKemaskiniMajikan() {
 }
 </script>
 
-<!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+<!-- KOD BAHARU: Memuatkan Firebase secara Global & Segera -->
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
-// Dan tambah baris ini di bawah window.setDoc = setDoc;
-window.getDoc = getDoc;
-  // 1. Konfigurasi Firebase anda yang sebenar
+<script>
+  // Inisialisasi Firebase Compat
   const firebaseConfig = {
     apiKey: "AIzaSyCEJL04DfA_N7GFhWHa8czWRzqGtV6jMu4",
     authDomain: "myaduan-sistem.firebaseapp.com",
@@ -16756,16 +16754,82 @@ window.getDoc = getDoc;
     appId: "1:527762768437:web:4469a8997447529e68677c"
   };
 
-  // 2. Inisialisasi Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
 
-  // Jadikan ia global supaya fungsi asal anda boleh mengaksesnya
-  window.db = db;
-  window.collection = collection;
-  window.getDocs = getDocs;
-  window.doc = doc;
-  window.setDoc = setDoc;
+  // Fungsi memuat turun profil dari awan dengan fallback LocalStorage
+  async function muatkanProfilDariAwan() {
+    try {
+      // 1. Semak & paparkan terus dari LocalStorage dulu supaya gambar muncul serta-merta tanpa tunggu internet
+      const gambarLokal = localStorage.getItem('eLC_gambarProfil');
+      const namaLokal = localStorage.getItem('eLC_namaProfil');
+
+      if (gambarLokal) {
+        const img = document.getElementById('gambarProfil');
+        const ikon = document.getElementById('ikonKamera');
+        if (img) {
+          img.style.display = 'block';
+          img.src = gambarLokal;
+        }
+        if (ikon) ikon.style.display = 'none';
+      }
+
+      if (namaLokal) {
+        const elNama = document.getElementById('namaProfilEdit');
+        if (elNama) elNama.innerHTML = namaLokal;
+      }
+
+      // 2. Tarik data terkini dari Firebase Firestore untuk kemaskini
+      const docSnap = await db.collection("data_pengguna").doc("profil_hafiz_abubakar").get();
+
+      if (docSnap.exists) {
+        const dataProfil = docSnap.data();
+
+        if (dataProfil.nama) {
+          document.getElementById('namaProfilEdit').innerHTML = dataProfil.nama;
+          localStorage.setItem('eLC_namaProfil', dataProfil.nama);
+        }
+
+        if (dataProfil.gambar) {
+          const img = document.getElementById('gambarProfil');
+          const ikon = document.getElementById('ikonKamera');
+          if (img) {
+            img.style.display = 'block';
+            img.src = dataProfil.gambar;
+          }
+          if (ikon) ikon.style.display = 'none';
+          localStorage.setItem('eLC_gambarProfil', dataProfil.gambar);
+        }
+      }
+    } catch (error) {
+        console.error("Gagal menarik data profil dari Firebase:", error);
+    }
+  }
+
+  // Fungsi menyimpan profil ke Firebase
+  async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
+    try {
+      const namaSimpan = namaText || document.getElementById('namaProfilEdit').innerHTML || localStorage.getItem('eLC_namaProfil') || "";
+      const gambarSimpan = gambarBase64 || localStorage.getItem('eLC_gambarProfil') || "";
+
+      await db.collection("data_pengguna").doc("profil_hafiz_abubakar").set({
+        nama: namaSimpan,
+        gambar: gambarSimpan,
+        pos: posObj || {x: 0, y: 0},
+        scale: scaleVal || "1.2",
+        kemaskiniTerakhir: new Date().toISOString()
+      }, { merge: true });
+
+      console.log("Gambar profil berjaya disimpan ke Firebase.");
+    } catch (error) {
+      console.error("Ralat simpan profil:", error);
+    }
+  }
+
+  // Jalankan fungsi serta-merta apabila skrip dimuatkan
+  muatkanProfilDariAwan();
 </script>
 </body>
 </html>
