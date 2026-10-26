@@ -16727,9 +16727,7 @@ function simpanKemaskiniMajikan() {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// Dan tambah baris ini di bawah window.setDoc = setDoc;
-window.getDoc = getDoc;
-  // 1. Konfigurasi Firebase anda yang sebenar
+  // 1. Konfigurasi Firebase anda
   const firebaseConfig = {
     apiKey: "AIzaSyCEJL04DfA_N7GFhWHa8czWRzqGtV6jMu4",
     authDomain: "myaduan-sistem.firebaseapp.com",
@@ -16743,12 +16741,13 @@ window.getDoc = getDoc;
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Jadikan ia global supaya fungsi asal anda boleh mengaksesnya
+  // 3. Eksport ke window global SETELAH di-import
   window.db = db;
   window.collection = collection;
   window.getDocs = getDocs;
   window.doc = doc;
   window.setDoc = setDoc;
+  window.getDoc = getDoc; // ✅ Diletakkan di sini bersama yang lain
 </script>
 </body>
 </html>
