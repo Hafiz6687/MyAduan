@@ -6569,8 +6569,7 @@ bekasProfil.addEventListener('wheel', function(e) {
             imgProfile.addEventListener('dblclick', function() { inputProfil.click(); });
         }
 
-// DELETE / GANTI KOD ASAL INI:
-// KOD BARU: Muat naik, mampatkan gambar secara automatik, dan terus hantar ke Firebase
+// KOD BARU: Mampatkan gambar profil di bawah 1MB secara automatik menggunakan Canvas
 function muatNaikGambarProfil(input) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
@@ -6581,10 +6580,9 @@ function muatNaikGambarProfil(input) {
             imgTemp.src = e.target.result;
 
             imgTemp.onload = function() {
-                // Mampatkan saiz gambar (Max 300x300px) supaya pantas dimuatkan dari Firebase
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 300;
-                const MAX_HEIGHT = 300;
+                const MAX_WIDTH = 500;
+                const MAX_HEIGHT = 500;
                 let width = imgTemp.width;
                 let height = imgTemp.height;
 
@@ -6605,8 +6603,15 @@ function muatNaikGambarProfil(input) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(imgTemp, 0, 0, width, height);
 
-                // Tukar kepada data Base64 berkualiti optimum (0.85)
-                const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+                // Mula mampat dengan kualiti 0.8 (80%)
+                let quality = 0.8;
+                let optimizedBase64 = canvas.toDataURL('image/jpeg', quality);
+
+                // Gelung kawalan: Jika saiz melebihi 1MB (1048576 bait), kurangkan kualiti secara berperingkat
+                while (optimizedBase64.length > 1048576 && quality > 0.1) {
+                    quality -= 0.1;
+                    optimizedBase64 = canvas.toDataURL('image/jpeg', quality);
+                }
 
                 // Paparkan pada elemen UI
                 document.getElementById('ikonKamera').style.display = 'none';
