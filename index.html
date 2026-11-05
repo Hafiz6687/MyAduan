@@ -3439,8 +3439,8 @@ Portal rasmi : jtksm.mohr.gov.my
     <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
             <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-        <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTambahTuntutanDraf()">+ Jenis Aduan</button>
-    </div>                        
+            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTuntutan('biasa')">+ Jenis Aduan</button>
+        </div>                        
                         <table id="jadualTuntutan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
                             <thead style="background-color: var(--card-header-bg);">
                                 <tr>
@@ -3643,51 +3643,51 @@ Portal rasmi : jtksm.mohr.gov.my
             // Panggil fungsi muat turun profil dari awan secara automatik
             muatkanProfilDariAwan();
 
-// --- KEMASKINI: Tarik data dari Local Storage serta-merta & selaras dengan Firestore ---
+// --- KEMASKINI: Tarik data dari Local Storage supaya tak hilang bila refresh ---
+// Fungsi untuk menarik data dari awan Firestore
     async function muatkanDataAwal() {
-        // 1. Muatkan data dari Local Storage terlebih dahulu supaya data langsung wujud serta-merta tanpa lewat
-        const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
-        if (senaraiLokal) {
-            try {
-                memoriSenaraiKes = JSON.parse(senaraiLokal);
-                renderSenaraiTugas();
-            } catch (e) {
-                console.error("Ralat membaca Local Storage:", e);
-                memoriSenaraiKes = [];
-            }
-        } else {
-            memoriSenaraiKes = [];
-        }
-
-        // 2. Cuba tarik data terkini dari awan Firestore di latar belakang
         try {
-            console.log("Sedang menyemak data dari awan...");
+            console.log("Sedang memuat turun data dari awan...");
             const docSnap = await window.getDocs(window.collection(window.db, "data_pengguna"));
             
+            let dataDijumpai = false;
             docSnap.forEach((docItem) => {
                 if (docItem.id === "hafiz_abubakar") {
-                    const dataAwan = docItem.data().senaraiKes || [];
-                    // Jika data awan wujud dan sah, utamakan data awan dan kemaskini Local Storage
-                    if (dataAwan.length > 0) {
-                        memoriSenaraiKes = dataAwan;
-                        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-                        renderSenaraiTugas();
-                    }
+                    memoriSenaraiKes = docItem.data().senaraiKes || [];
+                    dataDijumpai = true;
                 }
             });
+
+            if (!dataDijumpai) {
+                // Jika ini kali pertama buka, muatkan data kosong
+                memoriSenaraiKes = [];
+            }
         } catch (error) {
-            console.error("Nota: Gagal menyambung ke awan, menggunakan data lokal sepenuhnya.", error);
+            console.error("Gagal menarik data awan. Cuba baca dari backup lokal:", error);
+            const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
+            if (senaraiLokal) {
+                memoriSenaraiKes = JSON.parse(senaraiLokal);
+            } else {
+                memoriSenaraiKes = [];
+            }
         }
+
+        // Paparkan jadual selepas data berjaya dimuat turun
+        renderSenaraiTugas();
     }
 
     // Jalankan fungsi
     muatkanDataAwal();
 
-    // --- TAMBAHAN BARU: Tetapkan paparan utama ke Senarai Tugasan sebaik sahaja sistem dibuka ---
-    tukarView('senarai'); 
+        // --- TAMBAHAN BARU: Tetapkan paparan utama ke Senarai Tugasan sebaik sahaja sistem dibuka ---
+        tukarView('senarai'); 
 
-}); // <--- INI ADALAH PENUTUP DOMContentLoaded
-       
+    }); // <--- INI ADALAH PENUTUP DOMContentLoaded
+// =========================================================================
+// FUNGSI AWAN UNTUK GAMBAR DAN NAMA PROFIL (FIRESTORE)
+// =========================================================================
+
+// KOD BARU: Memuat turun dan menyimpan profil secara terus dari Firebase Firestore
 async function muatkanProfilDariAwan() {
     try {
         if (!window.db || !window.doc || !window.getDoc) {
@@ -3772,31 +3772,24 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         alert("Gagal menyimpan ke pangkalan data. Sila pastikan sambungan internet stabil.");
     }
 }
+// --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
 async function simpanSenaraiKeLokal() {
-    // 1. Simpan salinan penuh ke Local Storage pelayar secara selamat dan wajib
-    try {
-        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        console.log("Data kes berjaya disimpan ke Local Storage pelayar.");
-    } catch (localErr) {
-        console.error("Ralat kritikal: Gagal simpan ke Local Storage pelayar:", localErr);
-        alert("Amaran: Memori pelayar anda penuh atau menyekat storan lokal. Data kes mungkin tidak kekal selepas refresh.");
-    }
-
-    // 2. Cuba selaraskan ke awan Firebase secara latar belakang (background sync)
     try {
         if (!window.db || !window.doc || !window.setDoc) {
-            console.warn("Firebase belum bersedia, penyelarasan awan dilangkau.");
+            localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
             return;
         }
 
-        // Tapisan ringkas untuk memastikan data ke awan Firebase sentiasa ringan dan tidak melepasi limit dokumen
+        // Buat salinan bersih (buang fail lampiran saiz besar yang tidak perlu dari sync awan utama jika melebihi kapasiti)
         const kesBersih = memoriSenaraiKes.map(kes => {
             let kCopia = { ...kes };
             if (kCopia.dataBorang && kCopia.dataBorang.lampiran) {
+                // Kecilkan atau asingkan fail base64 yang terlalu berat untuk disimpan terus dalam doc
                 kCopia.dataBorang.lampiran = kCopia.dataBorang.lampiran.map(f => ({
-                    nama: f.nama || 'Dokumen',
-                    saiz: f.saiz || '',
-                    jenis: f.jenis || ''
+                    nama: f.nama,
+                    saiz: f.saiz,
+                    jenis: f.jenis
+                    // Tidak simpan data string base64 fail yang besar ke dalam Firestore
                 }));
             }
             return kCopia;
@@ -3808,10 +3801,15 @@ async function simpanSenaraiKeLokal() {
             kemaskiniTerakhir: new Date().toISOString()
         }, { merge: true });
         
-        console.log("Data kes berjaya diselaraskan ke awan Firebase.");
+        // Simpan juga salinan lengkap di lokal browser
+        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+        console.log("Data kes berjaya disimpan ke awan (Firestore).");
 
     } catch (e) {
-        console.error("Nota Penyelarasan Awan (Firebase):", e);
+        console.error("Ralat menyimpan data ke Firestore:", e);
+        // Fallback simpan ke local storage pelayar supaya kerja pengguna tidak hilang
+        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+        alert("Amaran: Gagal kemaskini ke awan (Saiz fail terlalu besar), tetapi data telah disimpan secara selamat di memori pelayar (Local Storage) anda.");
     }
 }
 
@@ -7110,106 +7108,91 @@ function kawalStatusAduanLain() {
     }
 }
 
-// 1. KHAS UNTUK FLOW PENDAFTARAN ADUAN (Hanya 2 Medan)
-function bukaModalTambahTuntutanDraf() {
-    document.getElementById('indexTuntutanEdit').value = "-1";
-    document.getElementById('jenisTuntutan').value = '';
-    document.getElementById('keteranganTuntutan').value = '';
+// Di dalam fungsi bukaModalTuntutan, pastikan logik ini disertakan:
+function bukaModalTuntutan(jenis, index = -1) {
+    document.getElementById('indexTuntutanEdit').value = index;
+    document.getElementById('jenisJadualTuntutan').value = jenis;
     
-    const tajuk = document.getElementById('tajukModal');
-    if(tajuk) tajuk.innerText = "Tambah Tuntutan";
-    
-    // Sembunyikan medan Hasil Siasatan & Status Aduan khas untuk Pendaftaran Aduan
-    let groupHasil = document.getElementById('hasilSiasatanTuntutan')?.closest('.form-group');
-    let groupStatus = document.getElementById('statusAduanTuntutan')?.closest('.form-group');
-    
-    if(groupHasil) groupHasil.style.display = 'none';
-    if(groupStatus) groupStatus.style.display = 'none';
-
-    document.getElementById('modalTuntutan').style.display = 'flex';
-}
-
-// 2. KEKAL UNTUK FLOW PENGURUSAN / KEMASKINI KES (Lengkap 4 Medan)
-function bukaModalKemaskiniTuntutan(index) {
-    // Kekalkan logik asal untuk edit kes yang telah didaftarkan
-    const tajuk = document.getElementById('tajukModal');
-    if(tajuk) tajuk.innerText = "Kemaskini Tuntutan & Siasatan";
-    
-    tukarPaparanMedanPopup(true); // Paparkan kesemua 4 medan
-    
-    // ... logik memuatkan data sedia ada untuk di-edit ...
-    document.getElementById('modalTuntutan').style.display = 'flex';
-}
-
-// Fungsi sokongan untuk menyembunyikan/memaparkan medan 3 & 4
-function tukarPaparanMedanPopup(paparSemua) {
-    // Anda boleh sesuaikan ID elemen div bagi medan Hasil Siasatan dan Status Aduan
-    const groupHasil = document.getElementById('hasilSiasatanTuntutan')?.closest('.form-group');
-    const groupStatus = document.getElementById('statusAduanTuntutan')?.closest('.form-group');
-    
-    if(groupHasil && groupStatus) {
-        groupHasil.style.display = paparSemua ? 'grid' : 'none';
-        groupStatus.style.display = paparSemua ? 'grid' : 'none';
+    let currentTuntutanList = [];
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
+        let kesAktif = memoriSenaraiKes[indexKesSemasa];
+        if (kesAktif.dataBorang && kesAktif.dataBorang.tuntutanBiasa) {
+            currentTuntutanList = kesAktif.dataBorang.tuntutanBiasa;
+        }
     }
+    if (currentTuntutanList.length === 0) {
+        currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
+    }
+
+    let statusSelect = document.getElementById('statusAduanTuntutan');
+    let statusLainInput = document.getElementById('statusAduanLain');
+    let jenisTuntutanInput = document.getElementById('jenisTuntutan');
+
+    if (index > -1 && currentTuntutanList[index]) {
+        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
+        let item = currentTuntutanList[index];
+        
+        // Ekstrak dan tetapkan nilai Jenis Aduan daripada jadual tuntutan
+        jenisTuntutanInput.value = item.jenis || '-';
+        
+        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
+        document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
+        
+        let valStatus = item.statusAduan || '';
+        if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
+            statusSelect.value = valStatus;
+            statusLainInput.style.display = 'none';
+            statusLainInput.value = '';
+        } else if (valStatus !== "") {
+            statusSelect.value = "Lain-lain";
+            statusLainInput.style.display = 'block';
+            statusLainInput.value = valStatus;
+        } else {
+            statusSelect.value = "";
+            statusLainInput.style.display = 'none';
+            statusLainInput.value = '';
+        }
+    } else {
+        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
+        jenisTuntutanInput.value = "";
+        document.getElementById('keteranganTuntutan').value = "";
+        document.getElementById('hasilSiasatanTuntutan').value = "";
+        statusSelect.value = "";
+        statusLainInput.style.display = 'none';
+        statusLainInput.value = "";
+    }
+    document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
-// KOD BAHARU - GANTIKAN DENGAN INI
+// Pastikan juga fungsi simpanTuntutan mengambil nilai teks bebas jika "Lain-lain" dipilih:
 function simpanTuntutan() {
-    let indexEdit = document.getElementById('indexTuntutanEdit').value;
-    let jenis = document.getElementById('jenisTuntutan').value.trim();
-    let keterangan = document.getElementById('keteranganTuntutan').value.trim();
+    let jenis = document.getElementById('jenisTuntutan').value;
+    let keterangan = document.getElementById('keteranganTuntutan').value;
+    let hasilSiasatan = document.getElementById('hasilSiasatanTuntutan').value;
+    let selectStatus = document.getElementById('statusAduanTuntutan').value;
+    let statusAduan = (selectStatus === 'Lain-lain') ? document.getElementById('statusAduanLain').value : selectStatus;
     
-    // Semak medan wajib untuk pendaftaran & kemaskini
-    if (!jenis || !keterangan) {
-        alert("Sila lengkapkan Jenis Aduan dan Keterangan Aduan.");
-        return;
+    let index = parseInt(document.getElementById('indexTuntutanEdit').value);
+    let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
+
+    let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
+    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa] && memoriSenaraiKes[indexKesSemasa].dataBorang) {
+        targetList = memoriSenaraiKes[indexKesSemasa].dataBorang.tuntutanBiasa || targetList;
     }
 
-    // Ambil medan siasatan & status jika ia wujud (untuk flow kemaskini kes)
-    let elHasil = document.getElementById('hasilSiasatanTuntutan');
-    let elStatus = document.getElementById('statusAduanTuntutan');
-    let elStatusLain = document.getElementById('statusAduanLain');
-
-    let hasilSiasatan = elHasil ? elHasil.value.trim() : "";
-    let statusAduan = elStatus ? elStatus.value : "";
-    if (statusAduan === "Lain-lain" && elStatusLain) {
-        statusAduan = elStatusLain.value.trim();
+    if (index > -1 && targetList[index]) {
+        targetList[index].jenis = jenis; // Kekalkan jenis asal yang diekstrak
+        targetList[index].keterangan = keterangan;
+        targetList[index].hasilSiasatan = hasilSiasatan;
+        targetList[index].statusAduan = statusAduan;
     }
 
-    // Tentukan jenis jadual / memori sasaran
-    let jenisJadual = document.getElementById('jenisJadualTuntutan') ? document.getElementById('jenisJadualTuntutan').value : 'biasa';
+    document.getElementById('modalTuntutan').style.display = 'none';
     
-    let targetMemori;
-    if (jenisJadual === 'biasa' || typeof memoriTuntutan !== 'undefined') {
-        targetMemori = memoriTuntutan;
-    } else {
-        targetMemori = [];
-    }
-
-    if (indexEdit === "-1" || indexEdit === "") {
-        // Tambah baharu
-        targetMemori.push({
-            jenis: jenis,
-            keterangan: keterangan,
-            hasilSiasatan: hasilSiasatan,
-            statusAduan: statusAduan
-        });
-    } else {
-        // Kemaskini sedia ada (Edit)
-        targetMemori[parseInt(indexEdit)] = {
-            jenis: jenis,
-            keterangan: keterangan,
-            hasilSiasatan: hasilSiasatan,
-            statusAduan: statusAduan
-        };
-    }
-
-    // Tutup modal dan kemaskini paparan jadual
-    tutupModalTuntutan();
-    
-    // Panggil fungsi render jadual yang bersesuaian
-    if (typeof renderJadualTuntutan === 'function') {
-        renderJadualTuntutan();
+    if (typeof renderSemuaJadualTuntutan === 'function') {
+        renderSemuaJadualTuntutan();
+    } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
+        bukaMaklumatKes(indexKesSemasa);
     }
 }
         
