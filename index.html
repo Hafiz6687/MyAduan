@@ -534,8 +534,8 @@ body {
             <input type="hidden" id="jenisJadualTuntutan" value="biasa">
             
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
-                <input type="text" id="jenisTuntutan" placeholder="Masukkan jenis aduan..." style="width: 100%; box-sizing: border-box; font-weight: 600; color: var(--primary-blue);" oninput="hurufBesarSetiapPerkataan(this)">
+                <label style="text-align: left;">1. Jenis Aduan</label>
+                <input type="text" id="jenisTuntutan" readonly style="background-color: #e2e8f0; font-weight: 600; color: var(--primary-blue); cursor: not-allowed; width: 100%; box-sizing: border-box;">
             </div>
             
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
@@ -565,92 +565,7 @@ body {
             </div>
         </div>
     </div>
-<!-- MODAL KEMASKINI MAKLUMAT PENGADU -->
-<div class="modal-overlay" id="modalKemaskiniPengadu" style="z-index: 2200;">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Kemaskini Maklumat Pengadu</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Pengadu <span>*</span></label>
-            <input type="text" id="edit_namaPengadu" placeholder="Nama penuh pengadu" style="width: 100%; box-sizing: border-box;">
-        </div>
 
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">No. MyKad / Pasport <span>*</span></label>
-            <input type="text" id="edit_noPendPengadu" placeholder="No. Pengenalan" style="width: 100%; box-sizing: border-box;" maxlength="14">
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Alamat Penuh <span>*</span></label>
-            <input type="text" id="edit_alamat1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <input type="text" id="edit_alamat2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <input type="text" id="edit_alamat3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <input type="text" id="edit_poskod" placeholder="Poskod" maxlength="5" style="width: 100%; box-sizing: border-box;">
-                <input type="text" id="edit_bandar" placeholder="Bandar" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">No. Telefon (H/P)</label>
-                <input type="text" id="edit_hpPengadu" placeholder="012-3456789" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">E-mel</label>
-                <input type="email" id="edit_emelPengadu" placeholder="emel@domain.com" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalKemaskiniPengadu').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="simpanKemaskiniPengadu()">✔ Simpan Perubahan</button>
-        </div>
-    </div>
-</div>
-    <!-- MODAL KEMASKINI MAKLUMAT MAJIKAN -->
-<div class="modal-overlay" id="modalKemaskiniMajikan" style="z-index: 2200;">
-    <div class="modal-box" style="max-width: 650px;">
-        <div class="modal-title">Kemaskini Maklumat Majikan</div>
-        
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Nama Majikan <span>*</span></label>
-            <input type="text" id="edit_namaDefendan" placeholder="Nama penuh majikan / syarikat" style="width: 100%; box-sizing: border-box;">
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">No. MyKad / Pendaftaran Syarikat (SSM) <span>*</span></label>
-            <input type="text" id="edit_noPendDefendan" placeholder="No. Pengenalan / Pendaftaran" style="width: 100%; box-sizing: border-box;">
-        </div>
-
-        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-            <label style="text-align: left;">Alamat Penuh Majikan <span>*</span></label>
-            <input type="text" id="edit_alamatDefendan1" placeholder="Baris 1" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <input type="text" id="edit_alamatDefendan2" placeholder="Baris 2" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <input type="text" id="edit_alamatDefendan3" placeholder="Baris 3" style="width: 100%; box-sizing: border-box; margin-bottom: 8px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <input type="text" id="edit_poskodDefendan" placeholder="Poskod" maxlength="5" style="width: 100%; box-sizing: border-box;">
-                <input type="text" id="edit_bandarDefendan" placeholder="Bandar" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">No. Telefon (H/P)</label>
-                <input type="text" id="edit_hpDefendan" placeholder="012-3456789" style="width: 100%; box-sizing: border-box;">
-            </div>
-            <div>
-                <label style="font-size: 0.85em; font-weight: 600; display: block; margin-bottom: 5px;">E-mel</label>
-                <input type="email" id="edit_emelDefendan" placeholder="emel@domain.com" style="width: 100%; box-sizing: border-box;">
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="document.getElementById('modalKemaskiniMajikan').style.display='none'">Batal</button>
-            <button class="btn-save" onclick="simpanKemaskiniMajikan()">✔ Simpan Perubahan</button>
-        </div>
-    </div>
-</div>
     <!-- MODAL POP-UP KHAS UNTUK TARIK BALIK KES (MAJIKAN) -->
     <div class="modal-overlay" id="modalTarikBalikMajikan">
         <div class="modal-box">
@@ -2077,17 +1992,10 @@ Portal rasmi : jtksm.mohr.gov.my
         </div>
     </div>
 </div>
-<!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
-<div class="card full-width">
-    <div class="card-header" id="mk_header_pengadu" style="padding-right: 15px;">
-        <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
-            <span>Maklumat Pengadu</span>
-            <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniPengadu()">
-                ✏️ Kemaskini
-            </button>
-        </span>
-    </div>
-    <div class="card-body">
+            <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
+            <div class="card full-width">
+                <div class="card-header" id="mk_header_pengadu">Maklumat Pengadu</div>
+                <div class="card-body">
                     <div class="grid-3" id="mk_grid_pengadu">
                         <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Pengadu -->
                     </div>
@@ -2157,14 +2065,7 @@ Portal rasmi : jtksm.mohr.gov.my
             </div>
             <!-- BAHAGIAN 3: Maklumat Majikan -->
             <div class="card full-width" id="kad_maklumat_defendan">
-                <div class="card-header" id="mk_header_defendan" style="padding-right: 15px;">
-                    <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
-                        <span>Maklumat Majikan</span>
-                        <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniMajikan()">
-                            ✏️ Kemaskini
-                        </button>
-                    </span>
-                </div>
+                <div class="card-header" id="mk_header_defendan">Maklumat Majikan</div>
                 <div class="card-body">
         <div class="grid-2" id="mk_grid_defendan">
             <!-- Ruangan ini akan dijana oleh JS -->
@@ -3752,7 +3653,8 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         if (!window.db || !window.doc || !window.setDoc) return;
 
         const docRef = window.doc(window.db, "data_pengguna", "profil_hafiz_abubakar");
-
+        
+        // Dapatkan nilai semasa jika tidak dihantar
         const namaSimpan = namaText || document.getElementById('namaProfilEdit').innerHTML || localStorage.getItem('eLC_namaProfil') || "";
         const gambarSimpan = gambarBase64 || localStorage.getItem('eLC_gambarProfil') || "";
         const posSimpan = posObj || (localStorage.getItem('eLC_gambarPos') ? JSON.parse(localStorage.getItem('eLC_gambarPos')) : {x: 0, y: 0});
@@ -3769,47 +3671,26 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         console.log("Berjaya! Gambar profil dan tetapan disimpan ke Firebase.");
     } catch (error) {
         console.error("Ralat menyimpan profil ke Firebase:", error);
-        alert("Gagal menyimpan ke pangkalan data. Sila pastikan sambungan internet stabil.");
+        alert("Ralat menyimpan gambar ke awan. Sila pastikan saiz gambar tidak terlalu besar.");
     }
 }
 // --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
 async function simpanSenaraiKeLokal() {
     try {
-        if (!window.db || !window.doc || !window.setDoc) {
-            localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-            return;
-        }
-
-        // Buat salinan bersih (buang fail lampiran saiz besar yang tidak perlu dari sync awan utama jika melebihi kapasiti)
-        const kesBersih = memoriSenaraiKes.map(kes => {
-            let kCopia = { ...kes };
-            if (kCopia.dataBorang && kCopia.dataBorang.lampiran) {
-                // Kecilkan atau asingkan fail base64 yang terlalu berat untuk disimpan terus dalam doc
-                kCopia.dataBorang.lampiran = kCopia.dataBorang.lampiran.map(f => ({
-                    nama: f.nama,
-                    saiz: f.saiz,
-                    jenis: f.jenis
-                    // Tidak simpan data string base64 fail yang besar ke dalam Firestore
-                }));
-            }
-            return kCopia;
-        });
-
+        // Simpan keseluruhan array memoriSenaraiKes ke Firestore
         const docRef = window.doc(window.db, "data_pengguna", "hafiz_abubakar");
         await window.setDoc(docRef, {
-            senaraiKes: kesBersih,
+            senaraiKes: memoriSenaraiKes,
             kemaskiniTerakhir: new Date().toISOString()
-        }, { merge: true });
+        });
         
-        // Simpan juga salinan lengkap di lokal browser
+        console.log("Berjaya! Data kes disimpan ke awan (Firestore).");
+        // Simpan juga salinan ke localStorage sebagai backup jika tiada internet
         localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        console.log("Data kes berjaya disimpan ke awan (Firestore).");
-
     } catch (e) {
         console.error("Ralat menyimpan data ke Firestore:", e);
-        // Fallback simpan ke local storage pelayar supaya kerja pengguna tidak hilang
+        // Fallback: Guna memori browser jika gagal
         localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        alert("Amaran: Gagal kemaskini ke awan (Saiz fail terlalu besar), tetapi data telah disimpan secara selamat di memori pelayar (Local Storage) anda.");
     }
 }
 
@@ -3981,16 +3862,7 @@ function bukaMaklumatKes(index) {
     const p_bil_pengadu = dataSistem['bilPengadu'] ? dataSistem['bilPengadu'] + " Orang" : "-";
 
     const headerPengadu = document.getElementById('mk_header_pengadu');
-if (headerPengadu) {
-    headerPengadu.innerHTML = `
-        <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
-            <span>Maklumat Pengadu</span>
-            <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniPengadu()">
-                ✏️ Kemaskini
-            </button>
-        </span>
-    `;
-}
+    if (headerPengadu) headerPengadu.innerText = 'Maklumat Pengadu';
         
     let p_id = dataSistem['noPendPengadu'] || "-";
     let p_tel = dataSistem['telPengadu'] || "-";
@@ -4052,17 +3924,7 @@ if (headerPengadu) {
     `;
     document.getElementById('mk_grid_pengadu').innerHTML = htmlPengadu;
 
-    const headerDefendan = document.getElementById('mk_header_defendan');
-if (headerDefendan) {
-    headerDefendan.innerHTML = `
-        <span style="display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;">
-            <span>Maklumat Majikan</span>
-            <button type="button" class="btn-terapung" style="background-color: var(--primary-blue); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-left: auto;" onclick="bukaModalKemaskiniMajikan()">
-                ✏️ Kemaskini
-            </button>
-        </span>
-    `;
-}
+    document.getElementById('mk_header_defendan').innerText = 'Maklumat Majikan';
     let lbl_id = d_isMyKad ? 'No. MyKad' : 'No. Pendaftaran';
     let htmlDefendan = `
         <div style="display: flex; flex-direction: column;">
@@ -4261,7 +4123,7 @@ function simpanDisahkanOleh(el) {
         }
     }
 }
-
+    
     function kawalCheckboxPenerimaNotis() {
         const kes = memoriSenaraiKes[indexKesSemasa];
         if (!kes) return;
@@ -6597,51 +6459,65 @@ function muatNaikGambarProfil(input) {
         const reader = new FileReader();
 
         reader.onload = function (e) {
-            const imgElement = new Image();
-            imgElement.src = e.target.result;
+            const imgTemp = new Image();
+            imgTemp.src = e.target.result;
 
-            imgElement.onload = function () {
-                // Buat Canvas untuk mengecilkan resolusi & memampatkan imej
+            imgTemp.onload = function() {
+                // Mampatkan saiz gambar (Max 300x300px) supaya pantas dimuatkan dari Firebase
                 const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                // Tetapkan resolusi maksimum (cth: 300x300px)
-                const maxWidth = 300;
-                const maxHeight = 300;
-                let width = imgElement.width;
-                let height = imgElement.height;
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
+                let width = imgTemp.width;
+                let height = imgTemp.height;
 
                 if (width > height) {
-                    if (width > maxWidth) {
-                        height *= maxWidth / width;
-                        width = maxWidth;
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
                     }
                 } else {
-                    if (height > maxHeight) {
-                        width *= maxHeight / height;
-                        height = maxHeight;
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
                     }
                 }
 
                 canvas.width = width;
                 canvas.height = height;
-                ctx.drawImage(imgElement, 0, 0, width, height);
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(imgTemp, 0, 0, width, height);
 
-                // Tukar kepada JPEG dengan kualiti 0.7 (mampat lebih 80%)
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                // Tukar kepada data Base64 berkualiti optimum (0.85)
+                const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
 
-                // Paparkan pada UI
+                // Paparkan pada elemen UI
                 document.getElementById('ikonKamera').style.display = 'none';
                 const img = document.getElementById('gambarProfil');
                 img.style.display = 'block';
-                img.src = compressedBase64;
+                img.src = optimizedBase64;
+                img.style.cursor = 'grab';
 
-                // Simpan ke LocalStorage & Firestore Awan
-                localStorage.setItem('eLC_gambarProfil', compressedBase64);
-                simpanProfilKeAwan(compressedBase64);
+                if (img.naturalHeight > img.naturalWidth) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                } else {
+                    img.style.width = 'auto';
+                    img.style.height = '100%';
+                }
+
+                currentScale = 1.2; 
+                currentPosX = 0; 
+                currentPosY = 0;
+                if (typeof updateTransform === 'function') updateTransform();
+
+                // Simpan ke LocalStorage dan terus HANTAR KE FIREBASE
+                localStorage.setItem('eLC_gambarProfil', optimizedBase64);
+                localStorage.setItem('eLC_gambarScale', "1.2");
+                localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
+
+                simpanProfilKeAwan(optimizedBase64, {x: 0, y: 0}, "1.2", null);
             };
         };
-
         reader.readAsDataURL(file);
     }
 }
@@ -16613,119 +16489,6 @@ function simpanTarikhPengesahan(el) {
         if (typeof simpanSenaraiKeLokal === 'function') simpanSenaraiKeLokal();
     }
 }
-           // Buka modal dan tarik data pengadu semasa kes yang sedang dibuka
-function bukaModalKemaskiniPengadu() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    const inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
-
-    // Masukkan data sedia ada ke dalam input pop-up
-    document.getElementById('edit_namaPengadu').value = kes.namaPengadu ? kes.namaPengadu.replace(/<br>.*$/g, '') : (inputs['namaPengadu'] || '');
-    document.getElementById('edit_noPendPengadu').value = inputs['noPendPengadu'] || '';
-    document.getElementById('edit_alamat1').value = inputs['alamatPengadu1'] || '';
-    document.getElementById('edit_alamat2').value = inputs['alamatPengadu2'] || '';
-    document.getElementById('edit_alamat3').value = inputs['alamatPengadu3'] || '';
-    document.getElementById('edit_poskod').value = inputs['poskodPengadu'] || '';
-    document.getElementById('edit_bandar').value = inputs['bandarPengadu'] || '';
-    document.getElementById('edit_hpPengadu').value = inputs['hpPengadu'] || '';
-    document.getElementById('edit_emelPengadu').value = inputs['emelPengadu'] || '';
-
-    // Paparkan modal
-    document.getElementById('modalKemaskiniPengadu').style.display = 'flex';
-}
-
-// Simpan perubahan dari modal ke dalam memori kes dan pangkalan data lokal/awan
-function simpanKemaskiniPengadu() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa < 0) return;
-    let kes = memoriSenaraiKes[indexKesSemasa];
-
-    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
-    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
-
-    // Tangkap nilai baharu dari input modal
-    const namaBaru = document.getElementById('edit_namaPengadu').value.trim();
-    kes.namaPengadu = namaBaru;
-    kes.dataBorang.inputs['namaPengadu'] = namaBaru;
-    kes.dataBorang.inputs['noPendPengadu'] = document.getElementById('edit_noPendPengadu').value.trim();
-    kes.dataBorang.inputs['alamatPengadu1'] = document.getElementById('edit_alamat1').value.trim();
-    kes.dataBorang.inputs['alamatPengadu2'] = document.getElementById('edit_alamat2').value.trim();
-    kes.dataBorang.inputs['alamatPengadu3'] = document.getElementById('edit_alamat3').value.trim();
-    kes.dataBorang.inputs['poskodPengadu'] = document.getElementById('edit_poskod').value.trim();
-    kes.dataBorang.inputs['bandarPengadu'] = document.getElementById('edit_bandar').value.trim();
-    kes.dataBorang.inputs['hpPengadu'] = document.getElementById('edit_hpPengadu').value.trim();
-    kes.dataBorang.inputs['emelPengadu'] = document.getElementById('edit_emelPengadu').value.trim();
-
-    // Tutup modal
-    document.getElementById('modalKemaskiniPengadu').style.display = 'none';
-
-    // Simpan ke storan (Lokal / Awan)
-    if (typeof simpanSenaraiKeLokal === 'function') {
-        simpanSenaraiKeLokal();
-    }
-
-    // Segarkan paparan Maklumat Kes supaya perubahan terus kelihatan
-    bukaMaklumatKes(indexKesSemasa);
-    alert("Maklumat pengadu berjaya dikemaskini!");
-}
-    function bukaModalKemaskiniMajikan() {
-    const kes = (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined') ? memoriSenaraiKes[indexKesSemasa] : null;
-    if (!kes) return;
-    const inputs = (kes.dataBorang && kes.dataBorang.inputs) ? kes.dataBorang.inputs : {};
-
-    document.getElementById('edit_namaDefendan').value = inputs['namaDefendan'] || kes.namaDefendan.replace(/<br>.*$/g, '') || '';
-    document.getElementById('edit_noPendDefendan').value = inputs['noPendDefendan'] || '';
-    document.getElementById('edit_alamatDefendan1').value = inputs['alamatDefendan1'] || '';
-    document.getElementById('edit_alamatDefendan2').value = inputs['alamatDefendan2'] || '';
-    document.getElementById('edit_alamatDefendan3').value = inputs['alamatDefendan3'] || '';
-    document.getElementById('edit_poskodDefendan').value = inputs['poskodDefendan'] || '';
-    document.getElementById('edit_bandarDefendan').value = inputs['bandarDefendan'] || '';
-    document.getElementById('edit_hpDefendan').value = inputs['hpDefendan'] || inputs['telHpDefendan'] || '';
-    document.getElementById('edit_emelDefendan').value = inputs['emelDefendan'] || '';
-
-    document.getElementById('modalKemaskiniMajikan').style.display = 'flex';
-}
-
-function simpanKemaskiniMajikan() {
-    if (typeof indexKesSemasa === 'undefined' || indexKesSemasa === -1 || !memoriSenaraiKes[indexKesSemasa]) return;
-    const kes = memoriSenaraiKes[indexKesSemasa];
-    if (!kes.dataBorang) kes.dataBorang = { inputs: {} };
-    if (!kes.dataBorang.inputs) kes.dataBorang.inputs = {};
-
-    const valNama = document.getElementById('edit_namaDefendan').value.trim();
-    const valNoPend = document.getElementById('edit_noPendDefendan').value.trim();
-    const valA1 = document.getElementById('edit_alamatDefendan1').value.trim();
-    const valA2 = document.getElementById('edit_alamatDefendan2').value.trim();
-    const valA3 = document.getElementById('edit_alamatDefendan3').value.trim();
-    const valPos = document.getElementById('edit_poskodDefendan').value.trim();
-    const valBdr = document.getElementById('edit_bandarDefendan').value.trim();
-    const valHp = document.getElementById('edit_hpDefendan').value.trim();
-    const valEmel = document.getElementById('edit_emelDefendan').value.trim();
-
-    if (!valNama) {
-        alert("Sila masukkan nama majikan.");
-        return;
-    }
-
-    kes.dataBorang.inputs['namaDefendan'] = valNama;
-    kes.dataBorang.inputs['noPendDefendan'] = valNoPend;
-    kes.dataBorang.inputs['alamatDefendan1'] = valA1;
-    kes.dataBorang.inputs['alamatDefendan2'] = valA2;
-    kes.dataBorang.inputs['alamatDefendan3'] = valA3;
-    kes.dataBorang.inputs['poskodDefendan'] = valPos;
-    kes.dataBorang.inputs['bandarDefendan'] = valBdr;
-    kes.dataBorang.inputs['hpDefendan'] = valHp;
-    kes.dataBorang.inputs['emelDefendan'] = valEmel;
-
-    kes.namaDefendan = valNama;
-
-    if (typeof simpanSenaraiKeLokal === 'function') {
-        simpanSenaraiKeLokal();
-    }
-
-    document.getElementById('modalKemaskiniMajikan').style.display = 'none';
-    bukaMaklumatKes(indexKesSemasa);
-    alert("Maklumat Majikan berjaya dikemaskini!");
-}
 </script>
 
 <!-- Muatkan Firebase SDK melalui CDN (Hanya Firestore) -->
@@ -16733,7 +16496,9 @@ function simpanKemaskiniMajikan() {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-  // 1. Konfigurasi Firebase anda
+// Dan tambah baris ini di bawah window.setDoc = setDoc;
+window.getDoc = getDoc;
+  // 1. Konfigurasi Firebase anda yang sebenar
   const firebaseConfig = {
     apiKey: "AIzaSyCEJL04DfA_N7GFhWHa8czWRzqGtV6jMu4",
     authDomain: "myaduan-sistem.firebaseapp.com",
@@ -16747,13 +16512,12 @@ function simpanKemaskiniMajikan() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // 3. Eksport ke window global SETELAH di-import
+  // Jadikan ia global supaya fungsi asal anda boleh mengaksesnya
   window.db = db;
   window.collection = collection;
   window.getDocs = getDocs;
   window.doc = doc;
   window.setDoc = setDoc;
-  window.getDoc = getDoc; // ✅ Diletakkan di sini bersama yang lain
 </script>
 </body>
 </html>
