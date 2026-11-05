@@ -7110,17 +7110,19 @@ function kawalStatusAduanLain() {
 
 // 1. KHAS UNTUK FLOW PENDAFTARAN ADUAN (Hanya 2 Medan)
 function bukaModalTambahTuntutanDraf() {
-    // Kosongkan nilai input
+    document.getElementById('indexTuntutanEdit').value = "-1";
     document.getElementById('jenisTuntutan').value = '';
     document.getElementById('keteranganTuntutan').value = '';
     
-    // Tetapkan tajuk pop-up
     const tajuk = document.getElementById('tajukModal');
     if(tajuk) tajuk.innerText = "Tambah Tuntutan";
     
-    // Sembunyikan medan Hasil Siasatan dan Status Aduan khusus untuk pendaftaran baharu
-    // (Anda boleh bungkus medan 3 & 4 dalam div berasingan atau kawal paparan di sini)
-    tukarPaparanMedanPopup(false); 
+    // Sembunyikan medan Hasil Siasatan & Status Aduan khas untuk Pendaftaran Aduan
+    let groupHasil = document.getElementById('hasilSiasatanTuntutan')?.closest('.form-group');
+    let groupStatus = document.getElementById('statusAduanTuntutan')?.closest('.form-group');
+    
+    if(groupHasil) groupHasil.style.display = 'none';
+    if(groupStatus) groupStatus.style.display = 'none';
 
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
@@ -7149,35 +7151,63 @@ function tukarPaparanMedanPopup(paparSemua) {
     }
 }
 
-// Pastikan juga fungsi simpanTuntutan mengambil nilai teks bebas jika "Lain-lain" dipilih:
+// KOD BAHARU - GANTIKAN DENGAN INI
 function simpanTuntutan() {
-    let jenis = document.getElementById('jenisTuntutan').value;
-    let keterangan = document.getElementById('keteranganTuntutan').value;
-    let hasilSiasatan = document.getElementById('hasilSiasatanTuntutan').value;
-    let selectStatus = document.getElementById('statusAduanTuntutan').value;
-    let statusAduan = (selectStatus === 'Lain-lain') ? document.getElementById('statusAduanLain').value : selectStatus;
+    let indexEdit = document.getElementById('indexTuntutanEdit').value;
+    let jenis = document.getElementById('jenisTuntutan').value.trim();
+    let keterangan = document.getElementById('keteranganTuntutan').value.trim();
     
-    let index = parseInt(document.getElementById('indexTuntutanEdit').value);
-    let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
-
-    let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa] && memoriSenaraiKes[indexKesSemasa].dataBorang) {
-        targetList = memoriSenaraiKes[indexKesSemasa].dataBorang.tuntutanBiasa || targetList;
+    // Semak medan wajib untuk pendaftaran & kemaskini
+    if (!jenis || !keterangan) {
+        alert("Sila lengkapkan Jenis Aduan dan Keterangan Aduan.");
+        return;
     }
 
-    if (index > -1 && targetList[index]) {
-        targetList[index].jenis = jenis; // Kekalkan jenis asal yang diekstrak
-        targetList[index].keterangan = keterangan;
-        targetList[index].hasilSiasatan = hasilSiasatan;
-        targetList[index].statusAduan = statusAduan;
+    // Ambil medan siasatan & status jika ia wujud (untuk flow kemaskini kes)
+    let elHasil = document.getElementById('hasilSiasatanTuntutan');
+    let elStatus = document.getElementById('statusAduanTuntutan');
+    let elStatusLain = document.getElementById('statusAduanLain');
+
+    let hasilSiasatan = elHasil ? elHasil.value.trim() : "";
+    let statusAduan = elStatus ? elStatus.value : "";
+    if (statusAduan === "Lain-lain" && elStatusLain) {
+        statusAduan = elStatusLain.value.trim();
     }
 
-    document.getElementById('modalTuntutan').style.display = 'none';
+    // Tentukan jenis jadual / memori sasaran
+    let jenisJadual = document.getElementById('jenisJadualTuntutan') ? document.getElementById('jenisJadualTuntutan').value : 'biasa';
     
-    if (typeof renderSemuaJadualTuntutan === 'function') {
-        renderSemuaJadualTuntutan();
-    } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
-        bukaMaklumatKes(indexKesSemasa);
+    let targetMemori;
+    if (jenisJadual === 'biasa' || typeof memoriTuntutan !== 'undefined') {
+        targetMemori = memoriTuntutan;
+    } else {
+        targetMemori = [];
+    }
+
+    if (indexEdit === "-1" || indexEdit === "") {
+        // Tambah baharu
+        targetMemori.push({
+            jenis: jenis,
+            keterangan: keterangan,
+            hasilSiasatan: hasilSiasatan,
+            statusAduan: statusAduan
+        });
+    } else {
+        // Kemaskini sedia ada (Edit)
+        targetMemori[parseInt(indexEdit)] = {
+            jenis: jenis,
+            keterangan: keterangan,
+            hasilSiasatan: hasilSiasatan,
+            statusAduan: statusAduan
+        };
+    }
+
+    // Tutup modal dan kemaskini paparan jadual
+    tutupModalTuntutan();
+    
+    // Panggil fungsi render jadual yang bersesuaian
+    if (typeof renderJadualTuntutan === 'function') {
+        renderJadualTuntutan();
     }
 }
         
