@@ -3772,24 +3772,27 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         alert("Gagal menyimpan ke pangkalan data. Sila pastikan sambungan internet stabil.");
     }
 }
-// --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
 async function simpanSenaraiKeLokal() {
+    // Sentiasa simpan salinan penuh yang selamat di dalam Local Storage pelayar terlebih dahulu
+    try {
+        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+    } catch (localErr) {
+        console.warn("Amaran LocalStorage penuh:", localErr);
+    }
+
     try {
         if (!window.db || !window.doc || !window.setDoc) {
-            localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
             return;
         }
 
-        // Buat salinan bersih (buang fail lampiran saiz besar yang tidak perlu dari sync awan utama jika melebihi kapasiti)
+        // Tapisan ringkas untuk memastikan data ke awan Firebase sentiasa ringan dan tidak melepasi limit dokumen
         const kesBersih = memoriSenaraiKes.map(kes => {
             let kCopia = { ...kes };
             if (kCopia.dataBorang && kCopia.dataBorang.lampiran) {
-                // Kecilkan atau asingkan fail base64 yang terlalu berat untuk disimpan terus dalam doc
                 kCopia.dataBorang.lampiran = kCopia.dataBorang.lampiran.map(f => ({
-                    nama: f.nama,
-                    saiz: f.saiz,
-                    jenis: f.jenis
-                    // Tidak simpan data string base64 fail yang besar ke dalam Firestore
+                    nama: f.nama || 'Dokumen',
+                    saiz: f.saiz || '',
+                    jenis: f.jenis || ''
                 }));
             }
             return kCopia;
@@ -3801,15 +3804,11 @@ async function simpanSenaraiKeLokal() {
             kemaskiniTerakhir: new Date().toISOString()
         }, { merge: true });
         
-        // Simpan juga salinan lengkap di lokal browser
-        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        console.log("Data kes berjaya disimpan ke awan (Firestore).");
+        console.log("Data kes berjaya diselaraskan ke awan Firebase.");
 
     } catch (e) {
-        console.error("Ralat menyimpan data ke Firestore:", e);
-        // Fallback simpan ke local storage pelayar supaya kerja pengguna tidak hilang
-        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        alert("Amaran: Gagal kemaskini ke awan (Saiz fail terlalu besar), tetapi data telah disimpan secara selamat di memori pelayar (Local Storage) anda.");
+        // Direkodkan secara senyap di console tanpa memaparkan pop-up amaran mengganggu kepada pengguna
+        console.error("Nota Penyelarasan Awan:", e);
     }
 }
 
