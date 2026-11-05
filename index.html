@@ -3439,8 +3439,8 @@ Portal rasmi : jtksm.mohr.gov.my
     <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
             <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTuntutan('biasa')">+ Jenis Aduan</button>
-        </div>                        
+        <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTambahTuntutanDraf()">+ Jenis Aduan</button>
+    </div>                        
                         <table id="jadualTuntutan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
                             <thead style="background-color: var(--card-header-bg);">
                                 <tr>
@@ -7108,60 +7108,45 @@ function kawalStatusAduanLain() {
     }
 }
 
-// Di dalam fungsi bukaModalTuntutan, pastikan logik ini disertakan:
-function bukaModalTuntutan(jenis, index = -1) {
-    document.getElementById('indexTuntutanEdit').value = index;
-    document.getElementById('jenisJadualTuntutan').value = jenis;
+// 1. KHAS UNTUK FLOW PENDAFTARAN ADUAN (Hanya 2 Medan)
+function bukaModalTambahTuntutanDraf() {
+    // Kosongkan nilai input
+    document.getElementById('jenisTuntutan').value = '';
+    document.getElementById('keteranganTuntutan').value = '';
     
-    let currentTuntutanList = [];
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
-        let kesAktif = memoriSenaraiKes[indexKesSemasa];
-        if (kesAktif.dataBorang && kesAktif.dataBorang.tuntutanBiasa) {
-            currentTuntutanList = kesAktif.dataBorang.tuntutanBiasa;
-        }
-    }
-    if (currentTuntutanList.length === 0) {
-        currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-    }
+    // Tetapkan tajuk pop-up
+    const tajuk = document.getElementById('tajukModal');
+    if(tajuk) tajuk.innerText = "Tambah Tuntutan";
+    
+    // Sembunyikan medan Hasil Siasatan dan Status Aduan khusus untuk pendaftaran baharu
+    // (Anda boleh bungkus medan 3 & 4 dalam div berasingan atau kawal paparan di sini)
+    tukarPaparanMedanPopup(false); 
 
-    let statusSelect = document.getElementById('statusAduanTuntutan');
-    let statusLainInput = document.getElementById('statusAduanLain');
-    let jenisTuntutanInput = document.getElementById('jenisTuntutan');
-
-    if (index > -1 && currentTuntutanList[index]) {
-        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
-        let item = currentTuntutanList[index];
-        
-        // Ekstrak dan tetapkan nilai Jenis Aduan daripada jadual tuntutan
-        jenisTuntutanInput.value = item.jenis || '-';
-        
-        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
-        document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
-        
-        let valStatus = item.statusAduan || '';
-        if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
-            statusSelect.value = valStatus;
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
-        } else if (valStatus !== "") {
-            statusSelect.value = "Lain-lain";
-            statusLainInput.style.display = 'block';
-            statusLainInput.value = valStatus;
-        } else {
-            statusSelect.value = "";
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
-        }
-    } else {
-        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
-        jenisTuntutanInput.value = "";
-        document.getElementById('keteranganTuntutan').value = "";
-        document.getElementById('hasilSiasatanTuntutan').value = "";
-        statusSelect.value = "";
-        statusLainInput.style.display = 'none';
-        statusLainInput.value = "";
-    }
     document.getElementById('modalTuntutan').style.display = 'flex';
+}
+
+// 2. KEKAL UNTUK FLOW PENGURUSAN / KEMASKINI KES (Lengkap 4 Medan)
+function bukaModalKemaskiniTuntutan(index) {
+    // Kekalkan logik asal untuk edit kes yang telah didaftarkan
+    const tajuk = document.getElementById('tajukModal');
+    if(tajuk) tajuk.innerText = "Kemaskini Tuntutan & Siasatan";
+    
+    tukarPaparanMedanPopup(true); // Paparkan kesemua 4 medan
+    
+    // ... logik memuatkan data sedia ada untuk di-edit ...
+    document.getElementById('modalTuntutan').style.display = 'flex';
+}
+
+// Fungsi sokongan untuk menyembunyikan/memaparkan medan 3 & 4
+function tukarPaparanMedanPopup(paparSemua) {
+    // Anda boleh sesuaikan ID elemen div bagi medan Hasil Siasatan dan Status Aduan
+    const groupHasil = document.getElementById('hasilSiasatanTuntutan')?.closest('.form-group');
+    const groupStatus = document.getElementById('statusAduanTuntutan')?.closest('.form-group');
+    
+    if(groupHasil && groupStatus) {
+        groupHasil.style.display = paparSemua ? 'grid' : 'none';
+        groupStatus.style.display = paparSemua ? 'grid' : 'none';
+    }
 }
 
 // Pastikan juga fungsi simpanTuntutan mengambil nilai teks bebas jika "Lain-lain" dipilih:
