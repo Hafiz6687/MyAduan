@@ -529,7 +529,7 @@ body {
 
     <div class="modal-overlay" id="modalTuntutan">
         <div class="modal-box" style="max-width: 650px;">
-            <div class="modal-title" id="tajukModal">Tambah Aduan</div>
+            <div class="modal-title" id="tajukModal">Kemaskini Tuntutan & Siasatan</div>
             <input type="hidden" id="indexTuntutanEdit" value="-1">
             <input type="hidden" id="jenisJadualTuntutan" value="biasa">
             
@@ -543,14 +543,12 @@ body {
                 <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
             </div>
 
-            <!-- MEDAN HASIL SIASATAN (Hanya dipaparkan jika dibuka dari Flow Senarai Kes / Urus Kes) -->
-            <div class="form-group" id="ruanganHasilSiasatanModal" style="grid-template-columns: 1fr; margin-bottom: 12px; display: none;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna senarai bertingkat/multilevel cth: 1., 1.1, a) b))</span></label>
                 <textarea id="hasilSiasatanTuntutan" rows="5" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen mendapati...&#10;   1.1 Gaji bulan Januari tidak dibayar...&#10;2. Penjelasan majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit;" oninput="autoResize(this)"></textarea>
             </div>
 
-            <!-- MEDAN STATUS ADUAN (Hanya dipaparkan jika dibuka dari Flow Senarai Kes / Urus Kes) -->
-            <div class="form-group" id="ruanganStatusAduanModal" style="grid-template-columns: 1fr; margin-bottom: 12px; display: none;">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">4. Status Aduan <span>*</span></label>
                 <select id="statusAduanTuntutan" onchange="kawalStatusAduanLain()" style="width: 100%; box-sizing: border-box;">
                     <option value="">-Sila Pilih Status-</option>
@@ -2094,9 +2092,11 @@ Portal rasmi : jtksm.mohr.gov.my
                         <!-- Ruangan ini akan dijana oleh JS bergantung kpd status Pengadu -->
                     </div>
 
+           
                     <!-- Tuntutan Digabungkan dalam Container yang sama -->
                     <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
-                    <h4 style="margin-top:0; margin-bottom: 15px; color:var(--primary-blue);">Maklumat Aduan</h4>
+                    <h4 style="margin-top:0; margin-bottom: 15px; color:var(--primary-blue);">Maklumat Tuntutan</h4>
+                    
                     <div style="grid-column: 1 / -1; overflow-x: auto;">
                         <table style="border:1px solid var(--border-color); width: 100%;">
                             <thead style="background-color: var(--card-header-bg);">
