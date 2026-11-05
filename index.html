@@ -3643,46 +3643,50 @@ Portal rasmi : jtksm.mohr.gov.my
             // Panggil fungsi muat turun profil dari awan secara automatik
             muatkanProfilDariAwan();
 
-// --- KEMASKINI: Tarik data dari Local Storage supaya tak hilang bila refresh ---
-// Fungsi untuk menarik data dari awan Firestore
+// --- KEMASKINI: Tarik data dari Local Storage serta-merta & selaras dengan Firestore ---
     async function muatkanDataAwal() {
-        try {
-            console.log("Sedang memuat turun data dari awan...");
-            const docSnap = await window.getDocs(window.collection(window.db, "data_pengguna"));
-            
-            let dataDijumpai = false;
-            docSnap.forEach((docItem) => {
-                if (docItem.id === "hafiz_abubakar") {
-                    memoriSenaraiKes = docItem.data().senaraiKes || [];
-                    dataDijumpai = true;
-                }
-            });
-
-            if (!dataDijumpai) {
-                // Jika ini kali pertama buka, muatkan data kosong
-                memoriSenaraiKes = [];
-            }
-        } catch (error) {
-            console.error("Gagal menarik data awan. Cuba baca dari backup lokal:", error);
-            const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
-            if (senaraiLokal) {
+        // 1. Muatkan data dari Local Storage terlebih dahulu supaya data langsung wujud serta-merta tanpa lewat
+        const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
+        if (senaraiLokal) {
+            try {
                 memoriSenaraiKes = JSON.parse(senaraiLokal);
-            } else {
+                renderSenaraiTugas();
+            } catch (e) {
+                console.error("Ralat membaca Local Storage:", e);
                 memoriSenaraiKes = [];
             }
+        } else {
+            memoriSenaraiKes = [];
         }
 
-        // Paparkan jadual selepas data berjaya dimuat turun
-        renderSenaraiTugas();
+        // 2. Cuba tarik data terkini dari awan Firestore di latar belakang
+        try {
+            console.log("Sedang menyemak data dari awan...");
+            const docSnap = await window.getDocs(window.collection(window.db, "data_pengguna"));
+            
+            docSnap.forEach((docItem) => {
+                if (docItem.id === "hafiz_abubakar") {
+                    const dataAwan = docItem.data().senaraiKes || [];
+                    // Jika data awan wujud dan sah, utamakan data awan dan kemaskini Local Storage
+                    if (dataAwan.length > 0) {
+                        memoriSenaraiKes = dataAwan;
+                        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+                        renderSenaraiTugas();
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Nota: Gagal menyambung ke awan, menggunakan data lokal sepenuhnya.", error);
+        }
     }
 
     // Jalankan fungsi
     muatkanDataAwal();
 
-        // --- TAMBAHAN BARU: Tetapkan paparan utama ke Senarai Tugasan sebaik sahaja sistem dibuka ---
-        tukarView('senarai'); 
+    // --- TAMBAHAN BARU: Tetapkan paparan utama ke Senarai Tugasan sebaik sahaja sistem dibuka ---
+    tukarView('senarai'); 
 
-    }); // <--- INI ADALAH PENUTUP DOMContentLoaded
+}); // <--- INI ADALAH PENUTUP DOMContentLoaded
 // =========================================================================
 // FUNGSI AWAN UNTUK GAMBAR DAN NAMA PROFIL (FIRESTORE)
 // =========================================================================
@@ -3773,15 +3777,19 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
     }
 }
 async function simpanSenaraiKeLokal() {
-    // Sentiasa simpan salinan penuh yang selamat di dalam Local Storage pelayar terlebih dahulu
+    // 1. Simpan salinan penuh ke Local Storage pelayar secara selamat dan wajib
     try {
         localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+        console.log("Data kes berjaya disimpan ke Local Storage pelayar.");
     } catch (localErr) {
-        console.warn("Amaran LocalStorage penuh:", localErr);
+        console.error("Ralat kritikal: Gagal simpan ke Local Storage pelayar:", localErr);
+        alert("Amaran: Memori pelayar anda penuh atau menyekat storan lokal. Data kes mungkin tidak kekal selepas refresh.");
     }
 
+    // 2. Cuba selaraskan ke awan Firebase secara latar belakang (background sync)
     try {
         if (!window.db || !window.doc || !window.setDoc) {
+            console.warn("Firebase belum bersedia, penyelarasan awan dilangkau.");
             return;
         }
 
@@ -3807,8 +3815,7 @@ async function simpanSenaraiKeLokal() {
         console.log("Data kes berjaya diselaraskan ke awan Firebase.");
 
     } catch (e) {
-        // Direkodkan secara senyap di console tanpa memaparkan pop-up amaran mengganggu kepada pengguna
-        console.error("Nota Penyelarasan Awan:", e);
+        console.error("Nota Penyelarasan Awan (Firebase):", e);
     }
 }
 
