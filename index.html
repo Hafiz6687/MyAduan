@@ -3439,7 +3439,7 @@ Portal rasmi : jtksm.mohr.gov.my
     <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
             <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTuntutan('biasa')">+ Jenis Aduan</button>
+            <button id="btnTambahTuntutanBiasa" class="btn-add btn-terapung" style="margin: 0; white-space: nowrap; padding: 10px 20px; font-size: 0.85em; min-width: 170px; text-align: center;" onclick="bukaModalTuntutan('biasa', -1)">+ Jenis Aduan</button>
         </div>                        
                         <table id="jadualTuntutan" style="width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color);">
                             <thead style="background-color: var(--card-header-bg);">
@@ -7108,59 +7108,34 @@ function kawalStatusAduanLain() {
     }
 }
 
-// Di dalam fungsi bukaModalTuntutan, pastikan logik ini disertakan:
 function bukaModalTuntutan(jenis, index = -1) {
-    document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
-    
-    let currentTuntutanList = [];
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
-        let kesAktif = memoriSenaraiKes[indexKesSemasa];
-        if (kesAktif.dataBorang && kesAktif.dataBorang.tuntutanBiasa) {
-            currentTuntutanList = kesAktif.dataBorang.tuntutanBiasa;
-        }
-    }
-    if (currentTuntutanList.length === 0) {
-        currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-    }
+    document.getElementById('indexTuntutanEdit').value = index;
 
-    let statusSelect = document.getElementById('statusAduanTuntutan');
-    let statusLainInput = document.getElementById('statusAduanLain');
-    let jenisTuntutanInput = document.getElementById('jenisTuntutan');
-
-    if (index > -1 && currentTuntutanList[index]) {
+    if (index > -1) {
+        // Mod Kemaskini
         document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
-        let item = currentTuntutanList[index];
+        let targetMemori = (typeof memoriTuntutan !== 'undefined') ? memoriTuntutan : [];
+        let dataTuntutan = targetMemori[index];
         
-        // Ekstrak dan tetapkan nilai Jenis Aduan daripada jadual tuntutan
-        jenisTuntutanInput.value = item.jenis || '-';
-        
-        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
-        document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
-        
-        let valStatus = item.statusAduan || '';
-        if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
-            statusSelect.value = valStatus;
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
-        } else if (valStatus !== "") {
-            statusSelect.value = "Lain-lain";
-            statusLainInput.style.display = 'block';
-            statusLainInput.value = valStatus;
-        } else {
-            statusSelect.value = "";
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
+        if (dataTuntutan) {
+            document.getElementById('jenisTuntutan').value = dataTuntutan.jenis || '';
+            document.getElementById('keteranganTuntutan').value = dataTuntutan.keterangan || '';
+            document.getElementById('hasilSiasatanTuntutan').value = dataTuntutan.hasilSiasatan || '';
+            document.getElementById('statusAduanTuntutan').value = dataTuntutan.status || '';
+            kawalStatusAduanLain();
         }
     } else {
-        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
-        jenisTuntutanInput.value = "";
-        document.getElementById('keteranganTuntutan').value = "";
-        document.getElementById('hasilSiasatanTuntutan').value = "";
-        statusSelect.value = "";
-        statusLainInput.style.display = 'none';
-        statusLainInput.value = "";
+        // Mod Tambah Baru (Seragam menggunakan paparan pop-up yang sama)
+        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
+        document.getElementById('jenisTuntutan').value = '';
+        document.getElementById('keteranganTuntutan').value = '';
+        document.getElementById('hasilSiasatanTuntutan').value = '';
+        document.getElementById('statusAduanTuntutan').value = '';
+        document.getElementById('statusAduanLain').value = '';
+        document.getElementById('statusAduanLain').style.display = 'none';
     }
+
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
