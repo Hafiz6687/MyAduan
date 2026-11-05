@@ -7115,8 +7115,7 @@ function kawalStatusAduanLain() {
     }
 }
 
-// Di dalam fungsi bukaModalTuntutan, pastikan logik ini disertakan:
-function bukaModalTuntutan(jenis, index = -1) {
+function bukaModalTuntutan(jenis = 'biasa', index = -1) {
     document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
     
@@ -7131,43 +7130,21 @@ function bukaModalTuntutan(jenis, index = -1) {
         currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
     }
 
-    let statusSelect = document.getElementById('statusAduanTuntutan');
-    let statusLainInput = document.getElementById('statusAduanLain');
     let jenisTuntutanInput = document.getElementById('jenisTuntutan');
+    let keteranganInput = document.getElementById('keteranganTuntutan');
 
     if (index > -1 && currentTuntutanList[index]) {
-        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
+        document.getElementById('tajukModal').innerText = "Kemaskini Aduan";
         let item = currentTuntutanList[index];
         
-        // Ekstrak dan tetapkan nilai Jenis Aduan daripada jadual tuntutan
-        jenisTuntutanInput.value = item.jenis || '-';
-        
-        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
-        document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
-        
-        let valStatus = item.statusAduan || '';
-        if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
-            statusSelect.value = valStatus;
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
-        } else if (valStatus !== "") {
-            statusSelect.value = "Lain-lain";
-            statusLainInput.style.display = 'block';
-            statusLainInput.value = valStatus;
-        } else {
-            statusSelect.value = "";
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
-        }
+        jenisTuntutanInput.value = item.jenis || '';
+        keteranganInput.value = item.keterangan || '';
     } else {
-        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
-        jenisTuntutanInput.value = "";
-        document.getElementById('keteranganTuntutan').value = "";
-        document.getElementById('hasilSiasatanTuntutan').value = "";
-        statusSelect.value = "";
-        statusLainInput.style.display = 'none';
-        statusLainInput.value = "";
+        document.getElementById('tajukModal').innerText = "Tambah Aduan";
+        jenisTuntutanInput.value = '';
+        keteranganInput.value = '';
     }
+    
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
