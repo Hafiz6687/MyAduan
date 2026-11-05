@@ -543,21 +543,28 @@ body {
                 <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
             </div>
 
+            <div class="modal-overlay" id="modalTuntutan">
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-title" id="tajukModal">Maklumat Aduan</div>
+            <input type="hidden" id="indexTuntutanEdit" value="-1">
+            <input type="hidden" id="jenisJadualTuntutan" value="biasa">
+            
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna senarai bertingkat/multilevel cth: 1., 1.1, a) b))</span></label>
-                <textarea id="hasilSiasatanTuntutan" rows="5" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen mendapati...&#10;   1.1 Gaji bulan Januari tidak dibayar...&#10;2. Penjelasan majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit;" oninput="autoResize(this)"></textarea>
+                <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
+                <input type="text" id="jenisTuntutan" placeholder="Masukkan jenis aduan..." style="width: 100%; box-sizing: border-box; font-weight: 600; color: var(--primary-blue);" oninput="hurufBesarSetiapPerkataan(this)">
             </div>
-
+            
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">4. Status Aduan <span>*</span></label>
-                <select id="statusAduanTuntutan" onchange="kawalStatusAduanLain()" style="width: 100%; box-sizing: border-box;">
-                    <option value="">-Sila Pilih Status-</option>
-                    <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
-                    <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
-                    <option value="Lain-lain">Lain-lain</option>
-                </select>
-                <input type="text" id="statusAduanLain" placeholder="Sila nyatakan status aduan lain" style="display: none; margin-top: 8px; width: 100%; box-sizing: border-box;" oninput="hurufBesarAyatPertama(this)">
+                <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
+                <textarea id="keteranganTuntutan" rows="4" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical; width: 100%; box-sizing: border-box;" oninput="hurufBesarAyatPertama(this)"></textarea>
             </div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
+                <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Aduan</button>
+            </div>
+        </div>
+    </div>
             
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
@@ -7164,16 +7171,16 @@ function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
-// Pastikan juga fungsi simpanTuntutan mengambil nilai teks bebas jika "Lain-lain" dipilih:
 function simpanTuntutan() {
-    let jenis = document.getElementById('jenisTuntutan').value;
-    let keterangan = document.getElementById('keteranganTuntutan').value;
-    let hasilSiasatan = document.getElementById('hasilSiasatanTuntutan').value;
-    let selectStatus = document.getElementById('statusAduanTuntutan').value;
-    let statusAduan = (selectStatus === 'Lain-lain') ? document.getElementById('statusAduanLain').value : selectStatus;
-    
+    let jenis = document.getElementById('jenisTuntutan').value.trim();
+    let keterangan = document.getElementById('keteranganTuntutan').value.trim();
     let index = parseInt(document.getElementById('indexTuntutanEdit').value);
     let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
+
+    if (!jenis || !keterangan) {
+        alert("Sila isi Jenis Aduan dan Keterangan Aduan.");
+        return;
+    }
 
     let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
     if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa] && memoriSenaraiKes[indexKesSemasa].dataBorang) {
@@ -7181,19 +7188,38 @@ function simpanTuntutan() {
     }
 
     if (index > -1 && targetList[index]) {
-        targetList[index].jenis = jenis; // Kekalkan jenis asal yang diekstrak
+        // Kemaskini tuntutan sedia ada
+        targetList[index].jenis = jenis;
         targetList[index].keterangan = keterangan;
-        targetList[index].hasilSiasatan = hasilSiasatan;
-        targetList[index].statusAduan = statusAduan;
+    } else {
+        // Tambah tuntutan baharu ke dalam senarai
+        targetList.push({
+            jenis: jenis,
+            keterangan: keterangan
+        });
     }
 
-    document.getElementById('modalTuntutan').style.display = 'none';
-    
+    tutupModalTuntutan();
+
+    // Semak fungsi paparan semula jadual yang sepadan
     if (typeof renderSemuaJadualTuntutan === 'function') {
         renderSemuaJadualTuntutan();
+    } else if (typeof renderJadualTuntutan === 'function') {
+        renderJadualTuntutan();
     } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
         bukaMaklumatKes(indexKesSemasa);
     }
+
+    if (typeof janaKenyataanAwal === 'function') {
+        janaKenyataanAwal();
+    }
+}
+
+function tutupModalTuntutan() {
+    document.getElementById('jenisTuntutan').value = '';
+    document.getElementById('keteranganTuntutan').value = '';
+    document.getElementById('indexTuntutanEdit').value = '-1';
+    document.getElementById('modalTuntutan').style.display = 'none';
 }
         
 function hapusTuntutan(index, jenisJadual = 'biasa') { 
@@ -7214,8 +7240,6 @@ function hapusTuntutan(index, jenisJadual = 'biasa') {
                 }
             } 
         }
-
-function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.display = 'none'; }
        
 function renderJadualTuntutan() {
     const tbody = document.querySelector("#jadualTuntutan tbody");
