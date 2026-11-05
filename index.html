@@ -7130,27 +7130,54 @@ function bukaModalTuntutan(jenis = 'biasa', index = -1) {
         currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
     }
 
+    let statusSelect = document.getElementById('statusAduanTuntutan');
+    let statusLainInput = document.getElementById('statusAduanLain');
     let jenisTuntutanInput = document.getElementById('jenisTuntutan');
-    let keteranganInput = document.getElementById('keteranganTuntutan');
+    let hasilSiasatanInput = document.getElementById('hasilSiasatanTuntutan');
 
     if (index > -1 && currentTuntutanList[index]) {
-        document.getElementById('tajukModal').innerText = "Kemaskini Aduan";
+        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
         let item = currentTuntutanList[index];
         
         jenisTuntutanInput.value = item.jenis || '';
-        keteranganInput.value = item.keterangan || '';
+        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
+        if (hasilSiasatanInput) hasilSiasatanInput.value = item.hasilSiasatan || '';
+        
+        let valStatus = item.statusAduan || '';
+        if (statusSelect) {
+            if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
+                statusSelect.value = valStatus;
+                if (statusLainInput) { statusLainInput.style.display = 'none'; statusLainInput.value = ''; }
+            } else if (valStatus !== "") {
+                statusSelect.value = "Lain-lain";
+                if (statusLainInput) { statusLainInput.style.display = 'block'; statusLainInput.value = valStatus; }
+            } else {
+                statusSelect.value = "";
+                if (statusLainInput) { statusLainInput.style.display = 'none'; statusLainInput.value = ''; }
+            }
+        }
     } else {
-        document.getElementById('tajukModal').innerText = "Tambah Aduan";
-        jenisTuntutanInput.value = '';
-        keteranganInput.value = '';
+        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
+        jenisTuntutanInput.value = "";
+        document.getElementById('keteranganTuntutan').value = "";
+        if (hasilSiasatanInput) hasilSiasatanInput.value = "";
+        if (statusSelect) statusSelect.value = "";
+        if (statusLainInput) { statusLainInput.style.display = 'none'; statusLainInput.value = ""; }
     }
-    
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
 function simpanTuntutan() {
     let jenis = document.getElementById('jenisTuntutan').value.trim();
     let keterangan = document.getElementById('keteranganTuntutan').value.trim();
+    let hasilSiasatanEl = document.getElementById('hasilSiasatanTuntutan');
+    let statusSelectEl = document.getElementById('statusAduanTuntutan');
+    
+    let hasilSiasatan = hasilSiasatanEl ? hasilSiasatanEl.value : '';
+    let selectStatus = statusSelectEl ? statusSelectEl.value : '';
+    let statusLainEl = document.getElementById('statusAduanLain');
+    let statusAduan = (selectStatus === 'Lain-lain' && statusLainEl) ? statusLainEl.value : selectStatus;
+    
     let index = parseInt(document.getElementById('indexTuntutanEdit').value);
     let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
 
@@ -7165,24 +7192,23 @@ function simpanTuntutan() {
     }
 
     if (index > -1 && targetList[index]) {
-        // Kemaskini tuntutan sedia ada
         targetList[index].jenis = jenis;
         targetList[index].keterangan = keterangan;
+        targetList[index].hasilSiasatan = hasilSiasatan;
+        targetList[index].statusAduan = statusAduan;
     } else {
-        // Tambah tuntutan baharu ke dalam senarai
         targetList.push({
             jenis: jenis,
-            keterangan: keterangan
+            keterangan: keterangan,
+            hasilSiasatan: hasilSiasatan,
+            statusAduan: statusAduan
         });
     }
 
-    tutupModalTuntutan();
-
-    // Semak fungsi paparan semula jadual yang sepadan
+    document.getElementById('modalTuntutan').style.display = 'none';
+    
     if (typeof renderSemuaJadualTuntutan === 'function') {
         renderSemuaJadualTuntutan();
-    } else if (typeof renderJadualTuntutan === 'function') {
-        renderJadualTuntutan();
     } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
         bukaMaklumatKes(indexKesSemasa);
     }
