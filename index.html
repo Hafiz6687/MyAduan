@@ -3805,44 +3805,34 @@ async function simpanProfilKeAwan(gambarBase64, posObj, scaleVal, namaText) {
         alert("Gagal menyimpan ke pangkalan data. Sila pastikan sambungan internet stabil.");
     }
 }
-// --- FUNGSI BARU: Simpan senarai kes ke dalam memori browser (Local Storage) ---
 async function simpanSenaraiKeLokal() {
     try {
-        if (!window.db || !window.doc || !window.setDoc) {
-            localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-            return;
+        // 1. Simpan kes secara selamat ke Local Storage pelayar serta-merta (Jaminan elak hilang)
+        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+        console.log("Data kes berjaya disimpan ke Local Storage pelayar.");
+
+        // 2. Cuba simpan ke Firebase jika sambungan ada
+        if (window.db && window.doc && window.setDoc) {
+            const kesBersih = memoriSenaraiKes.map(kes => {
+                let kCopia = { ...kes };
+                if (kCopia.dataBorang && kCopia.dataBorang.lampiran) {
+                    kCopia.dataBorang.lampiran = kCopia.dataBorang.lampiran.map(f => ({
+                        nama: f.nama,
+                        saiz: f.saiz,
+                        jenis: f.jenis
+                    }));
+                }
+                return kCopia;
+            });
+
+            const docRef = window.doc(window.db, "data_pengguna", "hafiz_abubakar");
+            await window.setDoc(docRef, {
+                senaraiKes: kesBersih,
+                kemaskiniTerakhir: new Date().toISOString()
+            }, { merge: true });
         }
-
-        // Buat salinan bersih (buang fail lampiran saiz besar yang tidak perlu dari sync awan utama jika melebihi kapasiti)
-        const kesBersih = memoriSenaraiKes.map(kes => {
-            let kCopia = { ...kes };
-            if (kCopia.dataBorang && kCopia.dataBorang.lampiran) {
-                // Kecilkan atau asingkan fail base64 yang terlalu berat untuk disimpan terus dalam doc
-                kCopia.dataBorang.lampiran = kCopia.dataBorang.lampiran.map(f => ({
-                    nama: f.nama,
-                    saiz: f.saiz,
-                    jenis: f.jenis
-                    // Tidak simpan data string base64 fail yang besar ke dalam Firestore
-                }));
-            }
-            return kCopia;
-        });
-
-        const docRef = window.doc(window.db, "data_pengguna", "hafiz_abubakar");
-        await window.setDoc(docRef, {
-            senaraiKes: kesBersih,
-            kemaskiniTerakhir: new Date().toISOString()
-        }, { merge: true });
-        
-        // Simpan juga salinan lengkap di lokal browser
-        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        console.log("Data kes berjaya disimpan ke awan (Firestore).");
-
     } catch (e) {
-        console.error("Ralat menyimpan data ke Firestore:", e);
-        // Fallback simpan ke local storage pelayar supaya kerja pengguna tidak hilang
-        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-        alert("Amaran: Gagal kemaskini ke awan (Saiz fail terlalu besar), tetapi data telah disimpan secara selamat di memori pelayar (Local Storage) anda.");
+        console.error("Ralat menyelaraskan ke awan (Data tetap selamat di Local Storage):", e);
     }
 }
 
