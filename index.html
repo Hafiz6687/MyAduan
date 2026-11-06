@@ -528,43 +528,44 @@ body {
     <div id="printArea" style="display: none;"></div>
 
     <div class="modal-overlay" id="modalTuntutan">
-        <div class="modal-box" style="max-width: 650px;">
-            <div class="modal-title" id="tajukModal">Kemaskini Tuntutan & Siasatan</div>
-            <input type="hidden" id="indexTuntutanEdit" value="-1">
-            <input type="hidden" id="jenisJadualTuntutan" value="biasa">
-            
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
-                <input type="text" id="jenisTuntutan" placeholder="Masukkan jenis aduan..." style="width: 100%; box-sizing: border-box; font-weight: 600; color: var(--primary-blue);" oninput="hurufBesarSetiapPerkataan(this)">
-            </div>
-            
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
-                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
-            </div>
+    <div class="modal-box" style="max-width: 650px;">
+        <div class="modal-title" id="tajukModal">Kemaskini Tuntutan & Siasatan</div>
+        <input type="hidden" id="indexTuntutanEdit" value="-1">
+        <input type="hidden" id="jenisJadualTuntutan" value="biasa">
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">1. Jenis Aduan <span>*</span></label>
+            <input type="text" id="jenisTuntutan" placeholder="Masukkan jenis aduan..." style="width: 100%; box-sizing: border-box; font-weight: 600; color: var(--primary-blue);" oninput="hurufBesarSetiapPerkataan(this)">
+        </div>
+        
+        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">2. Keterangan Aduan <span>*</span></label>
+            <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Aduan berkenaan..." style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
+        </div>
 
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna senarai bertingkat/multilevel cth: 1., 1.1, a) b))</span></label>
-                <textarea id="hasilSiasatanTuntutan" rows="5" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen mendapati...&#10;   1.1 Gaji bulan Januari tidak dibayar...&#10;2. Penjelasan majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit;" oninput="autoResize(this)"></textarea>
-            </div>
+        <!-- MEDAN INI AKAN DISEMBUNYIKAN SECARA AUTOMATIK JIKA DIBUKA DARI BORANG UTAMA -->
+        <div class="form-group group-siasatan-sistem" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">3. Hasil Siasatan Pegawai Penyiasat <br><span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(Boleh guna senarai bertingkat/multilevel cth: 1., 1.1, a) b))</span></label>
+            <textarea id="hasilSiasatanTuntutan" rows="5" class="auto-expand" placeholder="Contoh:&#10;1. Semakan dokumen mendapati...&#10;   1.1 Gaji bulan Januari tidak dibayar...&#10;2. Penjelasan majikan..." style="resize: vertical; width: 100%; box-sizing: border-box; font-family: inherit;" oninput="autoResize(this)"></textarea>
+        </div>
 
-            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
-                <label style="text-align: left;">4. Status Aduan <span>*</span></label>
-                <select id="statusAduanTuntutan" onchange="kawalStatusAduanLain()" style="width: 100%; box-sizing: border-box;">
-                    <option value="">-Sila Pilih Status-</option>
-                    <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
-                    <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
-                    <option value="Lain-lain">Lain-lain</option>
-                </select>
-                <input type="text" id="statusAduanLain" placeholder="Sila nyatakan status aduan lain" style="display: none; margin-top: 8px; width: 100%; box-sizing: border-box;" oninput="hurufBesarAyatPertama(this)">
-            </div>
-            
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
-                <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
-            </div>
+        <div class="form-group group-siasatan-sistem" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+            <label style="text-align: left;">4. Status Aduan <span>*</span></label>
+            <select id="statusAduanTuntutan" onchange="kawalStatusAduanLain()" style="width: 100%; box-sizing: border-box;">
+                <option value="">-Sila Pilih Status-</option>
+                <option value="Tiada Pelanggaran dikesan">Tiada Pelanggaran dikesan</option>
+                <option value="Pelanggaran dikesan">Pelanggaran dikesan</option>
+                <option value="Lain-lain">Lain-lain</option>
+            </select>
+            <input type="text" id="statusAduanLain" placeholder="Sila nyatakan status aduan lain" style="display: none; margin-top: 8px; width: 100%; box-sizing: border-box;" oninput="hurufBesarAyatPertama(this)">
+        </div>
+        
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
+            <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
         </div>
     </div>
+</div>
 <!-- MODAL KEMASKINI MAKLUMAT PENGADU -->
 <div class="modal-overlay" id="modalKemaskiniPengadu" style="z-index: 2200;">
     <div class="modal-box" style="max-width: 650px;">
@@ -7108,59 +7109,48 @@ function kawalStatusAduanLain() {
     }
 }
 
-// Di dalam fungsi bukaModalTuntutan, pastikan logik ini disertakan:
 function bukaModalTuntutan(jenis, index = -1) {
+    // Tetapkan nilai asas...
     document.getElementById('indexTuntutanEdit').value = index;
     document.getElementById('jenisJadualTuntutan').value = jenis;
-    
-    let currentTuntutanList = [];
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && typeof memoriSenaraiKes !== 'undefined' && memoriSenaraiKes[indexKesSemasa]) {
-        let kesAktif = memoriSenaraiKes[indexKesSemasa];
-        if (kesAktif.dataBorang && kesAktif.dataBorang.tuntutanBiasa) {
-            currentTuntutanList = kesAktif.dataBorang.tuntutanBiasa;
-        }
-    }
-    if (currentTuntutanList.length === 0) {
-        currentTuntutanList = (jenis === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-    }
 
-    let statusSelect = document.getElementById('statusAduanTuntutan');
-    let statusLainInput = document.getElementById('statusAduanLain');
-    let jenisTuntutanInput = document.getElementById('jenisTuntutan');
+    // KAWALAN KHAS: Semak sama ada modal dibuka dari Borang Utama atau Maklumat Kes
+    // Jika index == -1 dan paparan aktif adalah Borang Utama (Pendaftaran), sembunyikan medan siasatan.
+    const kumpulanSiasatan = document.querySelectorAll('.group-siasatan-sistem');
+    const isDariPendaftaran = document.getElementById('viewPendaftaranKes').style.display !== 'none';
 
-    if (index > -1 && currentTuntutanList[index]) {
-        document.getElementById('tajukModal').innerText = "Kemaskini Tuntutan & Siasatan";
-        let item = currentTuntutanList[index];
-        
-        // Ekstrak dan tetapkan nilai Jenis Aduan daripada jadual tuntutan
-        jenisTuntutanInput.value = item.jenis || '-';
-        
-        document.getElementById('keteranganTuntutan').value = item.keterangan || '';
-        document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
-        
-        let valStatus = item.statusAduan || '';
-        if (valStatus === "Tiada Pelanggaran dikesan" || valStatus === "Pelanggaran dikesan") {
-            statusSelect.value = valStatus;
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
-        } else if (valStatus !== "") {
-            statusSelect.value = "Lain-lain";
-            statusLainInput.style.display = 'block';
-            statusLainInput.value = valStatus;
+    kumpulanSiasatan.forEach(el => {
+        if (isDariPendaftaran) {
+            el.style.display = 'none'; // Sembunyi pada Borang Utama
         } else {
-            statusSelect.value = "";
-            statusLainInput.style.display = 'none';
-            statusLainInput.value = '';
+            el.style.display = 'block'; // Kekal papar pada Maklumat Kes Terperinci
+        }
+    });
+
+    if (index > -1) {
+        // Logik mengisi data sedia ada untuk proses Edit
+        let targetList = (jenis === 'ketua') ? memoriTuntutanKetua : memoriTuntutan;
+        if (window.jenisTuntutanAktif) targetList = window.jenisTuntutanAktif;
+        
+        let item = targetList[index];
+        if (item) {
+            document.getElementById('jenisTuntutan').value = item.jenis || '';
+            document.getElementById('keteranganTuntutan').value = item.keterangan || '';
+            if (document.getElementById('hasilSiasatanTuntutan')) {
+                document.getElementById('hasilSiasatanTuntutan').value = item.hasilSiasatan || '';
+            }
+            if (document.getElementById('statusAduanTuntutan')) {
+                document.getElementById('statusAduanTuntutan').value = item.statusAduan || '';
+            }
         }
     } else {
-        document.getElementById('tajukModal').innerText = "Tambah Tuntutan";
-        jenisTuntutanInput.value = "";
-        document.getElementById('keteranganTuntutan').value = "";
-        document.getElementById('hasilSiasatanTuntutan').value = "";
-        statusSelect.value = "";
-        statusLainInput.style.display = 'none';
-        statusLainInput.value = "";
+        // Reset kosong jika tambah baru
+        document.getElementById('jenisTuntutan').value = '';
+        document.getElementById('keteranganTuntutan').value = '';
+        if (document.getElementById('hasilSiasatanTuntutan')) document.getElementById('hasilSiasatanTuntutan').value = '';
+        if (document.getElementById('statusAduanTuntutan')) document.getElementById('statusAduanTuntutan').value = '';
     }
+
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
