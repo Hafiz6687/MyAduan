@@ -7154,36 +7154,57 @@ function bukaModalTuntutan(jenis, index = -1) {
     document.getElementById('modalTuntutan').style.display = 'flex';
 }
 
-// Pastikan juga fungsi simpanTuntutan mengambil nilai teks bebas jika "Lain-lain" dipilih:
 function simpanTuntutan() {
-    let jenis = document.getElementById('jenisTuntutan').value;
-    let keterangan = document.getElementById('keteranganTuntutan').value;
-    let hasilSiasatan = document.getElementById('hasilSiasatanTuntutan').value;
-    let selectStatus = document.getElementById('statusAduanTuntutan').value;
-    let statusAduan = (selectStatus === 'Lain-lain') ? document.getElementById('statusAduanLain').value : selectStatus;
+    let jenis = document.getElementById('jenisTuntutan').value.trim();
+    let keterangan = document.getElementById('keteranganTuntutan').value.trim();
+    
+    // Semakan selamat untuk elemen yang mungkin dibuang pada borang utama
+    let elHasil = document.getElementById('hasilSiasatanTuntutan');
+    let elStatus = document.getElementById('statusAduanTuntutan');
+    
+    let hasilSiasatan = elHasil ? elHasil.value.trim() : "";
+    let statusAduan = elStatus ? elStatus.value.trim() : "";
     
     let index = parseInt(document.getElementById('indexTuntutanEdit').value);
     let jenisJadual = document.getElementById('jenisJadualTuntutan').value;
 
-    let targetList = (jenisJadual === 'biasa') ? memoriTuntutan : memoriTuntutanKetua;
-    if (typeof indexKesSemasa !== 'undefined' && indexKesSemasa > -1 && memoriSenaraiKes[indexKesSemasa] && memoriSenaraiKes[indexKesSemasa].dataBorang) {
-        targetList = memoriSenaraiKes[indexKesSemasa].dataBorang.tuntutanBiasa || targetList;
+    if (!jenis || !keterangan) {
+        alert("Sila lengkapkan Jenis Aduan dan Keterangan Aduan.");
+        return;
     }
 
-    if (index > -1 && targetList[index]) {
-        targetList[index].jenis = jenis; // Kekalkan jenis asal yang diekstrak
-        targetList[index].keterangan = keterangan;
-        targetList[index].hasilSiasatan = hasilSiasatan;
-        targetList[index].statusAduan = statusAduan;
+    let objekTuntutan = {
+        jenis: jenis,
+        keterangan: keterangan,
+        hasilSiasatan: hasilSiasatan,
+        statusAduan: statusAduan
+    };
+
+    // Tentukan memori sasaran berdasarkan jenis jadual
+    let targetList = memoriTuntutan;
+    if (jenisJadual === 'ketua') {
+        targetList = memoriTuntutanKetua;
+    } else if (jenisJadual.startsWith('tambahan_')) {
+        let keyTambahan = jenisJadual.replace('tambahan_', '');
+        if (!memoriTuntutanTambahan[keyTambahan]) memoriTuntutanTambahan[keyTambahan] = [];
+        targetList = memoriTuntutanTambahan[keyTambahan];
     }
 
-    document.getElementById('modalTuntutan').style.display = 'none';
-    
-    if (typeof renderSemuaJadualTuntutan === 'function') {
-        renderSemuaJadualTuntutan();
-    } else if (typeof bukaMaklumatKes === 'function' && indexKesSemasa > -1) {
-        bukaMaklumatKes(indexKesSemasa);
+    if (index > -1) {
+        targetList[index] = objekTuntutan;
+    } else {
+        targetList.push(objekTuntutan);
     }
+
+    // Kemaskini paparan jadual yang bersesuaian
+    if (typeof renderJadualTuntutan === 'function') {
+        renderJadualTuntutan();
+    }
+    if (typeof renderJadualTuntutanKetua === 'function' && jenisJadual === 'ketua') {
+        renderJadualTuntutanKetua();
+    }
+
+    tutupModalTuntutan();
 }
         
 function hapusTuntutan(index, jenisJadual = 'biasa') { 
