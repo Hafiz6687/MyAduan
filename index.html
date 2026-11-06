@@ -3672,39 +3672,39 @@ Portal rasmi : jtksm.mohr.gov.my
 
 async function muatkanDataAwal() {
         try {
-            console.log("Sedang memuat turun data kes dari awan...");
+            console.log("Memuatkan data kes...");
+            
+            // 1. UTAMAKAN LOCAL STORAGE: Ambil terus dari pelayar supaya data terkini tidak hilang
+            const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
+            if (senaraiLokal) {
+                memoriSenaraiKes = JSON.parse(senaraiLokal);
+                console.log("Data berjaya dimuatkan dari Local Storage pelayar.");
+            } else {
+                memoriSenaraiKes = [];
+            }
+
+            // 2. SEGERA SELARASKAN KE FIREBASE (Tanpa menimpa data lokal jika firebase kosong)
             if (window.db && window.doc && window.getDoc) {
                 const docRef = window.doc(window.db, "data_pengguna", "hafiz_abubakar");
                 const docSnap = await window.getDoc(docRef);
 
                 if (docSnap.exists() && docSnap.data().senaraiKes) {
-                    memoriSenaraiKes = docSnap.data().senaraiKes || [];
-                    // Kemaskini salinan lokal pelayar dengan data terkini dari awan
-                    localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
-                    console.log("Data kes berjaya diselaraskan dari Firebase.");
-                } else {
-                    // Jika tiada di awan, semak jika ada data sandaran di lokal pelayar
-                    const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
-                    if (senaraiLokal) {
-                        memoriSenaraiKes = JSON.parse(senaraiLokal);
-                        // Muat naik semula ke awan supaya selamat
-                        await simpanSenaraiKeLokal();
-                    } else {
-                        memoriSenaraiKes = [];
+                    const kesAwan = docSnap.data().senaraiKes;
+                    // Jika data awan lebih banyak atau terkini, gabungkan atau guna yang lokal jika lokal ada isi
+                    if (kesAwan.length > memoriSenaraiKes.length) {
+                        memoriSenaraiKes = kesAwan;
+                        localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
                     }
                 }
-            } else {
-                // Jika pangkalan data belum siap sedia, baca dari lokal
-                const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
-                memoriSenaraiKes = senaraiLokal ? JSON.parse(senaraiLokal) : [];
             }
         } catch (error) {
-            console.error("Gagal menyelaraskan dari awan. Menggunakan memori pelayar lokal:", error);
+            console.error("Ralat memuatkan data awal:", error);
+            // Fallback terakhir kepada Local Storage
             const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
             memoriSenaraiKes = senaraiLokal ? JSON.parse(senaraiLokal) : [];
         }
 
-        // Paparkan semula jadual tugasan dengan data yang dipulihkan
+        // Paparkan semula jadual tugasan
         if (typeof renderSenaraiTugas === 'function') {
             renderSenaraiTugas();
         }
