@@ -1854,6 +1854,13 @@ function populasikanLampiran2() {
             } else {
                 aduanPenuh += "- Tiada maklumat tuntutan direkodkan -\n";
             }
+
+            // Semak status checkbox identiti dirahsiakan
+            let isRahsiaCheck = document.getElementById('identitiRahsia') ? document.getElementById('identitiRahsia').checked : (inputsData['identitiRahsia'] === true || inputsData['identitiRahsia'] === "true");
+            if (isRahsiaCheck) {
+                aduanPenuh += `\n(Nota: Pengadu mohon identitinya dirahsiakan)`;
+            }
+
             document.getElementById('l2_aduan').innerText = aduanPenuh.trim();
         }
 
