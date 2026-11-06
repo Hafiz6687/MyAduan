@@ -3670,39 +3670,45 @@ Portal rasmi : jtksm.mohr.gov.my
             // Panggil fungsi muat turun profil dari awan secara automatik
             muatkanProfilDariAwan();
 
-// --- KEMASKINI: Tarik data dari Local Storage supaya tak hilang bila refresh ---
-// Fungsi untuk menarik data dari awan Firestore
-    async function muatkanDataAwal() {
+async function muatkanDataAwal() {
         try {
-            console.log("Sedang memuat turun data dari awan...");
-            const docSnap = await window.getDocs(window.collection(window.db, "data_pengguna"));
-            
-            let dataDijumpai = false;
-            docSnap.forEach((docItem) => {
-                if (docItem.id === "hafiz_abubakar") {
-                    memoriSenaraiKes = docItem.data().senaraiKes || [];
-                    dataDijumpai = true;
-                }
-            });
+            console.log("Sedang memuat turun data kes dari awan...");
+            if (window.db && window.doc && window.getDoc) {
+                const docRef = window.doc(window.db, "data_pengguna", "hafiz_abubakar");
+                const docSnap = await window.getDoc(docRef);
 
-            if (!dataDijumpai) {
-                // Jika ini kali pertama buka, muatkan data kosong
-                memoriSenaraiKes = [];
+                if (docSnap.exists() && docSnap.data().senaraiKes) {
+                    memoriSenaraiKes = docSnap.data().senaraiKes || [];
+                    // Kemaskini salinan lokal pelayar dengan data terkini dari awan
+                    localStorage.setItem('eLC_senaraiKes', JSON.stringify(memoriSenaraiKes));
+                    console.log("Data kes berjaya diselaraskan dari Firebase.");
+                } else {
+                    // Jika tiada di awan, semak jika ada data sandaran di lokal pelayar
+                    const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
+                    if (senaraiLokal) {
+                        memoriSenaraiKes = JSON.parse(senaraiLokal);
+                        // Muat naik semula ke awan supaya selamat
+                        await simpanSenaraiKeLokal();
+                    } else {
+                        memoriSenaraiKes = [];
+                    }
+                }
+            } else {
+                // Jika pangkalan data belum siap sedia, baca dari lokal
+                const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
+                memoriSenaraiKes = senaraiLokal ? JSON.parse(senaraiLokal) : [];
             }
         } catch (error) {
-            console.error("Gagal menarik data awan. Cuba baca dari backup lokal:", error);
+            console.error("Gagal menyelaraskan dari awan. Menggunakan memori pelayar lokal:", error);
             const senaraiLokal = localStorage.getItem('eLC_senaraiKes');
-            if (senaraiLokal) {
-                memoriSenaraiKes = JSON.parse(senaraiLokal);
-            } else {
-                memoriSenaraiKes = [];
-            }
+            memoriSenaraiKes = senaraiLokal ? JSON.parse(senaraiLokal) : [];
         }
 
-        // Paparkan jadual selepas data berjaya dimuat turun
-        renderSenaraiTugas();
+        // Paparkan semula jadual tugasan dengan data yang dipulihkan
+        if (typeof renderSenaraiTugas === 'function') {
+            renderSenaraiTugas();
+        }
     }
-
     // Jalankan fungsi
     muatkanDataAwal();
 
