@@ -1725,9 +1725,27 @@ function populasikanLampiran2() {
         if (document.getElementById('l2_bayaran_lain')) {
             let adaElaunRad = document.querySelector('input[name="adaElaun"]:checked');
             let isAdaElaun = adaElaunRad ? adaElaunRad.value === 'Ya' : (inputsData['adaElaun'] === 'Ya');
+            
             if (isAdaElaun) {
                 let senaraiElaunFormatted = [];
-                if (kes && kes.dataBorang && kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
+                
+                // 1. Kutip data daripada elemen input dinamik yang sedang aktif di skrin borang utama
+                const jenisElaunInputs = document.querySelectorAll('.input-elaun-jenis');
+                const jumlahElaunInputs = document.querySelectorAll('.input-elaun-jumlah');
+                
+                if (jenisElaunInputs.length > 0) {
+                    jenisElaunInputs.forEach((elJenis, idx) => {
+                        let jVal = elJenis.value.trim();
+                        let jJumlah = jumlahElaunInputs[idx] ? jumlahElaunInputs[idx].value.trim() : '';
+                        if (jVal && jJumlah) {
+                            let tCase = jVal.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                            senaraiElaunFormatted.push(`${tCase} (RM ${jJumlah})`);
+                        }
+                    });
+                }
+                
+                // 2. Jika tiada di skrin semasa, ambil dari memori kes (data tersimpan)
+                if (senaraiElaunFormatted.length === 0 && kes && kes.dataBorang && kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
                     kes.dataBorang.elaun.forEach(el => {
                         if (el.jenis && el.jumlah) {
                             let tCase = el.jenis.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
@@ -1735,6 +1753,7 @@ function populasikanLampiran2() {
                         }
                     });
                 }
+                
                 document.getElementById('l2_bayaran_lain').innerText = senaraiElaunFormatted.length > 0 ? senaraiElaunFormatted.join(", ") : "Tiada";
             } else {
                 document.getElementById('l2_bayaran_lain').innerText = "Tiada";
